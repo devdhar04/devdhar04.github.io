@@ -1,17 +1,17 @@
 
-# Privacy Policy for Word Search Explorer
+# Privacy Policy for Word Search Quest
 
 **Last Updated:** May 4, 2026
 
 ## Introduction
 
-BetterApps ("we", "our", or "us") operates the Word Search Explorer mobile application (the "App"). This Privacy Policy explains how we handle information when you use our App.
+BetterApps ("we", "our", or "us") operates the Word Search Quest mobile application (the "App"). This Privacy Policy explains how we handle information when you use our App.
 
 ## Information We Collect
 
 **We do NOT collect, store, or share any personal information.**
 
-Word Search Explorer is designed with privacy in mind:
+Word Search Quest is designed with privacy in mind:
 - No user accounts required
 - No registration needed
 - No personal data collected
