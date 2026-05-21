@@ -1,0 +1,711 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Should You Add an Index? — Better Engineers</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3250;
+    --accent: #6c63ff;
+    --accent2: #00d2ff;
+    --yes: #22c55e;
+    --no: #ef4444;
+    --warn: #f59e0b;
+    --text: #e8eaf6;
+    --muted: #8b92b8;
+    --radius: 14px;
+    --font: 'Inter', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+    max-width: 640px;
+  }
+  header .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 99px;
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: 800;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #fff 30%, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── Progress Bar ── */
+  .progress-wrap {
+    width: 100%;
+    max-width: 640px;
+    margin-bottom: 32px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    transition: width 0.5s ease;
+  }
+
+  /* ── Breadcrumb trail ── */
+  .trail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: 640px;
+    width: 100%;
+    margin-bottom: 24px;
+    min-height: 28px;
+  }
+  .trail-item {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 3px 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .trail-item .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    max-width: 640px;
+    width: 100%;
+    animation: fadeUp 0.35s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .step-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .question {
+    font-size: clamp(17px, 3vw, 21px);
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  .hint {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 28px;
+    padding: 12px 14px;
+    background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+  }
+  .hint code {
+    font-family: 'Fira Code', monospace;
+    background: rgba(108,99,255,0.15);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  /* ── Buttons ── */
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .choice-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  }
+  .choice-btn:hover {
+    border-color: var(--accent);
+    background: rgba(108,99,255,0.12);
+    transform: translateX(4px);
+  }
+  .choice-btn .icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 1px;
+  }
+  .choice-btn .label { font-weight: 700; display: block; margin-bottom: 2px; }
+  .choice-btn .sub   { color: var(--muted); font-size: 12px; }
+
+  /* ── Result Card ── */
+  .result-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    max-width: 640px;
+    width: 100%;
+    animation: fadeUp 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-card.yes  { border: 1.5px solid var(--yes);  }
+  .result-card.no   { border: 1.5px solid var(--no);   }
+  .result-card.warn { border: 1.5px solid var(--warn); }
+
+  .result-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.04;
+    pointer-events: none;
+  }
+  .result-card.yes::before  { background: var(--yes); }
+  .result-card.no::before   { background: var(--no);  }
+  .result-card.warn::before { background: var(--warn); }
+
+  .verdict {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .verdict-icon {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .yes  .verdict-icon { background: rgba(34,197,94,0.15); }
+  .no   .verdict-icon { background: rgba(239,68,68,0.15); }
+  .warn .verdict-icon { background: rgba(245,158,11,0.15); }
+
+  .verdict-title {
+    font-size: 22px;
+    font-weight: 800;
+  }
+  .yes  .verdict-title { color: var(--yes);  }
+  .no   .verdict-title { color: var(--no);   }
+  .warn .verdict-title { color: var(--warn); }
+
+  .result-summary {
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+  .result-summary strong { color: #fff; }
+
+  .reasoning-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .reasoning-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .reasoning-list li {
+    font-size: 13.5px;
+    line-height: 1.6;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .reasoning-list li .bullet { flex-shrink: 0; margin-top: 2px; }
+
+  .code-example {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: #c9d1d9;
+    margin-bottom: 28px;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code-example .kw  { color: #ff79c6; }
+  .code-example .fn  { color: #50fa7b; }
+  .code-example .str { color: #f1fa8c; }
+  .code-example .cm  { color: #6272a4; }
+  .code-example .num { color: #bd93f9; }
+
+  /* ── Restart button ── */
+  .restart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .restart-btn:hover { opacity: 0.88; transform: scale(0.98); }
+
+  /* ── Footer ── */
+  footer {
+    margin-top: 56px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  footer a { color: var(--accent2); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Better Engineers · Interactive Tool</div>
+  <h1>Should You Add a Database Index?</h1>
+  <p>Answer 5 questions and get a precise, reasoned verdict — with the SQL to back it up.</p>
+</header>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-label">
+    <span id="progressText">Question 1 of 5</span>
+    <span id="progressPct">0%</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="trail" id="trail"></div>
+
+<div id="app"></div>
+
+<footer>
+  <p>From <a href="https://betterengineers.substack.com" target="_blank">Better Engineers</a> · Database Interview Playbook Series</p>
+</footer>
+
+<script>
+// ── Decision Tree Data ──────────────────────────────────────────────
+const tree = {
+  id: 'start',
+  step: 1,
+  question: 'Are you running this query frequently — more than a handful of times per day?',
+  hint: 'Indexes cost write performance and disk space. If a query only runs during manual admin tasks or nightly batch jobs, the trade-off rarely makes sense.',
+  choices: [
+    {
+      icon: '⚡',
+      label: 'Yes — it runs constantly',
+      sub: 'It\'s in a hot path: user-facing, runs hundreds or thousands of times/day',
+      next: {
+        id: 'cardinality',
+        step: 2,
+        question: 'Is the column you\'re indexing high-cardinality?',
+        hint: 'High cardinality = many distinct values (e.g. user_id, email, timestamp). Low cardinality = few distinct values (e.g. status with values "active/inactive", boolean flags). An index on a boolean column won\'t help — the database might as well do a full scan.',
+        choices: [
+          {
+            icon: '📊',
+            label: 'Yes — many distinct values',
+            sub: 'e.g. user_id, email, order_id, created_at',
+            next: {
+              id: 'writeload',
+              step: 3,
+              question: 'Is this table write-heavy?',
+              hint: 'Every INSERT, UPDATE, and DELETE must update all indexes on the table. For tables that are written to constantly (logs, events, metrics), indexes multiply your write cost. Aim for no more than 3–5 indexes on write-heavy tables.',
+              choices: [
+                {
+                  icon: '✍️',
+                  label: 'Yes — lots of writes',
+                  sub: 'e.g. events table, audit log, message queue, metrics',
+                  next: {
+                    id: 'partial',
+                    step: 4,
+                    question: 'Do your queries filter on a specific subset of rows — not the whole table?',
+                    hint: 'If most queries filter on <code>status = \'active\'</code> and only 5% of rows are active, a partial index on just those rows is much smaller and faster than a full index.',
+                    choices: [
+                      {
+                        icon: '🎯',
+                        label: 'Yes — I query a specific subset',
+                        sub: 'Filtering on status, flag, or a date range',
+                        next: {
+                          id: 'result_partial',
+                          type: 'result',
+                          verdict: 'warn',
+                          emoji: '⚠️',
+                          title: 'Add a Partial Index',
+                          summary: 'Your table is write-heavy, so a full index would hurt write performance significantly. But you\'re only querying a subset of rows — use a <strong>partial index</strong> to get the read benefit with a much smaller write cost.',
+                          reasons: [
+                            '✅ Partial index only covers rows matching the WHERE clause — smaller, faster',
+                            '✅ Lower write overhead than a full index on the column',
+                            '⚠️ Benchmark before and after — write throughput impact varies by DB and row volume',
+                          ],
+                          code: `<span class="cm">-- Partial index: only indexes "active" orders</span>
+<span class="kw">CREATE INDEX</span> <span class="fn">idx_orders_user_active</span>
+  <span class="kw">ON</span> orders (user_id)
+  <span class="kw">WHERE</span> status = <span class="str">'active'</span>;
+
+<span class="cm">-- Query that uses it:</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> orders
+<span class="kw">WHERE</span> user_id = <span class="num">42</span>
+  <span class="kw">AND</span> status = <span class="str">'active'</span>;`,
+                        }
+                      },
+                      {
+                        icon: '🌐',
+                        label: 'No — I query the full table',
+                        sub: 'No specific subset — all rows are fair game',
+                        next: {
+                          id: 'result_cautious',
+                          type: 'result',
+                          verdict: 'warn',
+                          emoji: '⚠️',
+                          title: 'Proceed With Caution',
+                          summary: 'A full index on a write-heavy table is a real trade-off. It will speed up reads but slow down every write. This is often the right call — but <strong>benchmark first</strong>, and consider whether you can batch writes or use a covering index.',
+                          reasons: [
+                            '⚠️ Each INSERT/UPDATE/DELETE now also writes to the index',
+                            '✅ For read-heavy hot paths, the win usually outweighs the cost',
+                            '💡 Try a covering index — include all SELECT columns so the DB never touches the table',
+                          ],
+                          code: `<span class="cm">-- Covering index: all needed columns in the index itself</span>
+<span class="kw">CREATE INDEX</span> <span class="fn">idx_orders_covering</span>
+  <span class="kw">ON</span> orders (user_id, status, created_at);
+
+<span class="cm">-- This query is answered entirely from the index</span>
+<span class="cm">-- (no heap fetch needed):</span>
+<span class="kw">SELECT</span> status, created_at
+<span class="kw">FROM</span> orders
+<span class="kw">WHERE</span> user_id = <span class="num">42</span>;`,
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  icon: '📖',
+                  label: 'No — mostly reads',
+                  sub: 'e.g. product catalog, user profiles, content table',
+                  next: {
+                    id: 'composite',
+                    step: 4,
+                    question: 'Do your queries filter on multiple columns together?',
+                    hint: 'A query like <code>WHERE user_id = 42 AND status = \'active\'</code> benefits from a composite index <code>(user_id, status)</code> — which is faster than two separate indexes. Column order matters: put the most selective column first.',
+                    choices: [
+                      {
+                        icon: '🔗',
+                        label: 'Yes — multiple columns in the WHERE',
+                        sub: 'e.g. WHERE user_id = ? AND status = ?',
+                        next: {
+                          id: 'result_composite',
+                          type: 'result',
+                          verdict: 'yes',
+                          emoji: '✅',
+                          title: 'Yes — Add a Composite Index',
+                          summary: 'Your table is read-heavy with high-cardinality columns and multi-column filters. A <strong>composite index</strong> is the right call. Get the column order right — most selective first — and you\'ll see dramatic query speedups.',
+                          reasons: [
+                            '✅ One composite index beats two separate indexes for multi-column queries',
+                            '✅ Read-heavy table means low write overhead impact',
+                            '✅ High cardinality guarantees good selectivity — the index will actually be used',
+                            '💡 Include frequently selected columns to create a covering index',
+                          ],
+                          code: `<span class="cm">-- Composite index (user_id most selective → goes first)</span>
+<span class="kw">CREATE INDEX</span> <span class="fn">idx_orders_user_status</span>
+  <span class="kw">ON</span> orders (user_id, status);
+
+<span class="cm">-- Verify the query planner uses it:</span>
+<span class="kw">EXPLAIN ANALYZE</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> orders
+<span class="kw">WHERE</span> user_id = <span class="num">42</span>
+  <span class="kw">AND</span> status = <span class="str">'active'</span>;
+<span class="cm">-- Look for "Index Scan" not "Seq Scan"</span>`,
+                        }
+                      },
+                      {
+                        icon: '1️⃣',
+                        label: 'No — single column filter',
+                        sub: 'e.g. WHERE user_id = ? or WHERE email = ?',
+                        next: {
+                          id: 'result_single',
+                          type: 'result',
+                          verdict: 'yes',
+                          emoji: '✅',
+                          title: 'Yes — Add a Single-Column Index',
+                          summary: 'All signals point to a straightforward B-tree index. High cardinality, read-heavy table, frequent queries. <strong>Add the index.</strong> Run EXPLAIN ANALYZE before and after to confirm the planner picks it up.',
+                          reasons: [
+                            '✅ High cardinality = excellent selectivity, index will be used',
+                            '✅ Read-heavy table = minimal write cost impact',
+                            '✅ Frequent query = immediate, measurable payoff',
+                            '💡 For equality lookups, B-tree is default. For text search, consider GIN.',
+                          ],
+                          code: `<span class="cm">-- Simple B-tree index</span>
+<span class="kw">CREATE INDEX</span> <span class="fn">idx_users_email</span>
+  <span class="kw">ON</span> users (email);
+
+<span class="cm">-- Before: likely Seq Scan (slow)</span>
+<span class="cm">-- After: Index Scan (fast)</span>
+<span class="kw">EXPLAIN ANALYZE</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> users
+<span class="kw">WHERE</span> email = <span class="str">'user@example.com'</span>;`,
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            icon: '📉',
+            label: 'No — few distinct values',
+            sub: 'e.g. status, role, boolean flag, gender',
+            next: {
+              id: 'result_low_card',
+              type: 'result',
+              verdict: 'no',
+              emoji: '🚫',
+              title: 'Skip the Index',
+              summary: 'Low cardinality columns are the classic index trap. If a column has only a handful of distinct values, the database will likely ignore your index entirely and do a full table scan anyway — because fetching half the table via an index is slower than just scanning it directly.',
+              reasons: [
+                '❌ Low cardinality = poor selectivity — DB skips the index anyway',
+                '❌ Index adds write overhead with no read benefit',
+                '✅ Exception: partial index if you query a rare value (e.g. status=\'banned\' on 0.1% of rows)',
+              ],
+              code: `<span class="cm">-- DON'T do this on a boolean or status column:</span>
+<span class="cm">-- CREATE INDEX idx_users_active ON users (is_active); ❌</span>
+
+<span class="cm">-- DO this if only a tiny fraction match:</span>
+<span class="kw">CREATE INDEX</span> <span class="fn">idx_users_banned</span>
+  <span class="kw">ON</span> users (id)
+  <span class="kw">WHERE</span> status = <span class="str">'banned'</span>;
+<span class="cm">-- Only useful if 'banned' users are <5% of the table</span>`,
+            }
+          }
+        ]
+      }
+    },
+    {
+      icon: '🐌',
+      label: 'No — it runs rarely',
+      sub: 'Manual reports, admin queries, weekly batch jobs',
+      next: {
+        id: 'result_rare',
+        type: 'result',
+        verdict: 'no',
+        emoji: '🚫',
+        title: 'Don\'t Add the Index',
+        summary: 'If the query runs rarely, the index will sit unused — costing you write overhead and disk space every single day, for a read benefit you almost never need. <strong>Don\'t add it.</strong>',
+        reasons: [
+          '❌ Every INSERT/UPDATE/DELETE pays the index maintenance cost',
+          '❌ Unused indexes waste disk space (can be GBs on large tables)',
+          '✅ For rare admin queries, just run EXPLAIN first and add a temporary index if needed',
+          '💡 Use pg_stat_user_indexes (Postgres) to find and drop unused indexes',
+        ],
+        code: `<span class="cm">-- Find indexes that are never used in Postgres:</span>
+<span class="kw">SELECT</span> schemaname, tablename, indexname, idx_scan
+<span class="kw">FROM</span> pg_stat_user_indexes
+<span class="kw">WHERE</span> idx_scan = <span class="num">0</span>
+  <span class="kw">AND</span> indexname <span class="kw">NOT LIKE</span> <span class="str">'%pkey%'</span>
+<span class="kw">ORDER BY</span> schemaname, tablename;
+
+<span class="cm">-- Safely drop a dead index:</span>
+<span class="kw">DROP INDEX CONCURRENTLY</span> idx_never_used;`,
+      }
+    }
+  ]
+};
+
+// ── State ──────────────────────────────────────────────────────────
+let current = tree;
+let trailData = [];
+const TOTAL_STEPS = 5;
+
+// ── Render ─────────────────────────────────────────────────────────
+function render() {
+  const app = document.getElementById('app');
+
+  if (current.type === 'result') {
+    renderResult(app);
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('trail').style.display = 'none';
+  } else {
+    renderQuestion(app);
+    updateProgress();
+    updateTrail();
+  }
+}
+
+function updateProgress() {
+  const step = current.step || 1;
+  const pct = Math.round(((step - 1) / TOTAL_STEPS) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `Question ${step} of ${TOTAL_STEPS}`;
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function updateTrail() {
+  const trail = document.getElementById('trail');
+  trail.innerHTML = trailData.map(t =>
+    `<div class="trail-item"><span class="dot"></span>${t}</div>`
+  ).join('');
+}
+
+function renderQuestion(app) {
+  const q = current;
+  app.innerHTML = `
+    <div class="card">
+      <div class="step-num">Step ${q.step} of ${TOTAL_STEPS}</div>
+      <div class="question">${q.question}</div>
+      <div class="hint">${q.hint}</div>
+      <div class="choices" id="choices"></div>
+    </div>`;
+
+  const choicesEl = document.getElementById('choices');
+  q.choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `
+      <span class="icon">${c.icon}</span>
+      <span>
+        <span class="label">${c.label}</span>
+        <span class="sub">${c.sub}</span>
+      </span>`;
+    btn.addEventListener('click', () => {
+      trailData.push(c.label);
+      current = c.next;
+      render();
+    });
+    choicesEl.appendChild(btn);
+  });
+}
+
+function renderResult(app) {
+  const r = current;
+  app.innerHTML = `
+    <div class="result-card ${r.verdict}">
+      <div class="verdict">
+        <div class="verdict-icon">${r.emoji}</div>
+        <div class="verdict-title">${r.title}</div>
+      </div>
+      <div class="result-summary">${r.summary}</div>
+      <div class="reasoning-title">Why this verdict</div>
+      <ul class="reasoning-list">
+        ${r.reasons.map(reason => `<li><span class="bullet">→</span><span>${reason}</span></li>`).join('')}
+      </ul>
+      <div class="reasoning-title">The SQL</div>
+      <div class="code-example">${r.code}</div>
+      <button class="restart-btn" id="restartBtn">
+        ↺ &nbsp;Start Over
+      </button>
+    </div>`;
+
+  document.getElementById('restartBtn').addEventListener('click', restart);
+}
+
+function restart() {
+  current = tree;
+  trailData = [];
+  document.getElementById('progressWrap').style.display = 'block';
+  document.getElementById('trail').style.display = 'flex';
+  render();
+}
+
+// ── Boot ───────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
