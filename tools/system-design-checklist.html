@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>System Design Interview Checklist — Better Engineers</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3250;
+    --accent: #6c63ff;
+    --accent2: #00d2ff;
+    --green: #22c55e;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+    --text: #e8eaf6;
+    --muted: #8b92b8;
+    --font: 'Inter', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    max-width: 680px;
+    margin-bottom: 40px;
+  }
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 4px 14px; border-radius: 99px;
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-size: clamp(24px, 5vw, 38px); font-weight: 900; line-height: 1.2;
+    background: linear-gradient(135deg, #fff 40%, var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin-bottom: 10px;
+  }
+  header p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+  /* ── Overall progress ── */
+  .overall-progress {
+    width: 100%; max-width: 680px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .score-circle {
+    width: 72px; height: 72px; flex-shrink: 0;
+    position: relative;
+  }
+  .score-circle svg { transform: rotate(-90deg); }
+  .score-circle .score-text {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transform: none;
+  }
+  .score-num { font-size: 20px; font-weight: 900; color: white; line-height: 1; }
+  .score-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  .progress-info { flex: 1; }
+  .progress-info h3 { font-size: 15px; font-weight: 700; color: white; margin-bottom: 6px; }
+  .progress-bar-wrap { background: var(--surface2); border-radius: 99px; height: 6px; overflow: hidden; }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  /* ── Timer ── */
+  .timer-bar {
+    width: 100%; max-width: 680px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .timer-label { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .timer-display {
+    font-size: 22px; font-weight: 900; font-variant-numeric: tabular-nums;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .timer-btns { display: flex; gap: 8px; margin-left: auto; }
+  .timer-btn {
+    padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text); font-family: var(--font);
+    font-size: 12px; font-weight: 600; cursor: pointer; transition: border-color 0.2s;
+  }
+  .timer-btn:hover { border-color: var(--accent); }
+  .timer-btn.active { background: rgba(108,99,255,0.2); border-color: var(--accent); color: var(--accent2); }
+
+  /* ── Step cards ── */
+  .steps { width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 16px; }
+
+  .step-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.25s;
+  }
+  .step-card.active   { border-color: var(--accent); }
+  .step-card.complete { border-color: var(--green); }
+  .step-card.warning  { border-color: var(--yellow); }
+
+  /* Step header (clickable accordion) */
+  .step-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 20px; cursor: pointer;
+    user-select: none;
+  }
+  .step-num {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px;
+    background: var(--surface2); color: var(--muted);
+    border: 1.5px solid var(--border);
+    transition: all 0.25s;
+  }
+  .step-card.active   .step-num { background: rgba(108,99,255,0.2); color: var(--accent); border-color: var(--accent); }
+  .step-card.complete .step-num { background: rgba(34,197,94,0.2);  color: var(--green);  border-color: var(--green); }
+  .step-card.warning  .step-num { background: rgba(245,158,11,0.2); color: var(--yellow); border-color: var(--yellow); }
+
+  .step-meta { flex: 1; min-width: 0; }
+  .step-title { font-size: 15px; font-weight: 700; color: white; }
+  .step-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .step-time {
+    font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 99px; background: var(--surface2); color: var(--muted);
+    border: 1px solid var(--border); white-space: nowrap;
+  }
+  .step-card.active   .step-time { background: rgba(108,99,255,0.15); color: var(--accent); border-color: var(--accent); }
+  .step-card.complete .step-time { background: rgba(34,197,94,0.15);  color: var(--green);  border-color: var(--green); }
+
+  .step-chevron {
+    font-size: 16px; color: var(--muted); transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .step-card.open .step-chevron { transform: rotate(180deg); }
+
+  /* Step body */
+  .step-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .step-card.open .step-body { display: block; }
+
+  .step-tip {
+    font-size: 13px; color: var(--muted); line-height: 1.6;
+    padding: 12px 14px; background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    margin: 14px 0 16px;
+  }
+  .step-tip strong { color: var(--accent2); }
+
+  /* Checklist items */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+
+  .check-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+  }
+  .check-item:hover { border-color: var(--accent); }
+  .check-item.checked {
+    background: rgba(34,197,94,0.07);
+    border-color: rgba(34,197,94,0.4);
+  }
+
+  .check-box {
+    width: 20px; height: 20px; border-radius: 6px;
+    border: 2px solid var(--border); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface); transition: all 0.2s;
+    margin-top: 1px;
+  }
+  .check-item.checked .check-box {
+    background: var(--green); border-color: var(--green);
+  }
+  .check-box svg { display: none; }
+  .check-item.checked .check-box svg { display: block; }
+
+  .check-content { flex: 1; min-width: 0; }
+  .check-title {
+    font-size: 13.5px; font-weight: 600; color: var(--text); line-height: 1.4;
+  }
+  .check-item.checked .check-title {
+    color: var(--muted); text-decoration: line-through;
+  }
+  .check-sub {
+    font-size: 11.5px; color: var(--muted); margin-top: 3px; line-height: 1.5;
+  }
+
+  /* Mistake alert */
+  .mistake-alert {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 10px;
+    font-size: 13px; color: #fca5a5; line-height: 1.6;
+  }
+  .mistake-alert.show { display: block; }
+  .mistake-alert strong { color: var(--red); }
+
+  /* ── Reset & share bar ── */
+  .action-bar {
+    width: 100%; max-width: 680px;
+    display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap;
+  }
+  .action-btn {
+    flex: 1; padding: 13px 20px; border-radius: 10px;
+    font-family: var(--font); font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: opacity 0.2s, transform 0.15s; border: none;
+  }
+  .action-btn:hover { opacity: 0.88; transform: scale(0.98); }
+  .btn-reset {
+    background: var(--surface2); color: var(--muted);
+    border: 1.5px solid var(--border);
+  }
+  .btn-share {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+  }
+
+  /* ── Completion modal ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; z-index: 100;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--surface); border: 1.5px solid var(--accent);
+    border-radius: 20px; padding: 40px 36px; max-width: 460px; width: 100%;
+    text-align: center; animation: popIn 0.35s ease;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+  .modal-emoji { font-size: 56px; margin-bottom: 16px; }
+  .modal h2 { font-size: 26px; font-weight: 900; color: white; margin-bottom: 10px; }
+  .modal p  { color: var(--muted); font-size: 14px; line-height: 1.7; margin-bottom: 24px; }
+  .modal-close {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white; padding: 12px 28px; border-radius: 8px;
+    border: none; font-family: var(--font); font-size: 14px;
+    font-weight: 700; cursor: pointer;
+  }
+
+  footer {
+    margin-top: 56px; text-align: center;
+    color: var(--muted); font-size: 12px;
+  }
+  footer a { color: var(--accent2); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="badge">Better Engineers · Interview Tool</div>
+  <h1>System Design Interview Checklist</h1>
+  <p>Tick off each item as you practice. The checklist tracks your coverage, warns you about common mistakes, and times your run.</p>
+</header>
+
+<!-- Overall progress -->
+<div class="overall-progress">
+  <div class="score-circle">
+    <svg width="72" height="72" viewBox="0 0 72 72">
+      <circle cx="36" cy="36" r="30" fill="none" stroke="#22263a" stroke-width="7"/>
+      <circle cx="36" cy="36" r="30" fill="none" stroke="url(#pg)" stroke-width="7"
+              stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="188.5"
+              id="scoreRing"/>
+      <defs>
+        <linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#6c63ff"/>
+          <stop offset="100%" stop-color="#00d2ff"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="score-text">
+      <span class="score-num" id="scoreNum">0</span>
+      <span class="score-label">of <span id="scoreTotal">0</span></span>
+    </div>
+  </div>
+  <div class="progress-info">
+    <h3 id="progressTitle">Ready to start your interview practice?</h3>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-sub" id="progressSub">Tick items as you cover them · 8 steps · 44 minutes</div>
+  </div>
+</div>
+
+<!-- Timer -->
+<div class="timer-bar">
+  <span class="timer-label">⏱ Interview Timer</span>
+  <span class="timer-display" id="timerDisplay">45:00</span>
+  <div class="timer-btns">
+    <button class="timer-btn" id="btnStart" onclick="startTimer()">▶ Start</button>
+    <button class="timer-btn" id="btnPause" onclick="pauseTimer()" style="display:none">⏸ Pause</button>
+    <button class="timer-btn" onclick="resetTimer()">↺ Reset</button>
+  </div>
+</div>
+
+<!-- Steps -->
+<div class="steps" id="steps"></div>
+
+<!-- Action bar -->
+<div class="action-bar">
+  <button class="action-btn btn-reset" onclick="resetAll()">↺ Reset Checklist</button>
+  <button class="action-btn btn-share" onclick="copyShare()">📋 Copy Progress Summary</button>
+</div>
+
+<!-- Completion modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-emoji">🎉</div>
+    <h2>You're Interview-Ready!</h2>
+    <p>You've checked every item across all 8 steps. You have the framework, the time management, and the depth. Go get that offer.</p>
+    <p><strong style="color:white">Remember:</strong> System design is a conversation, not a performance. Think out loud. Explain your trade-offs. Reference your requirements.</p>
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">
+      Close &amp; Review ✓
+    </button>
+  </div>
+</div>
+
+<footer>
+  <p>From <a href="https://betterengineers.substack.com" target="_blank">Better Engineers</a> · System Design Interview Series</p>
+</footer>
+
+<script>
+// ── Data ─────────────────────────────────────────────────────────────
+const STEPS = [
+  {
+    num: 1, title: 'Clarify Requirements', time: '5 min',
+    subtitle: 'Understand before you design',
+    tip: '<strong>The interview move:</strong> Write requirements on the whiteboard. Reference them throughout. Never start drawing until you finish this step.',
+    mistake: 'Most candidates skip this and jump straight to drawing boxes. Interviewers notice. Spending 5 minutes here signals seniority.',
+    items: [
+      { title: 'Asked for core functional features', sub: 'What must the system do? e.g. post tweets, follow users, see feed' },
+      { title: 'Confirmed out-of-scope features', sub: 'What are we NOT building? e.g. DMs, ads, analytics' },
+      { title: 'Asked about scale', sub: 'How many users? DAU vs MAU? Global or regional?' },
+      { title: 'Confirmed read vs write ratio', sub: 'Is this read-heavy (Twitter feed) or write-heavy (logging)?' },
+      { title: 'Asked about latency requirements', sub: 'What is acceptable p99 latency? Real-time or eventual?' },
+      { title: 'Confirmed consistency needs', sub: 'Strong consistency (payments) or eventual (social feeds)?' },
+    ]
+  },
+  {
+    num: 2, title: 'Estimate Scale', time: '3 min',
+    subtitle: 'Numbers shape every architecture decision',
+    tip: '<strong>The interview move:</strong> Say the numbers out loud as you calculate. A wrong estimate explained clearly beats a right answer pulled from thin air.',
+    mistake: 'Skipping estimation leads to over-engineering small systems or under-engineering large ones. Even rough numbers change the design.',
+    items: [
+      { title: 'Calculated QPS (Queries Per Second)', sub: 'DAU × actions per day ÷ 86,400 = avg QPS. Peak = 3-5× avg.' },
+      { title: 'Estimated storage requirements', sub: 'Avg object size × writes per day × retention period' },
+      { title: 'Calculated bandwidth', sub: 'QPS × avg response size = MB/s outbound' },
+      { title: 'Determined if CDN is needed', sub: 'If serving media or static assets globally → yes' },
+      { title: 'Noted peak vs average traffic', sub: 'Plan for peak. Peak is typically 3-5× daily average.' },
+    ]
+  },
+  {
+    num: 3, title: 'Define the API', time: '3 min',
+    subtitle: 'The contract before the architecture',
+    tip: '<strong>The interview move:</strong> If you cannot define the API, you do not yet understand the problem. This step forces clarity.',
+    mistake: 'Engineers who skip API definition often design a system that does not match what was asked. Define inputs, outputs, and auth before drawing.',
+    items: [
+      { title: 'Defined core CRUD endpoints', sub: 'POST to create, GET to read, PATCH to update, DELETE to remove' },
+      { title: 'Specified request/response shapes', sub: 'What fields go in? What comes back?' },
+      { title: 'Noted authentication requirements', sub: 'Which endpoints need auth? JWT, API key, OAuth?' },
+      { title: 'Handled pagination for list endpoints', sub: 'Cursor-based for large/changing datasets, offset for small fixed ones' },
+      { title: 'Considered async endpoints if needed', sub: 'Long operations → 202 Accepted + job ID + status polling' },
+    ]
+  },
+  {
+    num: 4, title: 'Design the Data Model', time: '5 min',
+    subtitle: 'Entities, relationships, and database choice',
+    tip: '<strong>The interview move:</strong> Always explain WHY you chose the database. "I\'ll use Cassandra because it\'s optimized for time-series writes" beats just saying "Cassandra."',
+    mistake: 'Choosing a database before understanding the data shape. SQL vs NoSQL is not about preference — it is about access patterns.',
+    items: [
+      { title: 'Defined core entities and attributes', sub: 'User, Tweet, Follow, Feed — what fields does each have?' },
+      { title: 'Mapped relationships between entities', sub: 'One-to-many? Many-to-many? Embedded or normalized?' },
+      { title: 'Chose primary database with justification', sub: 'SQL for ACID/relations, Cassandra for time-series writes, Redis for cache' },
+      { title: 'Identified which data goes in cache', sub: 'Hot data: active feeds, user sessions, rate limit counters' },
+      { title: 'Planned for media/blob storage', sub: 'Images and videos → S3 or equivalent object store' },
+      { title: 'Considered data partitioning strategy', sub: 'How will you shard when one DB node is not enough?' },
+    ]
+  },
+  {
+    num: 5, title: 'High-Level Architecture', time: '10 min',
+    subtitle: 'Draw the system, justify every component',
+    tip: '<strong>The interview move:</strong> Draw the happy path first. User does X → what happens step by step? Then ask: what fails at each step?',
+    mistake: 'Adding every component you know (Kafka, Elasticsearch, Redis, CDN) without justification. Each component must earn its place.',
+    items: [
+      { title: 'Drew client → load balancer → servers', sub: 'The baseline. Start here before adding complexity.' },
+      { title: 'Added caching layer with justification', sub: 'Redis in front of DB. What are you caching? What is the TTL?' },
+      { title: 'Added database with read replicas', sub: 'Master for writes, replicas for reads. Most systems are read-heavy.' },
+      { title: 'Added CDN for static/media content', sub: 'Required if serving images, videos, or global users' },
+      { title: 'Added message queue if async needed', sub: 'Kafka/RabbitMQ for decoupling, fan-out, and absorbing spikes' },
+      { title: 'Labeled all arrows with data flow direction', sub: 'What data flows where? Sync or async? Request or event?' },
+      { title: 'Explained each component\'s purpose', sub: 'No component should be on the diagram without a spoken reason' },
+    ]
+  },
+  {
+    num: 6, title: 'Deep Dive', time: '10 min',
+    subtitle: 'The hardest component in detail',
+    tip: '<strong>The interview move:</strong> Present at least two alternatives before recommending one. Show the trade-off, not just the answer.',
+    mistake: 'Going deep on the easiest component (the one you know best) instead of the hardest one (the one the interviewer cares about most).',
+    items: [
+      { title: 'Identified the hardest component', sub: 'Feed generation? Real-time sync? Consistency? Matching algorithm?' },
+      { title: 'Presented at least 2 design options', sub: 'e.g. Fan-out on write vs read vs hybrid' },
+      { title: 'Explained trade-offs for each option', sub: 'Latency, throughput, consistency, complexity, cost' },
+      { title: 'Made a recommendation with reasoning', sub: '"I would choose X because given our scale and consistency requirements..."' },
+      { title: 'Considered failure scenarios', sub: 'What happens when this component fails? How do you recover?' },
+      { title: 'Addressed the scale bottleneck', sub: 'What breaks first at 10x traffic? How do you fix it?' },
+    ]
+  },
+  {
+    num: 7, title: 'Non-Functional Requirements', time: '5 min',
+    subtitle: 'Prove your design handles them',
+    tip: '<strong>The interview move:</strong> Go back to requirements from Step 1 and address each one explicitly. "Our CDN handles the latency requirement from Step 1."',
+    mistake: 'Designing a system that is functionally correct but ignores non-functional requirements. A system that works but cannot scale is a failed design.',
+    items: [
+      { title: 'Addressed scalability', sub: 'How do you handle 10x traffic? Horizontal scaling, sharding, partitioning.' },
+      { title: 'Addressed high availability', sub: 'What is your uptime target? How do you eliminate single points of failure?' },
+      { title: 'Addressed latency requirements', sub: 'What is the p99 latency? Where does caching and CDN help?' },
+      { title: 'Addressed data consistency', sub: 'Strong or eventual? What is the impact of stale data in this system?' },
+      { title: 'Addressed durability', sub: 'What happens to data if a node fails? Replication strategy?' },
+      { title: 'Addressed security basics', sub: 'Auth, rate limiting, input validation, encryption at rest/transit' },
+    ]
+  },
+  {
+    num: 8, title: 'Bottlenecks & Trade-offs', time: '3 min',
+    subtitle: 'Show architectural maturity',
+    tip: '<strong>The interview move:</strong> Say "this is a known weakness and here is how we would address it." This signals architectural maturity more than having a perfect design.',
+    mistake: 'Presenting your design as perfect. No system is perfect. Engineers who identify weaknesses proactively are more trusted than those who pretend everything is fine.',
+    items: [
+      { title: 'Named the #1 bottleneck in your design', sub: 'Where does your system break first under load?' },
+      { title: 'Proposed a mitigation for it', sub: 'Caching, sharding, async processing, or architectural change' },
+      { title: 'Acknowledged a known trade-off', sub: 'e.g. "Fan-out on write gives us fast reads but expensive writes"' },
+      { title: 'Mentioned what you would improve with more time', sub: 'Monitoring, circuit breakers, rate limiting, DR strategy' },
+      { title: 'Summarized the design in 2-3 sentences', sub: 'End with a crisp summary. Show you can communicate at the CTO level.' },
+    ]
+  },
+];
+
+// ── State ─────────────────────────────────────────────────────────────
+let checked = {};   // { "stepNum-itemIdx": true }
+let openStep = 1;
+let timerInterval = null;
+let timerSeconds = 45 * 60;
+let timerRunning = false;
+
+// ── Render ─────────────────────────────────────────────────────────────
+function render() {
+  const container = document.getElementById('steps');
+  container.innerHTML = '';
+
+  STEPS.forEach(step => {
+    const stepChecked = step.items.filter((_, i) => checked[`${step.num}-${i}`]).length;
+    const isComplete = stepChecked === step.items.length;
+    const isPartial  = stepChecked > 0 && !isComplete;
+    const isOpen     = openStep === step.num;
+
+    const card = document.createElement('div');
+    card.className = `step-card${isOpen ? ' open' : ''}${isComplete ? ' complete' : isPartial ? ' active' : ''}`;
+    card.dataset.step = step.num;
+
+    // Warning if step is skipped but next step is open
+    const isWarning = !isComplete && step.num < openStep && !isPartial;
+
+    card.innerHTML = `
+      <div class="step-header" onclick="toggleStep(${step.num})">
+        <div class="step-num">${isComplete ? '✓' : step.num}</div>
+        <div class="step-meta">
+          <div class="step-title">${step.title}</div>
+          <div class="step-subtitle">${step.subtitle} · ${stepChecked}/${step.items.length} done</div>
+        </div>
+        <div class="step-time">${step.time}</div>
+        <div class="step-chevron">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-tip">${step.tip}</div>
+        <div class="checklist">
+          ${step.items.map((item, i) => `
+            <div class="check-item${checked[`${step.num}-${i}`] ? ' checked' : ''}"
+                 onclick="toggleItem(${step.num}, ${i})">
+              <div class="check-box">
+                <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                  <path d="M1 5L4.5 8.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="check-content">
+                <div class="check-title">${item.title}</div>
+                <div class="check-sub">${item.sub}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+        <div class="mistake-alert${isWarning ? ' show' : ''}" id="mistake-${step.num}">
+          ⚠️ <strong>Common mistake:</strong> ${step.mistake}
+        </div>
+      </div>`;
+
+    container.appendChild(card);
+  });
+
+  updateProgress();
+}
+
+function toggleStep(num) {
+  openStep = openStep === num ? null : num;
+  render();
+}
+
+function toggleItem(stepNum, itemIdx) {
+  const key = `${stepNum}-${itemIdx}`;
+  checked[key] = !checked[key];
+  saveState();
+  render();
+  checkCompletion();
+}
+
+function updateProgress() {
+  const total   = STEPS.reduce((s, st) => s + st.items.length, 0);
+  const done    = Object.values(checked).filter(Boolean).length;
+  const pct     = total > 0 ? Math.round((done / total) * 100) : 0;
+  const circumference = 188.5;
+
+  document.getElementById('scoreNum').textContent   = done;
+  document.getElementById('scoreTotal').textContent = total;
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  const ring = document.getElementById('scoreRing');
+  ring.style.strokeDashoffset = circumference - (circumference * pct / 100);
+
+  const completedSteps = STEPS.filter(s =>
+    s.items.every((_, i) => checked[`${s.num}-${i}`])
+  ).length;
+
+  if (pct === 0) {
+    document.getElementById('progressTitle').textContent = 'Ready to start your interview practice?';
+    document.getElementById('progressSub').textContent = 'Tick items as you cover them · 8 steps · 44 minutes';
+  } else if (pct < 50) {
+    document.getElementById('progressTitle').textContent = `Good start — ${completedSteps} of 8 steps complete`;
+    document.getElementById('progressSub').textContent = `${done} of ${total} items checked · Keep going`;
+  } else if (pct < 100) {
+    document.getElementById('progressTitle').textContent = `Almost there — ${pct}% covered`;
+    document.getElementById('progressSub').textContent = `${total - done} items remaining · Strong finish!`;
+  } else {
+    document.getElementById('progressTitle').textContent = '✅ Full coverage — you\'re interview-ready!';
+    document.getElementById('progressSub').textContent = `All ${total} items checked · All 8 steps complete`;
+  }
+}
+
+function checkCompletion() {
+  const total = STEPS.reduce((s, st) => s + st.items.length, 0);
+  const done  = Object.values(checked).filter(Boolean).length;
+  if (done === total) {
+    setTimeout(() => document.getElementById('modal').classList.add('show'), 400);
+  }
+}
+
+// ── Timer ─────────────────────────────────────────────────────────────
+function formatTime(secs) {
+  const m = Math.floor(secs / 60).toString().padStart(2, '0');
+  const s = (secs % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function startTimer() {
+  if (timerRunning) return;
+  timerRunning = true;
+  document.getElementById('btnStart').style.display = 'none';
+  document.getElementById('btnPause').style.display = 'inline-block';
+  timerInterval = setInterval(() => {
+    if (timerSeconds <= 0) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      document.getElementById('timerDisplay').style.color = '#ef4444';
+      document.getElementById('btnPause').style.display = 'none';
+      document.getElementById('btnStart').style.display = 'inline-block';
+      return;
+    }
+    timerSeconds--;
+    document.getElementById('timerDisplay').textContent = formatTime(timerSeconds);
+
+    // Color warning when <10 min left
+    if (timerSeconds < 600) {
+      document.getElementById('timerDisplay').style.webkitTextFillColor = '#f59e0b';
+    }
+    if (timerSeconds < 300) {
+      document.getElementById('timerDisplay').style.webkitTextFillColor = '#ef4444';
+    }
+  }, 1000);
+}
+
+function pauseTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  document.getElementById('btnStart').style.display = 'inline-block';
+  document.getElementById('btnPause').style.display = 'none';
+}
+
+function resetTimer() {
+  pauseTimer();
+  timerSeconds = 45 * 60;
+  document.getElementById('timerDisplay').textContent = '45:00';
+  document.getElementById('timerDisplay').style.webkitTextFillColor = '';
+}
+
+// ── Persist & Reset ───────────────────────────────────────────────────
+function saveState() {
+  try { localStorage.setItem('sd-checklist', JSON.stringify(checked)); } catch {}
+}
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('sd-checklist');
+    if (saved) checked = JSON.parse(saved);
+  } catch {}
+}
+
+function resetAll() {
+  if (!confirm('Reset all checklist items?')) return;
+  checked = {};
+  saveState();
+  openStep = 1;
+  render();
+}
+
+function copyShare() {
+  const total = STEPS.reduce((s, st) => s + st.items.length, 0);
+  const done  = Object.values(checked).filter(Boolean).length;
+  const pct   = Math.round((done / total) * 100);
+
+  const lines = STEPS.map(step => {
+    const stepDone = step.items.filter((_, i) => checked[`${step.num}-${i}`]).length;
+    const all = step.items.length;
+    const icon = stepDone === all ? '✅' : stepDone > 0 ? '🔶' : '⬜';
+    return `${icon} Step ${step.num}: ${step.title} (${stepDone}/${all})`;
+  });
+
+  const text = `System Design Interview Checklist — ${pct}% complete\n\n${lines.join('\n')}\n\nbetterengineers.substack.com`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.btn-share');
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy Progress Summary', 2000);
+  });
+}
+
+// ── Boot ─────────────────────────────────────────────────────────────
+loadState();
+render();
+</script>
+</body>
+</html>
