@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Observability Patterns in Microservices</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@400;500&display=swap');
+
+  :root {
+    --bg: #faf7f2;
+    --ink: #1a1208;
+    --muted: #7a6e5f;
+    --rule: #e8e0d4;
+    --accent: #c0392b;
+    --accent-light: #fdf0ef;
+    --code-bg: #f0ebe3;
+    --pattern-1: #2c5f8a;
+    --pattern-2: #27774a;
+    --pattern-3: #8a6c2c;
+    --pattern-4: #6b2c8a;
+    --pattern-5: #2c7a8a;
+    --pattern-6: #8a2c4e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 4rem 2rem 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 30px,
+      rgba(255,255,255,0.02) 30px,
+      rgba(255,255,255,0.02) 31px
+    );
+  }
+
+  .hero-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(250,247,242,0.45);
+    margin-bottom: 1.25rem;
+  }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: rgba(250,247,242,0.65);
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: rgba(250,247,242,0.55);
+    max-width: 480px;
+    margin: 0 auto 2rem;
+    font-weight: 400;
+  }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(250,247,242,0.35);
+    letter-spacing: 0.06em;
+  }
+
+  .hero-meta span { display: flex; align-items: center; gap: 0.4rem; }
+
+  /* ── Main content ── */
+  .article {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 5rem;
+  }
+
+  /* ── Opening hook ── */
+  .hook {
+    font-family: 'Fraunces', serif;
+    font-size: 1.25rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--muted);
+    border-left: 3px solid var(--accent);
+    padding-left: 1.5rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  /* ── Body text ── */
+  p {
+    font-size: 1.05rem;
+    margin-bottom: 1.5rem;
+    color: #2a2218;
+  }
+
+  /* ── Section headings ── */
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 3rem 0 1rem;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 2rem 0 0.75rem;
+    color: var(--ink);
+  }
+
+  hr.section-rule {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 3rem 0;
+  }
+
+  /* ── Pattern cards ── */
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin: 2rem 0 2.5rem;
+  }
+
+  .pattern-card {
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 1.5rem;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+
+  .pattern-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  }
+
+  .pattern-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .card-1::before { background: var(--pattern-1); }
+  .card-2::before { background: var(--pattern-2); }
+  .card-3::before { background: var(--pattern-3); }
+  .card-4::before { background: var(--pattern-4); }
+  .card-5::before { background: var(--pattern-5); }
+  .card-6::before { background: var(--pattern-6); }
+
+  .card-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+  }
+
+  .card-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* ── Inline code ── */
+  code {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.83em;
+    background: var(--code-bg);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* ── Code blocks ── */
+  pre {
+    background: #1a1208;
+    color: #e8dfc8;
+    padding: 1.5rem;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin: 1.5rem 0 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.65;
+  }
+
+  pre .comment { color: #7a6e5f; }
+  pre .keyword { color: #c0a060; }
+  pre .string { color: #88b878; }
+  pre .number { color: #a08898; }
+
+  /* ── Pull quote ── */
+  .pullquote {
+    background: var(--accent-light);
+    border: 1px solid rgba(192,57,43,0.15);
+    border-radius: 10px;
+    padding: 1.75rem 2rem;
+    margin: 2.5rem 0;
+    text-align: center;
+  }
+
+  .pullquote p {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* ── Callout boxes ── */
+  .callout {
+    background: var(--code-bg);
+    border-left: 3px solid var(--ink);
+    border-radius: 0 8px 8px 0;
+    padding: 1.25rem 1.5rem;
+    margin: 1.75rem 0;
+  }
+
+  .callout-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .callout p {
+    font-size: 0.92rem;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  /* ── Diagram ── */
+  .diagram {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    overflow-x: auto;
+  }
+
+  .diagram-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .flow-box {
+    padding: 0.6rem 1rem;
+    border-radius: 7px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .flow-arrow {
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+
+  /* ── Responsibility table ── */
+  .resp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0 2rem;
+    font-size: 0.88rem;
+  }
+
+  .resp-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0.6rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--rule);
+  }
+
+  .resp-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    color: #2a2218;
+  }
+
+  .resp-table tr:last-child td { border-bottom: none; }
+
+  .badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .badge-dev { background: rgba(44,95,138,0.1); color: var(--pattern-1); }
+  .badge-ops { background: rgba(39,119,74,0.1); color: var(--pattern-2); }
+
+  /* ── TL;DR ── */
+  .tldr {
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 3rem 0;
+  }
+
+  .tldr-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(250,247,242,0.4);
+    margin-bottom: 1rem;
+  }
+
+  .tldr ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .tldr ul li {
+    font-size: 0.92rem;
+    color: rgba(250,247,242,0.85);
+    padding: 0.4rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .tldr ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: rgba(250,247,242,0.3);
+  }
+
+  /* ── Footer ── */
+  .post-footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 2rem;
+    margin-top: 3rem;
+    text-align: center;
+  }
+
+  .post-footer p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .subscribe-cta {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 2rem;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 100px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .subscribe-cta:hover { opacity: 0.8; }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .article { animation: fadeUp 0.5s ease; }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-kicker">System Design Deep Dive · Chapter 11</div>
+  <h1>You Can't Fix What You <em>Can't See</em></h1>
+  <p class="hero-sub">A complete guide to the 6 observability patterns every microservices engineer must know</p>
+  <div class="hero-meta">
+    <span>📖 8 min read</span>
+    <span>·</span>
+    <span>🎯 Mid → Senior Engineer</span>
+    <span>·</span>
+    <span>🏗️ Production Systems</span>
+  </div>
+</div>
+
+<!-- Article body -->
+<div class="article">
+
+  <p class="hook">In a monolith, debugging is uncomfortable. In microservices, without proper observability, debugging is nearly impossible. Your logs are in 12 places. The failing request touched 6 services. And your on-call alert fired at 2am.</p>
+
+  <p>This post breaks down the 6 observability patterns from <em>Microservices Patterns</em> by Chris Richardson — the same patterns used in production at companies like Netflix, Uber, and Discord. By the end, you'll know exactly which pattern to reach for and when.</p>
+
+  <hr class="section-rule">
+
+  <h2>Why Observability Is a Microservices Problem</h2>
+
+  <p>In a monolith, when something goes wrong you open one log file. One database. One process. The answer is usually in there.</p>
+
+  <p>In a microservices architecture, a single user request can touch a dozen services. Each service has its own database, its own logs, its own metrics. The classic FTGO food delivery app from Richardson's book illustrates this perfectly — a single <code>getOrderDetails()</code> call hits the API gateway, Order Service, Kitchen Service, Delivery Service, and Accounting Service. That's 5 log files to correlate manually, unless you have the right observability infrastructure in place.</p>
+
+  <div class="pullquote">
+    <p>"A service instance can fail without terminating. A bug might cause an instance to run out of database connections and be unable to access the database — yet still be running."</p>
+  </div>
+
+  <p>There are 6 patterns that solve this. They divide cleanly into a <strong>developer responsibility</strong> and an <strong>operations responsibility</strong>. Developers implement the signal. Operations builds the infrastructure to collect it.</p>
+
+  <hr class="section-rule">
+
+  <h2>The 6 Observability Patterns</h2>
+
+  <div class="pattern-grid">
+    <div class="pattern-card card-1">
+      <div class="card-number">Pattern 01</div>
+      <div class="card-title">Health Check API</div>
+      <p class="card-desc">Expose an endpoint that returns whether the service is alive and ready to handle requests.</p>
+    </div>
+    <div class="pattern-card card-2">
+      <div class="card-number">Pattern 02</div>
+      <div class="card-title">Log Aggregation</div>
+      <p class="card-desc">Ship logs from all services into a centralized server with search, filtering, and alerting.</p>
+    </div>
+    <div class="pattern-card card-3">
+      <div class="card-number">Pattern 03</div>
+      <div class="card-title">Distributed Tracing</div>
+      <p class="card-desc">Tag each request with a unique ID and track its journey across every service it touches.</p>
+    </div>
+    <div class="pattern-card card-4">
+      <div class="card-number">Pattern 04</div>
+      <div class="card-title">Exception Tracking</div>
+      <p class="card-desc">Report exceptions to a central service that de-duplicates, alerts, and tracks resolution.</p>
+    </div>
+    <div class="pattern-card card-5">
+      <div class="card-number">Pattern 05</div>
+      <div class="card-title">Application Metrics</div>
+      <p class="card-desc">Expose counters, gauges, and histograms to a metrics server for dashboards and alerts.</p>
+    </div>
+    <div class="pattern-card card-6">
+      <div class="card-number">Pattern 06</div>
+      <div class="card-title">Audit Logging</div>
+      <p class="card-desc">Record every user action in a persistent store for compliance, debugging, and security.</p>
+    </div>
+  </div>
+
+  <table class="resp-table">
+    <thead>
+      <tr>
+        <th>Pattern</th>
+        <th>Developer Owns</th>
+        <th>Ops Owns</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Health Check API</td>
+        <td><span class="badge badge-dev">Implement endpoint</span></td>
+        <td><span class="badge badge-ops">Monitoring invoker</span></td>
+      </tr>
+      <tr>
+        <td>Log Aggregation</td>
+        <td><span class="badge badge-dev">Write useful logs</span></td>
+        <td><span class="badge badge-ops">Aggregation pipeline</span></td>
+      </tr>
+      <tr>
+        <td>Distributed Tracing</td>
+        <td><span class="badge badge-dev">Propagate trace headers</span></td>
+        <td><span class="badge badge-ops">Tracing server (Zipkin)</span></td>
+      </tr>
+      <tr>
+        <td>Exception Tracking</td>
+        <td><span class="badge badge-dev">Report exceptions</span></td>
+        <td><span class="badge badge-ops">Tracking service</span></td>
+      </tr>
+      <tr>
+        <td>Application Metrics</td>
+        <td><span class="badge badge-dev">Instrument code</span></td>
+        <td><span class="badge badge-ops">Metrics server (Prometheus)</span></td>
+      </tr>
+      <tr>
+        <td>Audit Logging</td>
+        <td><span class="badge badge-dev">Log user actions</span></td>
+        <td><span class="badge badge-ops">Storage & compliance</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="section-rule">
+
+  <h2>Pattern 1: Health Check API</h2>
+
+  <p>A service can be running but completely broken. It might have exhausted its database connection pool, or its messaging adapter might have failed. Without a health check, the deployment infrastructure keeps routing requests to a broken instance — and users feel the pain.</p>
+
+  <p>The fix is simple: expose a <code>GET /health</code> endpoint that tests the service's actual connections and returns a status code. <strong>200 = healthy. 503 = unhealthy.</strong></p>
+
+  <div class="callout">
+    <div class="callout-label">Real world</div>
+    <p>Spring Boot Actuator implements <code>GET /actuator/health</code> out of the box. It auto-configures checks based on what's on your classpath — JDBC DataSource, RabbitMQ, Redis. Kubernetes uses this endpoint for both <code>readinessProbe</code> (should I route traffic here?) and <code>livenessProbe</code> (should I restart this pod?).</p>
+  </div>
+
+  <p>The key insight: a health check should test <em>real dependencies</em>, not just return 200 unconditionally. A database that's down should make your health check fail.</p>
+
+  <hr class="section-rule">
+
+  <h2>Pattern 2: Log Aggregation</h2>
+
+  <p>Logs scattered across dozens of service instances are useless for debugging distributed requests. You need them all in one place.</p>
+
+  <div class="diagram">
+    <div class="diagram-title">ELK Stack — Log Aggregation Pipeline</div>
+    <div class="flow">
+      <div class="flow-box" style="background:#f0ebe3; color:#2a2218;">Service A logs</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="background:#f0ebe3; color:#2a2218;">Service B logs</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="background: rgba(44,95,138,0.12); color: var(--pattern-1);">Logstash</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="background: rgba(39,119,74,0.12); color: var(--pattern-2);">Elasticsearch</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="background: rgba(138,108,44,0.12); color: var(--pattern-3);">Kibana</div>
+    </div>
+  </div>
+
+  <p>The popular stack is <strong>ELK</strong>: Elasticsearch (storage + search), Logstash (pipeline), Kibana (visualization). Alternatives include Fluentd, AWS CloudWatch Logs, and Datadog.</p>
+
+  <p>The developer's job is simpler than you think: <strong>log to stdout</strong>. Don't write to files. The deployment infrastructure (Docker, Kubernetes) picks up stdout and routes it to the log pipeline. This is especially important in containerized environments where there's no persistent filesystem to write to.</p>
+
+  <div class="callout">
+    <div class="callout-label">Pro tip</div>
+    <p>Always log in structured JSON. Plain text logs are hard to query. A JSON log entry like <code>{"level":"ERROR","service":"order-service","traceId":"8d8f...","msg":"DB timeout"}</code> lets you filter by any field instantly in Kibana.</p>
+  </div>
+
+  <hr class="section-rule">
+
+  <h2>Pattern 3: Distributed Tracing</h2>
+
+  <p>This is the most powerful pattern for debugging latency and cross-service failures. When a request enters your system, assign it a unique <strong>trace ID</strong>. Every service that handles that request stamps this ID onto its logs and passes it to the next service via HTTP headers.</p>
+
+  <p>The result: you can see the complete journey of any request — which services it touched, how long each took, where it failed.</p>
+
+  <div class="diagram">
+    <div class="diagram-title">A trace for GET /orders/1 → API Gateway → Order Service</div>
+    <div class="flow" style="flex-direction: column; align-items: flex-start; gap: 0.75rem;">
+      <div style="width: 100%; background: rgba(44,95,138,0.08); border-radius: 8px; padding: 0.75rem 1rem;">
+        <span style="font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--pattern-1);">Span ABC</span>
+        <span style="font-size: 0.82rem; color: var(--muted); margin-left: 0.75rem;">API Gateway — 45ms total</span>
+      </div>
+      <div style="width: 85%; margin-left: 2rem; background: rgba(39,119,74,0.08); border-radius: 8px; padding: 0.75rem 1rem;">
+        <span style="font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--pattern-2);">Span DEF</span>
+        <span style="font-size: 0.82rem; color: var(--muted); margin-left: 0.75rem;">Order Service — 32ms</span>
+      </div>
+      <div style="width: 65%; margin-left: 4rem; background: rgba(138,108,44,0.08); border-radius: 8px; padding: 0.75rem 1rem;">
+        <span style="font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--pattern-3);">Span GHI</span>
+        <span style="font-size: 0.82rem; color: var(--muted); margin-left: 0.75rem;">MySQL query — 18ms</span>
+      </div>
+    </div>
+  </div>
+
+  <p>The trace propagation uses standardized headers. The B3 standard (used by Zipkin) propagates <code>X-B3-TraceId</code> and <code>X-B3-ParentSpanId</code> between services. AWS X-Ray uses its own header format.</p>
+
+  <p>A huge bonus: when you combine distributed tracing with log aggregation, you can search your logs by trace ID and instantly find every log line generated by a single user request — across all services.</p>
+
+  <pre><span class="comment">// Log entry with trace context injected by Spring Cloud Sleuth</span>
+<span class="string">INFO</span> [ftgo-order-service,<span class="number">8d8fdc37be104cc6</span>,<span class="number">8d8fdc37be104cc6</span>,false]
+<span class="comment">                          ↑ traceId           ↑ spanId</span>
+
+<span class="comment">// Search all logs for this trace ID → find every service involved</span></pre>
+
+  <div class="callout">
+    <div class="callout-label">Framework pick</div>
+    <p><strong>Spring Cloud Sleuth</strong> auto-instruments distributed tracing using AOP — you add it as a dependency and it handles header propagation automatically. For the tracing server, <strong>Zipkin</strong> (open source) or <strong>AWS X-Ray</strong> (managed) are the standard choices.</p>
+  </div>
+
+  <hr class="section-rule">
+
+  <h2>Pattern 4: Exception Tracking</h2>
+
+  <p>Exceptions in log files are problematic for three reasons: log files are line-oriented (stack traces span many lines), there's no built-in deduplication (100 instances of the same bug = 100 separate log entries), and there's no tracking of resolution status.</p>
+
+  <p>An exception tracking service solves all three. Services report exceptions via a REST API. The service de-duplicates, generates alerts, and provides a UI to manage resolution. Examples: <strong>Sentry</strong> (open source + cloud), <strong>HoneyBadger</strong>, <strong>Rollbar</strong>.</p>
+
+  <pre><span class="comment">// Using Sentry in Java</span>
+<span class="keyword">try</span> {
+  orderService.createOrder(orderDetails);
+} <span class="keyword">catch</span> (Exception e) {
+  Sentry.captureException(e);  <span class="comment">// reports to Sentry with full context</span>
+  <span class="keyword">throw</span> e;
+}
+
+<span class="comment">// Or use a Servlet Filter to catch everything automatically</span></pre>
+
+  <hr class="section-rule">
+
+  <h2>Pattern 5: Application Metrics</h2>
+
+  <p>Health checks tell you if a service is alive. Metrics tell you <em>how well</em> it's doing. Business-level metrics — orders placed per minute, payment success rate, cart abandonment — give you early warning of problems before users start complaining.</p>
+
+  <p>The standard Java approach is <strong>Micrometer</strong>, which provides a vendor-neutral API. Configure it to export to Prometheus (pull model) or CloudWatch (push model).</p>
+
+  <pre><span class="comment">// Instrument OrderService with Micrometer</span>
+<span class="keyword">public class</span> OrderService {
+  <span class="keyword">private</span> MeterRegistry meterRegistry;
+
+  <span class="keyword">public</span> Order createOrder(...) {
+    <span class="comment">// ... business logic ...</span>
+    meterRegistry.counter(<span class="string">"placed_orders"</span>).increment();
+    <span class="keyword">return</span> order;
+  }
+
+  <span class="keyword">public void</span> approveOrder(long orderId) {
+    <span class="comment">// ... business logic ...</span>
+    meterRegistry.counter(<span class="string">"approved_orders"</span>).increment();
+  }
+}</pre>
+
+  <div class="diagram">
+    <div class="diagram-title">Prometheus + Grafana Stack</div>
+    <div class="flow">
+      <div class="flow-box" style="background:#f0ebe3; color:#2a2218;">Service<br><small style="opacity:0.6">/actuator/prometheus</small></div>
+      <div class="flow-arrow">← pull</div>
+      <div class="flow-box" style="background: rgba(138,108,44,0.12); color: var(--pattern-3);">Prometheus</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="background: rgba(107,44,138,0.12); color: var(--pattern-4);">Grafana</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="background: rgba(192,57,43,0.1); color: var(--accent);">Alerts</div>
+    </div>
+  </div>
+
+  <p>Set alerts on anomalies: if <code>placed_orders_total</code> rate drops below normal, something is wrong — even if no errors are visible yet.</p>
+
+  <hr class="section-rule">
+
+  <h2>Pattern 6: Audit Logging</h2>
+
+  <p>Audit logging records who did what to which entity and when. It's used for compliance (GDPR, SOC2), customer support ("what happened to order 1234?"), and security (detecting suspicious behavior).</p>
+
+  <p>There are 3 implementation approaches with different tradeoffs:</p>
+
+  <h3>Option A: Inline audit logging</h3>
+  <p>Add audit log writes directly inside business logic methods. Simple but couples auditing to business code and risks being forgotten by developers.</p>
+
+  <h3>Option B: AOP-based audit logging</h3>
+  <p>Use Spring AOP to intercept service methods and automatically write audit entries. More reliable — no developer can forget it. Tradeoff: the advice only sees method names and arguments, so generating human-readable audit entries can require extra work.</p>
+
+  <h3>Option C: Event sourcing</h3>
+  <p>If you're using event sourcing, audit logging comes for free. Every state change is stored as an immutable event. Your event store <em>is</em> your audit log — with full history, rollback capability, and temporal queries included.</p>
+
+  <div class="callout">
+    <div class="callout-label">Which to choose?</div>
+    <p>For new services: use AOP if you're not on event sourcing. For event-sourced services: leverage the built-in audit trail. Inline code is a last resort for one-off cases with complex domain context requirements.</p>
+  </div>
+
+  <hr class="section-rule">
+
+  <h2>Putting It All Together: The Microservice Chassis</h2>
+
+  <p>Setting up all 6 patterns from scratch for every new service would take days. The solution is a <strong>microservice chassis</strong> — a framework that handles these cross-cutting concerns so you can focus on business logic from day one.</p>
+
+  <p>For Java, the chassis is <strong>Spring Boot + Spring Cloud</strong>. Add the right dependencies, and you get: health checks via Actuator, distributed tracing via Sleuth, metrics via Micrometer, and structured logging via SLF4J + Logback — all configured automatically.</p>
+
+  <p>The emerging alternative is a <strong>service mesh</strong> (Istio, Linkerd), which moves networking-level observability — distributed tracing propagation, load balancing, circuit breaking — out of the service and into the infrastructure layer. This makes the language/framework irrelevant for many concerns.</p>
+
+  <hr class="section-rule">
+
+  <!-- TL;DR -->
+  <div class="tldr">
+    <div class="tldr-title">TL;DR — What to remember</div>
+    <ul>
+      <li>Health Check API — expose <code>/health</code> and test real dependencies</li>
+      <li>Log Aggregation — log to stdout in JSON, ship to ELK or CloudWatch</li>
+      <li>Distributed Tracing — propagate trace IDs, use Zipkin or X-Ray</li>
+      <li>Exception Tracking — use Sentry or HoneyBadger, not raw log alerts</li>
+      <li>Application Metrics — Micrometer → Prometheus → Grafana</li>
+      <li>Audit Logging — AOP or event sourcing, never leave it optional</li>
+      <li>Every pattern has a developer half and an ops half — own your half</li>
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <div class="post-footer">
+    <p>If this was useful, forward it to one engineer on your team who's about to build their first microservice.</p>
+    <p style="margin-top: 0.5rem;">Next up: <strong>Service Mesh patterns — moving observability out of your code entirely.</strong></p>
+    <a class="subscribe-cta" href="#">Subscribe to get the next deep dive →</a>
+  </div>
+
+</div>
+</body>
+</html>
