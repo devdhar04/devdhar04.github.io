@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f1117;color:#e2e8f0;padding:12px;}
+
+.tab-row{display:flex;gap:4px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.tab-row::-webkit-scrollbar{display:none;}
+.tab-btn{
+  padding:8px 15px;font-size:12px;font-weight:600;
+  border-radius:8px;cursor:pointer;white-space:nowrap;
+  border:2px solid transparent;
+  color:#a0aec0;background:#1a2035;
+  transition:all .18s;
+}
+.tab-btn:hover{color:#fff;filter:brightness(1.15);}
+.tab-btn.active{color:#fff;border-color:currentColor;}
+
+/* Each tab has its own accent color */
+.tab-btn[data-tab="0"]        { --tc:#63b3ed; }
+.tab-btn[data-tab="1"]        { --tc:#68d391; }
+.tab-btn[data-tab="2"]        { --tc:#fc8181; }
+.tab-btn[data-tab="3"]        { --tc:#d4a76a; }
+.tab-btn.active[data-tab="0"] { background:#1a2e44; border-color:#63b3ed; color:#63b3ed; }
+.tab-btn.active[data-tab="1"] { background:#162e22; border-color:#68d391; color:#68d391; }
+.tab-btn.active[data-tab="2"] { background:#2e1616; border-color:#fc8181; color:#fc8181; }
+.tab-btn.active[data-tab="3"] { background:#2e2416; border-color:#d4a76a; color:#d4a76a; }
+
+.pane{display:none;}.pane.active{display:block;}
+
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;}
+.btn{padding:7px 14px;font-size:12px;font-weight:600;border-radius:7px;cursor:pointer;transition:opacity .15s,transform .1s;border:none;outline:none;}
+.btn:hover{opacity:.85;transform:translateY(-1px);}
+.btn:active{transform:translateY(0);}
+.btn-add  {background:#2b6cb0;color:#fff;}
+.btn-del  {background:#c53030;color:#fff;}
+.btn-gray {background:#2d3748;color:#e2e8f0;border:1px solid #4a5568;}
+.btn-green{background:#276749;color:#fff;}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+
+canvas{display:block;width:100%;border-radius:10px;background:#161b27;}
+
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;}
+.leg{display:flex;align-items:center;gap:6px;font-size:12px;color:#a0aec0;}
+.ldot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:10px;}
+.stat{background:#1a2035;border:1px solid #2d3748;border-radius:8px;padding:10px 12px;}
+.sl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#718096;margin-bottom:3px;}
+.sv{font-size:22px;font-weight:700;color:#e2e8f0;}
+.ss{font-size:11px;color:#718096;margin-top:2px;}
+
+.log{background:#161b27;border:1px solid #2d3748;border-radius:8px;padding:10px 12px;font-family:'SF Mono',monospace;font-size:11px;color:#a0aec0;max-height:80px;overflow-y:auto;margin-top:10px;line-height:1.7;}
+
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:14px;}
+.card{border-radius:10px;padding:14px;border:1px solid #2d3748;background:#1a2035;}
+.ct{font-size:13px;font-weight:600;margin-bottom:6px;}
+.cb{font-size:12px;color:#a0aec0;line-height:1.6;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+.ci{font-size:12px;color:#a0aec0;padding:4px 0;border-bottom:1px solid #2d3748;}
+.ci:last-child{border:none;}
+
+pre{background:#0d1117;border:1px solid #2d3748;border-radius:8px;padding:14px;font-family:'SF Mono',monospace;font-size:11.5px;line-height:1.75;overflow-x:auto;margin:12px 0;color:#e2e8f0;}
+.cm{color:#4a6741;}.ck{color:#d4a76a;}.cv{color:#86b05a;}.cn{color:#63b3ed;}
+
+.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.slider-row input{flex:1;accent-color:#68d391;}
+.slider-row span{font-size:13px;font-weight:600;color:#e2e8f0;min-width:24px;}
+.slider-label{font-size:12px;color:#a0aec0;}
+</style>
+</head>
+<body>
+
+<div class="tab-row">
+  <button class="tab-btn active" data-tab="0" onclick="showTab(0)">⭕ Interactive ring</button>
+  <button class="tab-btn"        data-tab="1" onclick="showTab(1)">🔵 Virtual nodes</button>
+  <button class="tab-btn"        data-tab="2" onclick="showTab(2)">⚡ Node failure</button>
+  <button class="tab-btn"        data-tab="3" onclick="showTab(3)">💻 How it works</button>
+</div>
+
+<!-- TAB 0 -->
+<div class="pane active" id="p0">
+  <div class="controls">
+    <button class="btn btn-add"  onclick="addNode()">＋ Add node</button>
+    <button class="btn btn-del"  onclick="removeNode()">－ Remove node</button>
+    <button class="btn btn-gray" onclick="addKey()">🔑 Add key</button>
+    <button class="btn btn-gray" onclick="resetAll()">↺ Reset</button>
+    <span style="font-size:11px;color:#718096;margin-left:4px">or click ring edge</span>
+  </div>
+  <canvas id="c0"></canvas>
+  <div class="legend">
+    <div class="leg"><div class="ldot" style="background:#4f87d4"></div>Node A</div>
+    <div class="leg"><div class="ldot" style="background:#44a87e"></div>Node B</div>
+    <div class="leg"><div class="ldot" style="background:#d4874f"></div>Node C</div>
+    <div class="leg"><div class="ldot" style="background:#a44fd4"></div>Node D</div>
+    <div class="leg"><div class="ldot" style="background:#718096"></div>Key</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="sl">Nodes</div><div class="sv" id="sn">3</div></div>
+    <div class="stat"><div class="sl">Keys placed</div><div class="sv" id="sk">0</div></div>
+    <div class="stat"><div class="sl">Ring size</div><div class="sv">360°</div><div class="ss">0–2³² in practice</div></div>
+  </div>
+  <div class="log" id="log0">Click ring edge or "Add key" to place keys and see ownership...</div>
+</div>
+
+<!-- TAB 1 -->
+<div class="pane" id="p1">
+  <div class="slider-row">
+    <span class="slider-label">Vnodes per server:</span>
+    <input type="range" min="1" max="9" value="3" id="vslider" oninput="updateVnodes()">
+    <span id="vval">3</span>
+  </div>
+  <canvas id="c1"></canvas>
+  <div class="legend">
+    <div class="leg"><div class="ldot" style="background:#4f87d4"></div>Node A vnodes</div>
+    <div class="leg"><div class="ldot" style="background:#44a87e"></div>Node B vnodes</div>
+    <div class="leg"><div class="ldot" style="background:#d4874f"></div>Node C vnodes</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="sl">Physical nodes</div><div class="sv">3</div></div>
+    <div class="stat"><div class="sl">Total ring points</div><div class="sv" id="svn">9</div></div>
+    <div class="stat"><div class="sl">Load per node</div><div class="sv" id="sbal">~33%</div></div>
+  </div>
+</div>
+
+<!-- TAB 2 -->
+<div class="pane" id="p2">
+  <div class="controls">
+    <button class="btn btn-del"   id="fbtn" onclick="failB()">💀 Fail Node B</button>
+    <button class="btn btn-green" onclick="restoreB()">♻️ Restore Node B</button>
+  </div>
+  <canvas id="c2"></canvas>
+  <div class="stats">
+    <div class="stat"><div class="sl">Keys remapped</div><div class="sv" id="srem">0</div><div class="ss" id="srempct">0% of total</div></div>
+    <div class="stat"><div class="sl">Keys unaffected</div><div class="sv" id="sunaf">8</div></div>
+    <div class="stat"><div class="sl">Naive mod-N</div><div class="sv" style="color:#fc8181">100%</div><div class="ss">all keys remap</div></div>
+  </div>
+  <div class="log" id="log2">Click "Fail Node B" to simulate a node going down...</div>
+</div>
+
+<!-- TAB 3 -->
+<div class="pane" id="p3">
+  <div class="concept-grid">
+    <div class="card"><div class="ct" style="color:#63b3ed">1. The ring</div><div class="cb">Hash space 0–2³² mapped to a circle. Nodes and keys both hashed onto it using MD5, SHA-1, or xxHash.</div></div>
+    <div class="card"><div class="ct" style="color:#68d391">2. Key lookup</div><div class="cb">Hash the key → find position → walk clockwise → first node owns it. O(log N) with binary search.</div></div>
+    <div class="card"><div class="ct" style="color:#f6ad55">3. Adding a node</div><div class="cb">New node only steals keys from its successor. Only ~K/N keys move. Everything else untouched.</div></div>
+    <div class="card"><div class="ct" style="color:#fc8181">4. Removing a node</div><div class="cb">Failed node's keys go to its clockwise neighbor. Only ~K/N keys move — the core advantage.</div></div>
+  </div>
+<pre><span class="cm">// Consistent hash ring — core implementation</span>
+<span class="ck">class</span> <span class="cn">ConsistentHashRing</span> {
+  <span class="ck">constructor</span>(vnodes = <span class="cv">150</span>) {
+    <span class="ck">this</span>.ring   = <span class="ck">new</span> Map();  <span class="cm">// position → nodeName</span>
+    <span class="ck">this</span>.sorted = [];          <span class="cm">// sorted ring positions</span>
+    <span class="ck">this</span>.vnodes = vnodes;
+  }
+  addNode(node) {
+    <span class="ck">for</span> (<span class="ck">let</span> i = <span class="cv">0</span>; i &lt; <span class="ck">this</span>.vnodes; i++) {
+      <span class="ck">const</span> pos = hash(<span class="cv">`${node}#${i}`</span>);
+      <span class="ck">this</span>.ring.set(pos, node);
+      <span class="ck">this</span>.sorted.push(pos);
+    }
+    <span class="ck">this</span>.sorted.sort((a, b) => a - b);
+  }
+  getNode(key) {
+    <span class="ck">const</span> pos = hash(key);
+    <span class="ck">let</span> lo = <span class="cv">0</span>, hi = <span class="ck">this</span>.sorted.length;
+    <span class="ck">while</span> (lo &lt; hi) {
+      <span class="ck">const</span> mid = (lo + hi) >> <span class="cv">1</span>;
+      <span class="ck">if</span> (<span class="ck">this</span>.sorted[mid] &lt; pos) lo = mid + <span class="cv">1</span>;
+      <span class="ck">else</span> hi = mid;
+    }
+    <span class="ck">return this</span>.ring.get(<span class="ck">this</span>.sorted[lo % <span class="ck">this</span>.sorted.length]);
+  }
+}</pre>
+  <div class="grid2">
+    <div class="card" style="border-color:#742a2a;background:#1a0f0f;">
+      <div class="ct" style="color:#fc8181">❌ Naive mod-N hashing</div>
+      <div class="ci">node = hash(key) % N</div>
+      <div class="ci">Add 1 server → N changes</div>
+      <div class="ci">100% of keys remap</div>
+      <div class="ci">Cache invalidation storm</div>
+    </div>
+    <div class="card" style="border-color:#276749;background:#0f1a14;">
+      <div class="ct" style="color:#68d391">✅ Consistent hashing</div>
+      <div class="ci">node = clockwise successor</div>
+      <div class="ci">Add 1 server → local change</div>
+      <div class="ci">Only ~1/N keys remap</div>
+      <div class="ci">Minimal disruption</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLORS=['#4f87d4','#44a87e','#d4874f','#a44fd4','#d4c44f'];
+const NAMES=['A','B','C','D','E'];
+
+function setupCanvas(id,h){
+  const canvas=document.getElementById(id);
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.parentElement.getBoundingClientRect().width||580;
+  canvas.width=W*dpr; canvas.height=h*dpr;
+  canvas.style.width=W+'px'; canvas.style.height=h+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+  return {ctx,W,H:h,cx:W/2,cy:h/2,R:Math.min(W,h)*0.36};
+}
+function toXY(angle,r,cx,cy){
+  const rad=(angle-90)*Math.PI/180;
+  return {x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)};
+}
+function ownerOf(angle,nodeList){
+  const s=[...nodeList].sort((a,b)=>a.angle-b.angle);
+  for(const n of s) if(n.angle>=angle) return n;
+  return s[0];
+}
+
+// ── TAB 0 ─────────────────────────────────────────────────────────────────────
+let nodes=[
+  {name:'A',angle:60, color:COLORS[0]},
+  {name:'B',angle:185,color:COLORS[1]},
+  {name:'C',angle:305,color:COLORS[2]},
+];
+let keys=[]; let nc=3;
+
+function drawRing(){
+  const {ctx,W,H,cx,cy,R}=setupCanvas('c0',320);
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+  ctx.strokeStyle='#2d3748'; ctx.lineWidth=2; ctx.stroke();
+  const sorted=[...nodes].sort((a,b)=>a.angle-b.angle);
+  sorted.forEach((n,i)=>{
+    const next=sorted[(i+1)%sorted.length];
+    const sa=(n.angle-90)*Math.PI/180;
+    let ea=(next.angle-90)*Math.PI/180; if(ea<=sa) ea+=Math.PI*2;
+    ctx.beginPath(); ctx.arc(cx,cy,R,sa,ea);
+    ctx.strokeStyle=next.color+'66'; ctx.lineWidth=11; ctx.stroke();
+  });
+  keys.forEach(k=>{
+    const p=toXY(k.angle,R,cx,cy);
+    const owner=ownerOf(k.angle,nodes);
+    const np=toXY(owner.angle,R,cx,cy);
+    ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(np.x,np.y);
+    ctx.strokeStyle=owner.color+'33'; ctx.lineWidth=1;
+    ctx.setLineDash([4,4]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(p.x,p.y,6,0,Math.PI*2);
+    ctx.fillStyle='#4a5568'; ctx.fill();
+    ctx.strokeStyle=owner.color; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle='#cbd5e0'; ctx.font='bold 10px -apple-system,sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='bottom';
+    ctx.fillText(k.label,p.x,p.y-9);
+  });
+  nodes.forEach(n=>{
+    const p=toXY(n.angle,R,cx,cy);
+    ctx.beginPath(); ctx.arc(p.x,p.y,20,0,Math.PI*2);
+    ctx.fillStyle=n.color+'22'; ctx.fill();
+    ctx.beginPath(); ctx.arc(p.x,p.y,16,0,Math.PI*2);
+    ctx.fillStyle=n.color; ctx.fill();
+    ctx.strokeStyle='#0f1117'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle='#fff'; ctx.font='bold 13px -apple-system,sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(n.name,p.x,p.y);
+    const lp=toXY(n.angle,R+32,cx,cy);
+    ctx.fillStyle='#a0aec0'; ctx.font='11px -apple-system,sans-serif';
+    ctx.textBaseline='middle'; ctx.fillText('Node '+n.name,lp.x,lp.y);
+  });
+  ctx.fillStyle='#4a5568'; ctx.font='500 12px -apple-system,sans-serif';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('Hash ring',cx,cy-8);
+  ctx.font='11px -apple-system,sans-serif'; ctx.fillStyle='#2d3748';
+  ctx.fillText('0 ─── 2³²',cx,cy+10);
+  document.getElementById('sn').textContent=nodes.length;
+  document.getElementById('sk').textContent=keys.length;
+}
+function addNode(){
+  if(nc>=5){appendLog('log0','Max 5 nodes');return;}
+  const angle=Math.floor(Math.random()*340)+10;
+  nodes.push({name:NAMES[nc],angle,color:COLORS[nc]}); nc++;
+  appendLog('log0',`Node ${nodes[nodes.length-1].name} added at ${angle}° — nearby keys redistributed`);
+  drawRing();
+}
+function removeNode(){
+  if(nodes.length<=2){appendLog('log0','Minimum 2 nodes');return;}
+  const r=nodes.pop(); nc--;
+  appendLog('log0',`Node ${r.name} removed — its keys moved to next clockwise node`);
+  drawRing();
+}
+function addKey(){
+  const angle=Math.floor(Math.random()*359)+1;
+  const label='k'+(keys.length+1);
+  keys.push({angle,label});
+  const owner=ownerOf(angle,nodes);
+  drawRing();
+  appendLog('log0',`Key "${label}" → ${angle}° → Node ${owner.name}`);
+}
+function resetAll(){
+  keys=[]; nodes=[
+    {name:'A',angle:60, color:COLORS[0]},
+    {name:'B',angle:185,color:COLORS[1]},
+    {name:'C',angle:305,color:COLORS[2]},
+  ]; nc=3; drawRing();
+  appendLog('log0','Reset — 3 nodes, 0 keys');
+}
+document.getElementById('c0').addEventListener('click',function(e){
+  const rect=this.getBoundingClientRect();
+  const W=rect.width,H=rect.height,R=Math.min(W,H)*0.36;
+  const x=(e.clientX-rect.left)-W/2,y=(e.clientY-rect.top)-H/2;
+  if(Math.abs(Math.sqrt(x*x+y*y)-R)<26){
+    let angle=Math.atan2(y,x)*180/Math.PI+90; if(angle<0) angle+=360;
+    angle=Math.round(angle);
+    const label='k'+(keys.length+1);
+    keys.push({angle,label});
+    const owner=ownerOf(angle,nodes);
+    drawRing();
+    appendLog('log0',`Key "${label}" → ${angle}° → Node ${owner.name}`);
+  }
+});
+
+// ── TAB 1 ─────────────────────────────────────────────────────────────────────
+const PHYS=[{name:'A',color:COLORS[0]},{name:'B',color:COLORS[1]},{name:'C',color:COLORS[2]}];
+function vnodeAngles(idx,count){
+  const out=[];
+  for(let i=0;i<count;i++)
+    out.push((idx*(360/PHYS.length)+i*(360/(PHYS.length*count))+idx*43)%360);
+  return out;
+}
+function drawVnodes(){
+  const count=parseInt(document.getElementById('vslider').value);
+  const {ctx,W,H,cx,cy,R}=setupCanvas('c1',320);
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+  ctx.strokeStyle='#2d3748'; ctx.lineWidth=2; ctx.stroke();
+  let allV=[];
+  PHYS.forEach((p,i)=>vnodeAngles(i,count).forEach(a=>allV.push({angle:a,node:p})));
+  allV.sort((a,b)=>a.angle-b.angle);
+  allV.forEach((v,i)=>{
+    const next=allV[(i+1)%allV.length];
+    const sa=(v.angle-90)*Math.PI/180;
+    let ea=(next.angle-90)*Math.PI/180; if(ea<=sa) ea+=Math.PI*2;
+    ctx.beginPath(); ctx.arc(cx,cy,R,sa,ea);
+    ctx.strokeStyle=next.node.color+'66'; ctx.lineWidth=11; ctx.stroke();
+  });
+  PHYS.forEach((p,i)=>{
+    vnodeAngles(i,count).forEach(a=>{
+      const pt=toXY(a,R,cx,cy);
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,9,0,Math.PI*2);
+      ctx.fillStyle=p.color; ctx.fill();
+      ctx.strokeStyle='#0f1117'; ctx.lineWidth=2; ctx.stroke();
+      ctx.fillStyle='#fff'; ctx.font='bold 9px -apple-system,sans-serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(p.name,pt.x,pt.y);
+    });
+  });
+  ctx.fillStyle='#4a5568'; ctx.font='500 12px -apple-system,sans-serif';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(`${PHYS.length} nodes × ${count} vnodes = ${PHYS.length*count} ring points`,cx,cy);
+  document.getElementById('svn').textContent=PHYS.length*count;
+  document.getElementById('vval').textContent=count;
+}
+function updateVnodes(){ drawVnodes(); }
+
+// ── TAB 2 ─────────────────────────────────────────────────────────────────────
+const FNODES=[
+  {name:'A',angle:60, color:COLORS[0]},
+  {name:'B',angle:185,color:COLORS[1]},
+  {name:'C',angle:305,color:COLORS[2]},
+];
+const FKEYS=[22,65,112,155,195,238,272,318].map((a,i)=>({angle:a,label:'k'+(i+1)}));
+let bFailed=false;
+function ownerFail(angle,failed){
+  const active=FNODES.filter(n=>!failed||n.name!=='B');
+  return ownerOf(angle,active);
+}
+function drawFail(){
+  const {ctx,W,H,cx,cy,R}=setupCanvas('c2',320);
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+  ctx.strokeStyle='#2d3748'; ctx.lineWidth=2; ctx.stroke();
+  const active=FNODES.filter(n=>!bFailed||n.name!=='B');
+  const sorted=[...active].sort((a,b)=>a.angle-b.angle);
+  sorted.forEach((n,i)=>{
+    const next=sorted[(i+1)%sorted.length];
+    const sa=(n.angle-90)*Math.PI/180;
+    let ea=(next.angle-90)*Math.PI/180; if(ea<=sa) ea+=Math.PI*2;
+    ctx.beginPath(); ctx.arc(cx,cy,R,sa,ea);
+    ctx.strokeStyle=next.color+'66'; ctx.lineWidth=11; ctx.stroke();
+  });
+  let remapped=0;
+  FKEYS.forEach(k=>{
+    const before=ownerFail(k.angle,false);
+    const after=ownerFail(k.angle,bFailed);
+    const moved=before.name!==after.name;
+    if(moved) remapped++;
+    const p=toXY(k.angle,R,cx,cy);
+    const owner=bFailed?after:before;
+    if(moved&&bFailed){
+      const np=toXY(after.angle,R,cx,cy);
+      ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(np.x,np.y);
+      ctx.strokeStyle='#fc818166'; ctx.lineWidth=1.5;
+      ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.beginPath(); ctx.arc(p.x,p.y,7,0,Math.PI*2);
+    ctx.fillStyle=moved&&bFailed?'#e53e3e':'#4a5568'; ctx.fill();
+    ctx.strokeStyle=owner.color; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle='#e2e8f0'; ctx.font='bold 10px -apple-system,sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='bottom';
+    ctx.fillText(k.label,p.x,p.y-10);
+  });
+  FNODES.forEach(n=>{
+    const dead=bFailed&&n.name==='B';
+    const p=toXY(n.angle,R,cx,cy);
+    if(dead){ ctx.beginPath(); ctx.arc(p.x,p.y,20,0,Math.PI*2); ctx.fillStyle='#e53e3e22'; ctx.fill(); }
+    ctx.beginPath(); ctx.arc(p.x,p.y,16,0,Math.PI*2);
+    ctx.fillStyle=dead?'#2d3748':n.color; ctx.fill();
+    ctx.strokeStyle=dead?'#e53e3e':'#0f1117'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle=dead?'#fc8181':'#fff';
+    ctx.font='bold 13px -apple-system,sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(dead?'✕':n.name,p.x,p.y);
+    const lp=toXY(n.angle,R+32,cx,cy);
+    ctx.fillStyle=dead?'#fc8181':'#a0aec0';
+    ctx.font='11px -apple-system,sans-serif'; ctx.textBaseline='middle';
+    ctx.fillText(dead?'Node B (failed)':'Node '+n.name,lp.x,lp.y);
+  });
+  const total=FKEYS.length;
+  document.getElementById('srem').textContent=bFailed?remapped:0;
+  document.getElementById('srempct').textContent=bFailed?`${Math.round(remapped/total*100)}% of ${total} keys`:`0% of ${total} keys`;
+  document.getElementById('sunaf').textContent=bFailed?total-remapped:total;
+}
+function failB(){
+  bFailed=true; document.getElementById('fbtn').disabled=true; drawFail();
+  const r=parseInt(document.getElementById('srem').textContent);
+  appendLog('log2',`Node B failed → ${r} keys remapped to Node C. ${FKEYS.length-r} keys unaffected.`);
+}
+function restoreB(){
+  bFailed=false; document.getElementById('fbtn').disabled=false; drawFail();
+  appendLog('log2','Node B restored — all keys return to original owners.');
+}
+
+// ── Shared ────────────────────────────────────────────────────────────────────
+function showTab(i){
+  document.querySelectorAll('.tab-btn').forEach((b,j)=>b.classList.toggle('active',i===j));
+  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('active',i===j));
+  if(i===0) drawRing();
+  if(i===1) drawVnodes();
+  if(i===2) drawFail();
+}
+function appendLog(id,msg){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.innerHTML=`<span style="color:#4a5568">[now]</span> ${msg}<br>`+el.innerHTML;
+}
+window.addEventListener('resize',()=>{
+  const tabs=['p0','p1','p2','p3'];
+  const active=document.querySelector('.pane.active');
+  if(!active) return;
+  const i=tabs.indexOf(active.id);
+  if(i===0) drawRing(); if(i===1) drawVnodes(); if(i===2) drawFail();
+});
+drawRing(); drawVnodes(); drawFail();
+</script>
+</body>
+</html>
