@@ -1,0 +1,543 @@
+
+<style>
+.tab-row{display:flex;border-bottom:1px solid var(--color-border-tertiary);margin-bottom:14px;overflow-x:auto;scrollbar-width:none;}
+.tab-row::-webkit-scrollbar{display:none;}
+.tab-btn{padding:8px 14px;font-size:12px;font-weight:500;color:var(--color-text-secondary);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .15s;}
+.tab-btn:hover{color:var(--color-text-primary);}
+.tab-btn.active{color:var(--color-text-primary);border-bottom-color:var(--color-text-primary);}
+.pane{display:none;}.pane.active{display:block;}
+</style>
+<div class="tab-row">
+  <button class="tab-btn active" onclick="show(0)">1. Full flow</button>
+  <button class="tab-btn" onclick="show(1)">2. Backend architecture</button>
+  <button class="tab-btn" onclick="show(2)">3. Payment state machine</button>
+  <button class="tab-btn" onclick="show(3)">4. Security layers</button>
+  <button class="tab-btn" onclick="show(4)">5. Data model</button>
+</div>
+
+<!-- TAB 1: Full transaction flow -->
+<div class="pane active" id="pane0">
+<svg width="100%" viewBox="0 0 680 560" role="img">
+<title>PayPay dynamic QR code payment full transaction flow</title>
+<desc>Sequence diagram showing merchant, PayPay API, and user app interactions during a dynamic QR code payment</desc>
+<defs>
+<marker id="ar1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<!-- Actors -->
+<g class="node c-teal" onclick="sendPrompt('What does the merchant system do in PayPay QR payment?')">
+  <rect x="30" y="30" width="110" height="40" rx="6" stroke-width="0.5"/>
+  <text class="th" x="85" y="45" text-anchor="middle" dominant-baseline="central">Merchant app</text>
+  <text class="ts" x="85" y="61" text-anchor="middle" dominant-baseline="central">POS / e-commerce</text>
+</g>
+
+<g class="node c-purple" onclick="sendPrompt('What does the PayPay Open Payment API do?')">
+  <rect x="270" y="30" width="140" height="40" rx="6" stroke-width="0.5"/>
+  <text class="th" x="340" y="45" text-anchor="middle" dominant-baseline="central">PayPay OPA</text>
+  <text class="ts" x="340" y="61" text-anchor="middle" dominant-baseline="central">Open Payment API</text>
+</g>
+
+<g class="node c-blue" onclick="sendPrompt('What does the PayPay user app do in QR payment?')">
+  <rect x="540" y="30" width="110" height="40" rx="6" stroke-width="0.5"/>
+  <text class="th" x="595" y="45" text-anchor="middle" dominant-baseline="central">User app</text>
+  <text class="ts" x="595" y="61" text-anchor="middle" dominant-baseline="central">PayPay mobile</text>
+</g>
+
+<!-- Lifelines -->
+<line x1="85"  y1="70" x2="85"  y2="540" stroke="var(--color-border-tertiary)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<line x1="340" y1="70" x2="340" y2="540" stroke="var(--color-border-tertiary)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<line x1="595" y1="70" x2="595" y2="540" stroke="var(--color-border-tertiary)" stroke-width="0.5" stroke-dasharray="4 3"/>
+
+<!-- Step labels left -->
+<text class="ts" x="22" y="102" text-anchor="end" dominant-baseline="central" style="fill:var(--color-text-tertiary)">①</text>
+<text class="ts" x="22" y="142" text-anchor="end" dominant-baseline="central" style="fill:var(--color-text-tertiary)">②</text>
+<text class="ts" x="22" y="182" text-anchor="end" dominant-baseline="central" style="fill:var(--color-text-tertiary)">③</text>
+<text class="ts" x="22" y="232" text-anchor="end" dominant-baseline="central" style="fill:var(--color-text-tertiary)">④</text>
+<text class="ts" x="22" y="292" text-anchor="end" dominant-baseline="central" style="fill:var(--color-text-tertiary)">⑤</text>
+<text class="ts" x="22" y="342" text-anchor="end" dominant-baseline="central" style="fill:var(--color-text-tertiary)">⑥</text>
+<text class="ts" x="22" y="392" text-anchor="end" dominant-baseline="central" style="fill:var(--color-text-tertiary)">⑦</text>
+<text class="ts" x="22" y="442" text-anchor="end" dominant-baseline="central" style="fill:var(--color-text-tertiary)">⑧</text>
+<text class="ts" x="22" y="492" text-anchor="end" dominant-baseline="central" style="fill:var(--color-text-tertiary)">⑨</text>
+
+<!-- Step 1: Merchant → OPA: POST create QR -->
+<line x1="85" y1="100" x2="330" y2="100" stroke="var(--color-border-secondary)" stroke-width="1.5" marker-end="url(#ar1)"/>
+<g class="node c-teal" onclick="sendPrompt('What parameters are sent when creating a PayPay dynamic QR code?')">
+  <rect x="92" y="84" width="230" height="32" rx="4" stroke-width="0.5"/>
+  <text class="ts" x="207" y="96" text-anchor="middle" dominant-baseline="central">POST /v1/codes</text>
+  <text class="ts" x="207" y="108" text-anchor="middle" dominant-baseline="central">merchantPaymentId · amount · expiry</text>
+</g>
+
+<!-- Step 2: OPA → Merchant: QR URL + codeId -->
+<line x1="330" y1="140" x2="95" y2="140" stroke="var(--color-border-secondary)" stroke-width="1.5" marker-end="url(#ar1)"/>
+<g class="node c-purple" onclick="sendPrompt('What does PayPay return when creating a QR code?')">
+  <rect x="100" y="124" width="224" height="32" rx="4" stroke-width="0.5"/>
+  <text class="ts" x="212" y="136" text-anchor="middle" dominant-baseline="central">codeId · qrCodeUrl · deeplink</text>
+  <text class="ts" x="212" y="148" text-anchor="middle" dominant-baseline="central">expires in 10 min (configurable)</text>
+</g>
+
+<!-- Step 3: Merchant displays QR -->
+<line x1="85" y1="180" x2="575" y2="180" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#ar1)"/>
+<text class="ts" x="330" y="172" text-anchor="middle" dominant-baseline="central" style="fill:var(--color-text-tertiary)">QR code displayed on screen / printed</text>
+
+<!-- Step 4: User scans QR -->
+<line x1="595" y1="220" x2="355" y2="250" stroke="var(--color-border-secondary)" stroke-width="1.5" marker-end="url(#ar1)"/>
+<g class="node c-blue" onclick="sendPrompt('What happens when a user scans a PayPay QR code?')">
+  <rect x="362" y="220" width="224" height="44" rx="4" stroke-width="0.5"/>
+  <text class="ts" x="474" y="234" text-anchor="middle" dominant-baseline="central">User scans QR → app decodes URL</text>
+  <text class="ts" x="474" y="248" text-anchor="middle" dominant-baseline="central">→ confirm payment screen shown</text>
+  <text class="ts" x="474" y="261" text-anchor="middle" dominant-baseline="central">→ user taps Confirm</text>
+</g>
+
+<!-- Step 5: Merchant polls GET payment status -->
+<line x1="85" y1="290" x2="330" y2="290" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#ar1)"/>
+<g class="node c-teal" onclick="sendPrompt('How does polling work in PayPay QR payment?')">
+  <rect x="92" y="274" width="230" height="32" rx="4" stroke-width="0.5"/>
+  <text class="ts" x="207" y="286" text-anchor="middle" dominant-baseline="central">GET /v1/codes/payments/{merchantPaymentId}</text>
+  <text class="ts" x="207" y="298" text-anchor="middle" dominant-baseline="central">every 2–3 seconds until COMPLETED</text>
+</g>
+
+<!-- Step 6: OPA processes payment, wallet debit -->
+<line x1="340" y1="340" x2="585" y2="340" stroke="var(--color-border-secondary)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#ar1)"/>
+<g class="node c-purple" onclick="sendPrompt('How does PayPay debit the user wallet?')">
+  <rect x="350" y="324" width="224" height="32" rx="4" stroke-width="0.5"/>
+  <text class="ts" x="462" y="336" text-anchor="middle" dominant-baseline="central">Debit user wallet · validate limits</text>
+  <text class="ts" x="462" y="348" text-anchor="middle" dominant-baseline="central">credit merchant · update status</text>
+</g>
+
+<!-- Step 7: OPA → Merchant webhook -->
+<line x1="330" y1="390" x2="95" y2="390" stroke="var(--color-border-secondary)" stroke-width="1.5" marker-end="url(#ar1)"/>
+<g class="node c-purple" onclick="sendPrompt('What does the PayPay webhook send to the merchant?')">
+  <rect x="100" y="374" width="224" height="32" rx="4" stroke-width="0.5"/>
+  <text class="ts" x="212" y="386" text-anchor="middle" dominant-baseline="central">Webhook: COMPLETED event</text>
+  <text class="ts" x="212" y="398" text-anchor="middle" dominant-baseline="central">paymentId · amount · timestamp</text>
+</g>
+
+<!-- Step 8: OPA notifies user -->
+<line x1="340" y1="440" x2="583" y2="440" stroke="var(--color-border-secondary)" stroke-width="1.5" marker-end="url(#ar1)"/>
+<g class="node c-blue" onclick="sendPrompt('How does PayPay notify the user after payment?')">
+  <rect x="350" y="424" width="224" height="32" rx="4" stroke-width="0.5"/>
+  <text class="ts" x="462" y="436" text-anchor="middle" dominant-baseline="central">Push notification + in-app receipt</text>
+  <text class="ts" x="462" y="448" text-anchor="middle" dominant-baseline="central">balance updated in real-time</text>
+</g>
+
+<!-- Step 9: Merchant fulfils order -->
+<line x1="85" y1="490" x2="575" y2="490" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#ar1)"/>
+<text class="ts" x="330" y="482" text-anchor="middle" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Merchant confirms payment → fulfils order</text>
+</svg>
+</div>
+
+<!-- TAB 2: Backend architecture -->
+<div class="pane" id="pane1">
+<svg width="100%" viewBox="0 0 680 540" role="img">
+<title>PayPay dynamic QR backend architecture</title>
+<desc>Internal backend architecture showing API gateway, QR service, payment engine, wallet service and supporting systems</desc>
+<defs>
+<marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<!-- External: Merchant -->
+<g class="node c-gray" onclick="sendPrompt('How does a merchant authenticate with PayPay OPA?')">
+  <rect x="30" y="30" width="110" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="85" y="48" text-anchor="middle" dominant-baseline="central">Merchant</text>
+  <text class="ts" x="85" y="65" text-anchor="middle" dominant-baseline="central">API key + HMAC</text>
+</g>
+<line x1="140" y1="52" x2="168" y2="52" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#ar2)"/>
+
+<!-- API Gateway / Load balancer -->
+<g class="node c-teal" onclick="sendPrompt('What does the PayPay API gateway do?')">
+  <rect x="170" y="30" width="130" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="235" y="48" text-anchor="middle" dominant-baseline="central">API gateway</text>
+  <text class="ts" x="235" y="65" text-anchor="middle" dominant-baseline="central">HMAC auth · rate limit · TLS 1.2</text>
+</g>
+<line x1="300" y1="52" x2="328" y2="52" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#ar2)"/>
+
+<!-- QR Service -->
+<g class="node c-purple" onclick="sendPrompt('What does the QR code service do internally?')">
+  <rect x="330" y="30" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="400" y="48" text-anchor="middle" dominant-baseline="central">QR service</text>
+  <text class="ts" x="400" y="65" text-anchor="middle" dominant-baseline="central">generate · validate · expire</text>
+</g>
+<line x1="400" y1="74" x2="400" y2="104" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#ar2)"/>
+
+<!-- Redis: QR store -->
+<g class="node c-coral" onclick="sendPrompt('How does Redis store QR codes in PayPay?')">
+  <rect x="330" y="106" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="400" y="123" text-anchor="middle" dominant-baseline="central">Redis</text>
+  <text class="ts" x="400" y="140" text-anchor="middle" dominant-baseline="central">QR state · TTL 10 min · idempotency</text>
+</g>
+
+<!-- Payment Engine (center) -->
+<g class="node c-purple" onclick="sendPrompt('What does the PayPay payment engine do?')">
+  <rect x="240" y="190" width="280" height="60" rx="8" stroke-width="0.5"/>
+  <text class="th" x="380" y="210" text-anchor="middle" dominant-baseline="central">Payment engine</text>
+  <text class="ts" x="380" y="228" text-anchor="middle" dominant-baseline="central">authorize · debit · capture · refund · idempotency</text>
+  <text class="ts" x="380" y="242" text-anchor="middle" dominant-baseline="central">ACID transactions · distributed lock</text>
+</g>
+
+<!-- Arrow from QR service → Payment Engine -->
+<line x1="400" y1="74" x2="380" y2="190" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#ar2)"/>
+
+<!-- Wallet service -->
+<g class="node c-amber" onclick="sendPrompt('How does the PayPay wallet service handle balance?')">
+  <rect x="30" y="290" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="100" y="308" text-anchor="middle" dominant-baseline="central">Wallet service</text>
+  <text class="ts" x="100" y="325" text-anchor="middle" dominant-baseline="central">balance · limits · currency</text>
+</g>
+<line x1="240" y1="230" x2="170" y2="290" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#ar2)"/>
+
+<!-- Fraud service -->
+<g class="node c-red" onclick="sendPrompt('How does PayPay detect fraud on QR payments?')">
+  <rect x="200" y="290" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="270" y="308" text-anchor="middle" dominant-baseline="central">Fraud / risk</text>
+  <text class="ts" x="270" y="325" text-anchor="middle" dominant-baseline="central">ML scoring · velocity check</text>
+</g>
+<line x1="310" y1="250" x2="290" y2="290" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#ar2)"/>
+
+<!-- Ledger service -->
+<g class="node c-blue" onclick="sendPrompt('What does the PayPay ledger service record?')">
+  <rect x="370" y="290" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="440" y="308" text-anchor="middle" dominant-baseline="central">Ledger service</text>
+  <text class="ts" x="440" y="325" text-anchor="middle" dominant-baseline="central">double-entry · settlement</text>
+</g>
+<line x1="440" y1="250" x2="440" y2="290" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#ar2)"/>
+
+<!-- Notification service -->
+<g class="node c-teal" onclick="sendPrompt('How does PayPay send payment notifications?')">
+  <rect x="540" y="290" width="120" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="600" y="308" text-anchor="middle" dominant-baseline="central">Notif service</text>
+  <text class="ts" x="600" y="325" text-anchor="middle" dominant-baseline="central">push · webhook</text>
+</g>
+<line x1="520" y1="230" x2="570" y2="290" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#ar2)"/>
+
+<!-- Kafka event bus -->
+<rect x="30" y="380" width="620" height="50" rx="6" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="5 3"/>
+<text class="ts" x="46" y="398" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Kafka — event bus</text>
+<g class="node c-gray" onclick="sendPrompt('What payment events does Kafka carry in PayPay?')">
+  <rect x="46" y="406" width="126" height="18" rx="3" stroke-width="0.5"/>
+  <text class="ts" x="109" y="415" text-anchor="middle" dominant-baseline="central">payment.completed</text>
+</g>
+<g class="node c-gray" onclick="sendPrompt('What is the payment.authorized event?')">
+  <rect x="184" y="406" width="130" height="18" rx="3" stroke-width="0.5"/>
+  <text class="ts" x="249" y="415" text-anchor="middle" dominant-baseline="central">payment.authorized</text>
+</g>
+<g class="node c-gray" onclick="sendPrompt('What is the payment.failed event?')">
+  <rect x="326" y="406" width="110" height="18" rx="3" stroke-width="0.5"/>
+  <text class="ts" x="381" y="415" text-anchor="middle" dominant-baseline="central">payment.failed</text>
+</g>
+<g class="node c-gray" onclick="sendPrompt('What is the payment.refunded event?')">
+  <rect x="448" y="406" width="122" height="18" rx="3" stroke-width="0.5"/>
+  <text class="ts" x="509" y="415" text-anchor="middle" dominant-baseline="central">payment.refunded</text>
+</g>
+
+<!-- Arrows to Kafka -->
+<line x1="100" y1="334" x2="100" y2="378" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#ar2)"/>
+<line x1="380" y1="250" x2="380" y2="378" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#ar2)"/>
+
+<!-- DB layer -->
+<g class="node c-blue" onclick="sendPrompt('What databases does PayPay use for QR payments?')">
+  <rect x="30" y="450" width="180" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="120" y="468" text-anchor="middle" dominant-baseline="central">Payment DB (MySQL)</text>
+  <text class="ts" x="120" y="485" text-anchor="middle" dominant-baseline="central">orders · idempotency · refunds</text>
+</g>
+<g class="node c-blue" onclick="sendPrompt('How is the PayPay wallet database structured?')">
+  <rect x="230" y="450" width="180" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="320" y="468" text-anchor="middle" dominant-baseline="central">Wallet DB (MySQL)</text>
+  <text class="ts" x="320" y="485" text-anchor="middle" dominant-baseline="central">balance · transaction log</text>
+</g>
+<g class="node c-blue" onclick="sendPrompt('What does the PayPay audit database store?')">
+  <rect x="430" y="450" width="220" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="540" y="468" text-anchor="middle" dominant-baseline="central">Audit log (append-only)</text>
+  <text class="ts" x="540" y="485" text-anchor="middle" dominant-baseline="central">immutable · compliance · reconciliation</text>
+</g>
+</svg>
+</div>
+
+<!-- TAB 3: Payment state machine -->
+<div class="pane" id="pane2">
+<svg width="100%" viewBox="0 0 680 460" role="img">
+<title>PayPay QR payment state machine</title>
+<desc>Payment states from QR created through authorized completed canceled expired and failed with transitions</desc>
+<defs>
+<marker id="ar3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<!-- States -->
+<g class="node c-gray" onclick="sendPrompt('What happens when a PayPay QR code is created?')">
+  <rect x="270" y="30" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="340" y="48" text-anchor="middle" dominant-baseline="central">QR created</text>
+  <text class="ts" x="340" y="65" text-anchor="middle" dominant-baseline="central">codeId issued · TTL 10 min</text>
+</g>
+
+<line x1="340" y1="74" x2="340" y2="110" stroke="var(--color-border-secondary)" stroke-width="1.5" marker-end="url(#ar3)"/>
+<text class="ts" x="348" y="94" dominant-baseline="central" style="fill:var(--color-text-tertiary)">user scans</text>
+
+<g class="node c-amber" onclick="sendPrompt('What does the AUTHORIZED state mean in PayPay?')">
+  <rect x="270" y="112" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="340" y="130" text-anchor="middle" dominant-baseline="central">AUTHORIZED</text>
+  <text class="ts" x="340" y="147" text-anchor="middle" dominant-baseline="central">wallet locked · awaiting capture</text>
+</g>
+
+<!-- AUTHORIZED → COMPLETED -->
+<line x1="340" y1="156" x2="340" y2="220" stroke="var(--color-border-secondary)" stroke-width="1.5" marker-end="url(#ar3)"/>
+<text class="ts" x="348" y="190" dominant-baseline="central" style="fill:var(--color-text-tertiary)">capture</text>
+
+<!-- AUTHORIZED → CANCELED (revert) -->
+<path d="M270 140 Q160 140 160 280 Q160 340 270 340" fill="none" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar3)"/>
+<text class="ts" x="90" y="230" text-anchor="middle" dominant-baseline="central" style="fill:var(--color-text-tertiary)">revert /</text>
+<text class="ts" x="90" y="245" text-anchor="middle" dominant-baseline="central" style="fill:var(--color-text-tertiary)">cancel</text>
+
+<g class="node c-green" onclick="sendPrompt('What happens when a PayPay payment is completed?')">
+  <rect x="270" y="222" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="340" y="240" text-anchor="middle" dominant-baseline="central">COMPLETED</text>
+  <text class="ts" x="340" y="257" text-anchor="middle" dominant-baseline="central">wallet debited · webhook fired</text>
+</g>
+
+<!-- COMPLETED → REFUNDED -->
+<line x1="410" y1="244" x2="500" y2="310" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar3)"/>
+<text class="ts" x="470" y="268" dominant-baseline="central" style="fill:var(--color-text-tertiary)">refund</text>
+
+<g class="node c-blue" onclick="sendPrompt('What does the REFUNDED state mean in PayPay?')">
+  <rect x="502" y="300" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="572" y="318" text-anchor="middle" dominant-baseline="central">REFUNDED</text>
+  <text class="ts" x="572" y="335" text-anchor="middle" dominant-baseline="central">partial or full · 90-day window</text>
+</g>
+
+<g class="node c-red" onclick="sendPrompt('What triggers a PayPay payment CANCELED state?')">
+  <rect x="270" y="328" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="340" y="346" text-anchor="middle" dominant-baseline="central">CANCELED</text>
+  <text class="ts" x="340" y="363" text-anchor="middle" dominant-baseline="central">user cancel or merchant cancel</text>
+</g>
+
+<!-- QR created → EXPIRED -->
+<line x1="410" y1="52" x2="510" y2="130" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar3)"/>
+<text class="ts" x="475" y="90" dominant-baseline="central" style="fill:var(--color-text-tertiary)">TTL elapsed</text>
+
+<g class="node c-gray" onclick="sendPrompt('What happens when a PayPay QR code expires?')">
+  <rect x="512" y="112" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="582" y="130" text-anchor="middle" dominant-baseline="central">EXPIRED</text>
+  <text class="ts" x="582" y="147" text-anchor="middle" dominant-baseline="central">QR invalid · create new code</text>
+</g>
+
+<!-- AUTHORIZED → FAILED -->
+<line x1="270" y1="156" x2="96" y2="220" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar3)"/>
+<text class="ts" x="120" y="186" dominant-baseline="central" style="fill:var(--color-text-tertiary)">insufficient</text>
+<text class="ts" x="120" y="200" dominant-baseline="central" style="fill:var(--color-text-tertiary)">funds / fraud</text>
+
+<g class="node c-red" onclick="sendPrompt('What causes a PayPay payment to FAIL?')">
+  <rect x="30" y="222" width="140" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="100" y="240" text-anchor="middle" dominant-baseline="central">FAILED</text>
+  <text class="ts" x="100" y="257" text-anchor="middle" dominant-baseline="central">no funds · fraud · limit exceeded</text>
+</g>
+
+<!-- EXPIRED_USER_CONFIRMATION special state -->
+<g class="node c-amber" onclick="sendPrompt('What is EXPIRED_USER_CONFIRMATION in PayPay?')">
+  <rect x="30" y="340" width="200" height="44" rx="6" stroke-width="0.5"/>
+  <text class="th" x="130" y="358" text-anchor="middle" dominant-baseline="central">EXPIRED_USER_CONFIRMATION</text>
+  <text class="ts" x="130" y="375" text-anchor="middle" dominant-baseline="central">high-amount needs extra auth</text>
+</g>
+<line x1="270" y1="140" x2="232" y2="340" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#ar3)"/>
+
+<!-- Legend -->
+<line x1="30" y1="420" x2="680" y2="420" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<line x1="38" y1="442" x2="78" y2="442" stroke="var(--color-border-secondary)" stroke-width="1.5" marker-end="url(#ar3)"/>
+<text class="ts" x="84" y="442" dominant-baseline="central">Normal flow</text>
+<line x1="200" y1="442" x2="240" y2="442" stroke="var(--color-border-secondary)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar3)"/>
+<text class="ts" x="246" y="442" dominant-baseline="central">Exception / alternate path</text>
+</svg>
+</div>
+
+<!-- TAB 4: Security layers -->
+<div class="pane" id="pane3">
+<svg width="100%" viewBox="0 0 680 420" role="img">
+<title>PayPay QR payment security layers</title>
+<desc>Five security layers: TLS transport, HMAC authentication, QR expiry and one-time use, fraud detection, and user confirmation</desc>
+<defs>
+<marker id="ar4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<!-- Outer layer: Transport security -->
+<rect x="20" y="20" width="640" height="370" rx="12" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5" stroke-dasharray="5 3"/>
+<text class="ts" x="36" y="38" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Layer 1 — Transport: TLS 1.2+ / CloudFront SNI / IP whitelist</text>
+
+<!-- Layer 2: Authentication -->
+<rect x="40" y="52" width="600" height="70" rx="8" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="56" y="68" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Layer 2 — Authentication</text>
+<g class="node c-teal" onclick="sendPrompt('How does HMAC authentication work in PayPay OPA?')">
+  <rect x="56" y="76" width="170" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="141" y="90" text-anchor="middle" dominant-baseline="central">HMAC-SHA256 signing</text>
+  <text class="ts" x="141" y="104" text-anchor="middle" dominant-baseline="central">API key + secret per merchant</text>
+</g>
+<g class="node c-teal" onclick="sendPrompt('What is the merchantPaymentId idempotency key?')">
+  <rect x="246" y="76" width="170" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="331" y="90" text-anchor="middle" dominant-baseline="central">merchantPaymentId</text>
+  <text class="ts" x="331" y="104" text-anchor="middle" dominant-baseline="central">idempotency · duplicate prevention</text>
+</g>
+<g class="node c-teal" onclick="sendPrompt('How does PayPay rate limit API requests?')">
+  <rect x="436" y="76" width="170" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="521" y="90" text-anchor="middle" dominant-baseline="central">Rate limiting (429)</text>
+  <text class="ts" x="521" y="104" text-anchor="middle" dominant-baseline="central">per merchant · per endpoint</text>
+</g>
+
+<!-- Layer 3: QR security -->
+<rect x="40" y="136" width="600" height="70" rx="8" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="56" y="152" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Layer 3 — QR code security</text>
+<g class="node c-purple" onclick="sendPrompt('How does PayPay make QR codes expire?')">
+  <rect x="56" y="160" width="170" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="141" y="174" text-anchor="middle" dominant-baseline="central">TTL expiry (10 min)</text>
+  <text class="ts" x="141" y="188" text-anchor="middle" dominant-baseline="central">Redis TTL · auto-invalidate</text>
+</g>
+<g class="node c-purple" onclick="sendPrompt('How are PayPay QR codes one-time use?')">
+  <rect x="246" y="160" width="170" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="331" y="174" text-anchor="middle" dominant-baseline="central">One-time use</text>
+  <text class="ts" x="331" y="188" text-anchor="middle" dominant-baseline="central">codeId consumed on scan</text>
+</g>
+<g class="node c-purple" onclick="sendPrompt('How does PayPay encode amount in the QR code?')">
+  <rect x="436" y="160" width="170" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="521" y="174" text-anchor="middle" dominant-baseline="central">Amount in payload</text>
+  <text class="ts" x="521" y="188" text-anchor="middle" dominant-baseline="central">tamper-proof · signed URL</text>
+</g>
+
+<!-- Layer 4: Fraud -->
+<rect x="40" y="220" width="600" height="70" rx="8" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="56" y="236" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Layer 4 — Fraud detection</text>
+<g class="node c-red" onclick="sendPrompt('How does PayPay detect fraudulent QR payments?')">
+  <rect x="56" y="244" width="170" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="141" y="258" text-anchor="middle" dominant-baseline="central">ML risk scoring</text>
+  <text class="ts" x="141" y="272" text-anchor="middle" dominant-baseline="central">real-time per transaction</text>
+</g>
+<g class="node c-red" onclick="sendPrompt('What velocity checks does PayPay run?')">
+  <rect x="246" y="244" width="170" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="331" y="258" text-anchor="middle" dominant-baseline="central">Velocity checks</text>
+  <text class="ts" x="331" y="272" text-anchor="middle" dominant-baseline="central">daily / monthly limits</text>
+</g>
+<g class="node c-red" onclick="sendPrompt('What is UNACCEPTABLE_OP error in PayPay?')">
+  <rect x="436" y="244" width="170" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="521" y="258" text-anchor="middle" dominant-baseline="central">Suspicious user block</text>
+  <text class="ts" x="521" y="272" text-anchor="middle" dominant-baseline="central">UNACCEPTABLE_OP error</text>
+</g>
+
+<!-- Layer 5: User confirmation -->
+<rect x="40" y="304" width="600" height="70" rx="8" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="56" y="320" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Layer 5 — User confirmation</text>
+<g class="node c-amber" onclick="sendPrompt('When does PayPay require extra user confirmation?')">
+  <rect x="56" y="328" width="200" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="156" y="342" text-anchor="middle" dominant-baseline="central">High-amount confirmation</text>
+  <text class="ts" x="156" y="356" text-anchor="middle" dominant-baseline="central">USER_CONFIRMATION_REQUIRED</text>
+</g>
+<g class="node c-amber" onclick="sendPrompt('How does PayPay biometric authentication work?')">
+  <rect x="276" y="328" width="180" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="366" y="342" text-anchor="middle" dominant-baseline="central">Biometric / PIN auth</text>
+  <text class="ts" x="366" y="356" text-anchor="middle" dominant-baseline="central">in-app before confirm tap</text>
+</g>
+<g class="node c-amber" onclick="sendPrompt('What are PayPay daily and monthly spending limits?')">
+  <rect x="476" y="328" width="148" height="36" rx="5" stroke-width="0.5"/>
+  <text class="th" x="550" y="342" text-anchor="middle" dominant-baseline="central">Spending limits</text>
+  <text class="ts" x="550" y="356" text-anchor="middle" dominant-baseline="central">user-defined daily/monthly</text>
+</g>
+</svg>
+</div>
+
+<!-- TAB 5: Data model -->
+<div class="pane" id="pane4">
+<svg width="100%" viewBox="0 0 680 380" role="img">
+<title>PayPay dynamic QR payment data model</title>
+<desc>Database tables for qr_codes, payments, wallets and audit log with relationships</desc>
+<defs>
+<marker id="ar5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<!-- qr_codes table -->
+<g class="node c-purple" onclick="sendPrompt('Explain the qr_codes table schema in PayPay')">
+  <rect x="20" y="30" width="164" height="22" rx="4" stroke-width="0.5"/>
+  <text class="th" x="102" y="41" text-anchor="middle" dominant-baseline="central">qr_codes</text>
+</g>
+<rect x="20" y="52" width="164" height="178" rx="0" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="30" y="68" dominant-baseline="central" style="fill:var(--color-text-success)">PK</text>
+<text class="ts" x="52" y="68" dominant-baseline="central">code_id  UUID</text>
+<line x1="20" y1="76" x2="184" y2="76" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<text class="ts" x="30" y="92" dominant-baseline="central" style="fill:var(--color-text-warning)">FK</text>
+<text class="ts" x="52" y="92" dominant-baseline="central">merchant_id</text>
+<text class="ts" x="30" y="108" dominant-baseline="central">merchant_payment_id</text>
+<text class="ts" x="30" y="124" dominant-baseline="central">amount  BIGINT</text>
+<text class="ts" x="30" y="140" dominant-baseline="central">currency  CHAR(3)</text>
+<text class="ts" x="30" y="156" dominant-baseline="central">status  ENUM</text>
+<text class="ts" x="30" y="172" dominant-baseline="central">qr_url  TEXT</text>
+<text class="ts" x="30" y="188" dominant-baseline="central">expires_at  TIMESTAMPTZ</text>
+<text class="ts" x="30" y="204" dominant-baseline="central">created_at  TIMESTAMPTZ</text>
+<rect x="20" y="226" width="164" height="4" rx="0" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="30" y="234" dominant-baseline="central" style="fill:var(--color-text-info)">UNIQUE (merchant_payment_id)</text>
+
+<!-- payments table -->
+<g class="node c-blue" onclick="sendPrompt('Explain the payments table schema in PayPay')">
+  <rect x="210" y="30" width="180" height="22" rx="4" stroke-width="0.5"/>
+  <text class="th" x="300" y="41" text-anchor="middle" dominant-baseline="central">payments</text>
+</g>
+<rect x="210" y="52" width="180" height="196" rx="0" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="220" y="68" dominant-baseline="central" style="fill:var(--color-text-success)">PK</text>
+<text class="ts" x="242" y="68" dominant-baseline="central">payment_id  UUID</text>
+<line x1="210" y1="76" x2="390" y2="76" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<text class="ts" x="220" y="92" dominant-baseline="central" style="fill:var(--color-text-warning)">FK</text>
+<text class="ts" x="242" y="92" dominant-baseline="central">code_id  UUID</text>
+<text class="ts" x="220" y="108" dominant-baseline="central" style="fill:var(--color-text-warning)">FK</text>
+<text class="ts" x="242" y="108" dominant-baseline="central">user_id  UUID</text>
+<text class="ts" x="220" y="124" dominant-baseline="central" style="fill:var(--color-text-warning)">FK</text>
+<text class="ts" x="242" y="124" dominant-baseline="central">merchant_id</text>
+<text class="ts" x="220" y="140" dominant-baseline="central">amount  BIGINT</text>
+<text class="ts" x="220" y="156" dominant-baseline="central">status  ENUM</text>
+<text class="ts" x="220" y="172" dominant-baseline="central">payment_method</text>
+<text class="ts" x="220" y="188" dominant-baseline="central">authorized_at</text>
+<text class="ts" x="220" y="204" dominant-baseline="central">completed_at</text>
+<text class="ts" x="220" y="220" dominant-baseline="central">idempotency_key</text>
+<rect x="210" y="238" width="180" height="10" rx="0" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="220" y="244" dominant-baseline="central" style="fill:var(--color-text-info)">UNIQUE (idempotency_key)</text>
+
+<!-- wallet_balances table -->
+<g class="node c-amber" onclick="sendPrompt('Explain the wallet_balances table schema')">
+  <rect x="416" y="30" width="180" height="22" rx="4" stroke-width="0.5"/>
+  <text class="th" x="506" y="41" text-anchor="middle" dominant-baseline="central">wallet_balances</text>
+</g>
+<rect x="416" y="52" width="180" height="162" rx="0" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="426" y="68" dominant-baseline="central" style="fill:var(--color-text-success)">PK</text>
+<text class="ts" x="448" y="68" dominant-baseline="central">user_id  UUID</text>
+<line x1="416" y1="76" x2="596" y2="76" stroke="var(--color-border-tertiary)" stroke-width="0.5"/>
+<text class="ts" x="426" y="92" dominant-baseline="central">balance  BIGINT</text>
+<text class="ts" x="426" y="108" dominant-baseline="central">currency  CHAR(3)</text>
+<text class="ts" x="426" y="124" dominant-baseline="central">daily_limit</text>
+<text class="ts" x="426" y="140" dominant-baseline="central">monthly_limit</text>
+<text class="ts" x="426" y="156" dominant-baseline="central">daily_spent</text>
+<text class="ts" x="426" y="172" dominant-baseline="central">updated_at</text>
+<text class="ts" x="426" y="188" dominant-baseline="central">version  BIGINT</text>
+<rect x="416" y="208" width="180" height="10" rx="0" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="426" y="214" dominant-baseline="central" style="fill:var(--color-text-info)">OCC: optimistic lock</text>
+
+<!-- audit_log -->
+<g class="node c-red" onclick="sendPrompt('What does the PayPay audit log store?')">
+  <rect x="30" y="296" width="620" height="22" rx="4" stroke-width="0.5"/>
+  <text class="th" x="340" y="307" text-anchor="middle" dominant-baseline="central">audit_log  (append-only · immutable)</text>
+</g>
+<rect x="30" y="318" width="620" height="44" rx="0" fill="none" stroke="var(--color-border-secondary)" stroke-width="0.5"/>
+<text class="ts" x="44" y="334" dominant-baseline="central">event_id · payment_id · user_id · merchant_id · event_type · amount · before_balance · after_balance · timestamp</text>
+<text class="ts" x="44" y="352" dominant-baseline="central" style="fill:var(--color-text-tertiary)">Written on every state transition. Used for reconciliation, compliance, dispute resolution. Never updated or deleted.</text>
+
+<!-- Relation lines -->
+<line x1="184" y1="68" x2="210" y2="92" stroke="var(--color-border-secondary)" stroke-width="0.5" marker-end="url(#ar5)"/>
+<line x1="390" y1="100" x2="416" y2="80" stroke="var(--color-border-secondary)" stroke-width="0.5" marker-end="url(#ar5)"/>
+</svg>
+</div>
+
+<script>
+function show(i){
+  document.querySelectorAll('.tab-btn').forEach((b,j)=>b.classList.toggle('active',i===j));
+  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('active',i===j));
+}
+</script>
