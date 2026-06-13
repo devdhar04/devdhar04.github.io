@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKS Interview Prep — Zero to Ready</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #222536;
+  --border: #2e3148;
+  --accent: #6366f1;
+  --accent2: #22d3ee;
+  --green: #22c55e;
+  --amber: #f59e0b;
+  --red: #f43f5e;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── TOPBAR ─────────────────────────── */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 52px;
+}
+.brand {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 1px;
+  font-weight: 600;
+  padding-right: 20px;
+  border-right: 1px solid var(--border);
+  margin-right: 4px;
+}
+.tabs {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 0 18px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--muted);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  height: 100%;
+  white-space: nowrap;
+  transition: all 0.15s;
+  font-family: var(--sans);
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.progress-pill {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.pill-bar {
+  width: 80px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.pill-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 99px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+/* ── PAGES ─────────────────────────── */
+.page { display: none; max-width: 900px; margin: 0 auto; padding: 36px 24px 80px; }
+.page.active { display: block; }
+
+/* ── HERO ──────────────────────────── */
+.hero { margin-bottom: 40px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--accent2);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.hero h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+.hero h1 .hi { color: var(--accent); }
+.hero p {
+  color: var(--muted);
+  max-width: 560px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chip {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.chip-blue { background: rgba(99,102,241,0.15); color: var(--accent); border: 1px solid rgba(99,102,241,0.3); }
+.chip-cyan { background: rgba(34,211,238,0.1); color: var(--accent2); border: 1px solid rgba(34,211,238,0.2); }
+.chip-green { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+.chip-amber { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+.chip-red { background: rgba(244,63,94,0.1); color: var(--red); border: 1px solid rgba(244,63,94,0.2); }
+
+/* ── SECTION HEADING ───────────────── */
+.sh { margin: 36px 0 16px; }
+.sh h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.sh p { color: var(--muted); font-size: 0.88rem; }
+
+/* ── CONCEPT CARD ──────────────────── */
+.concept {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.concept-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.concept-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.ci-blue { background: rgba(99,102,241,0.2); }
+.ci-cyan { background: rgba(34,211,238,0.15); }
+.ci-green { background: rgba(34,197,94,0.15); }
+.ci-amber { background: rgba(245,158,11,0.15); }
+.ci-red { background: rgba(244,63,94,0.15); }
+.ci-purple { background: rgba(168,85,247,0.15); }
+
+.concept-title { font-size: 1rem; font-weight: 600; color: var(--text); }
+.concept-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.concept-body { font-size: 0.88rem; color: #94a3b8; line-height: 1.75; }
+.concept-body p { margin-bottom: 8px; }
+.concept-body ul, .concept-body ol { padding-left: 18px; margin-bottom: 8px; }
+.concept-body li { margin-bottom: 4px; }
+.concept-body strong { color: var(--text); font-weight: 600; }
+.concept-body code {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  background: var(--surface2);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--accent2);
+}
+
+/* ── ANALOGY BOX ───────────────────── */
+.analogy {
+  background: rgba(99,102,241,0.08);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 14px;
+  margin: 10px 0;
+  font-size: 0.85rem;
+  color: #a5b4fc;
+  line-height: 1.6;
+}
+.analogy strong { color: white; }
+
+/* ── CODE BLOCK ────────────────────── */
+.cb-wrap {
+  position: relative;
+  margin: 14px 0;
+}
+.cb-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cb-dot { width: 8px; height: 8px; border-radius: 50%; }
+.cb-dot-red { background: #f43f5e; }
+.cb-dot-amber { background: #f59e0b; }
+.cb-dot-green { background: #22c55e; }
+pre[class*="language-"] {
+  margin: 0 !important;
+  border-radius: 0 0 6px 6px !important;
+  border: 1px solid var(--border) !important;
+  font-size: 0.78rem !important;
+  line-height: 1.7 !important;
+  font-family: var(--mono) !important;
+}
+
+/* ── DIAGRAM ───────────────────────── */
+.diagram {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 14px 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.8;
+  color: #94a3b8;
+  overflow-x: auto;
+  white-space: pre;
+}
+.diagram .hl { color: var(--accent2); font-weight: 600; }
+.diagram .gr { color: var(--green); }
+.diagram .am { color: var(--amber); }
+.diagram .rd { color: var(--red); }
+.diagram .ac { color: var(--accent); }
+
+/* ── Q&A CARD ──────────────────────── */
+.qa {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.qa:hover { border-color: rgba(99,102,241,0.4); }
+.qa.mastered { border-left: 3px solid var(--green); }
+
+.qa-q {
+  padding: 16px 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--surface);
+  user-select: none;
+}
+.qa-badge {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  padding: 2px 7px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-weight: 600;
+}
+.badge-easy { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+.badge-med { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+.badge-hard { background: rgba(244,63,94,0.15); color: var(--red); border: 1px solid rgba(244,63,94,0.3); }
+
+.qa-text { flex: 1; font-size: 0.92rem; font-weight: 500; color: var(--text); line-height: 1.5; }
+.qa-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.master-btn {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.master-btn:hover { border-color: var(--green); color: var(--green); }
+.master-btn.done { background: rgba(34,197,94,0.1); border-color: var(--green); color: var(--green); }
+.chevron { color: var(--muted); font-size: 0.7rem; transition: transform 0.2s; }
+.qa.open .chevron { transform: rotate(180deg); }
+
+.qa-a {
+  display: none;
+  padding: 18px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+.qa.open .qa-a { display: block; }
+
+.qa-a-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--green);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.qa-a-text {
+  font-size: 0.88rem;
+  color: #94a3b8;
+  line-height: 1.75;
+}
+.qa-a-text p { margin-bottom: 8px; }
+.qa-a-text ul, .qa-a-text ol { padding-left: 18px; margin-bottom: 8px; }
+.qa-a-text li { margin-bottom: 4px; }
+.qa-a-text strong { color: var(--text); }
+.qa-a-text code {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  background: var(--surface);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--accent2);
+}
+
+/* ── ALERT ─────────────────────────── */
+.note {
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 12px 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.note-cyan { background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.2); color: #67e8f9; }
+.note-amber { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); color: #fcd34d; }
+.note-green { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: #86efac; }
+.note strong { color: white; }
+
+/* ── TABLE ─────────────────────────── */
+.tbl { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.83rem; }
+.tbl th {
+  background: var(--surface2);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 9px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.tbl td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(46,49,72,0.6);
+  color: #94a3b8;
+  vertical-align: top;
+}
+.tbl tr:last-child td { border-bottom: none; }
+.tbl td:first-child { color: var(--text); font-weight: 500; font-family: var(--mono); font-size: 0.78rem; }
+.tbl tr:hover td { background: rgba(30,30,50,0.4); }
+
+/* ── MOCK MODE ─────────────────────── */
+.mock-bar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.sw { width: 40px; height: 22px; background: var(--border); border-radius: 99px; position: relative; transition: background 0.2s; flex-shrink: 0; }
+.sw.on { background: var(--green); }
+.sw-k { width: 16px; height: 16px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: left 0.2s; }
+.sw.on .sw-k { left: 21px; }
+.mock-label { font-size: 0.85rem; color: var(--muted); }
+.mock-label span { color: var(--amber); font-weight: 600; }
+.mock-on .mock-label span { color: var(--green); }
+#mock-qs.mock-mode .qa-a { display: none !important; }
+#mock-qs.mock-mode .qa.open .qa-a { display: block !important; }
+
+/* ── VISUAL ARCHITECTURE ───────────── */
+.arch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 14px 0;
+}
+.arch-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+}
+.arch-box h4 { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.arch-box ul { padding-left: 14px; }
+.arch-box li { font-size: 0.78rem; color: var(--muted); margin-bottom: 3px; }
+
+/* ── SVG DIAGRAM ───────────────────── */
+.svg-wrap {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 14px 0;
+  overflow-x: auto;
+}
+svg text { font-family: var(--mono); }
+
+/* ── SUMMARY TABLE ─────────────────── */
+.cheat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 14px 0;
+}
+.cheat-head {
+  background: var(--surface2);
+  padding: 10px 16px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.cheat-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr;
+  gap: 0;
+  border-bottom: 1px solid rgba(46,49,72,0.5);
+  padding: 10px 16px;
+  font-size: 0.82rem;
+}
+.cheat-row:last-child { border-bottom: none; }
+.cheat-row:hover { background: rgba(30,30,50,0.4); }
+.cheat-key { font-family: var(--mono); font-size: 0.75rem; color: var(--accent2); }
+.cheat-val { color: #94a3b8; padding-right: 12px; }
+.cheat-cmd { font-family: var(--mono); font-size: 0.72rem; color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">AKS PREP</div>
+  <div class="tabs">
+    <button class="tab active" onclick="show('p0',this)">🏠 Start Here</button>
+    <button class="tab" onclick="show('p1',this)">01 · What is AKS?</button>
+    <button class="tab" onclick="show('p2',this)">02 · Core Concepts</button>
+    <button class="tab" onclick="show('p3',this)">03 · Architecture</button>
+    <button class="tab" onclick="show('p4',this)">04 · YAML & Config</button>
+    <button class="tab" onclick="show('p5',this)">05 · Networking</button>
+    <button class="tab" onclick="show('p6',this)">06 · Scaling & Health</button>
+    <button class="tab" onclick="show('p7',this)">07 · Interview Q&A</button>
+    <button class="tab" onclick="show('p8',this)">08 · Mock Interview</button>
+  </div>
+  <div class="progress-pill">
+    <span id="prog-text">0/40</span>
+    <div class="pill-bar"><div class="pill-fill" id="prog-fill"></div></div>
+  </div>
+</div>
+
+<!-- PAGE 0: START HERE -->
+<div id="p0" class="page active">
+  <div class="hero">
+    <div class="eyebrow">Backend Engineer · AKS Interview Prep</div>
+    <h1>AKS from <span class="hi">Zero</span><br>to Interview-Ready</h1>
+    <p>You said you have zero knowledge of AKS. That's fine. This guide teaches you everything you need to answer backend engineering interview questions on Azure Kubernetes Service — starting from the very basics, no assumed knowledge.</p>
+    <div class="chips">
+      <span class="chip chip-blue">8 Chapters</span>
+      <span class="chip chip-cyan">40 Interview Questions</span>
+      <span class="chip chip-green">Visual Diagrams</span>
+      <span class="chip chip-amber">Real YAML Examples</span>
+      <span class="chip chip-red">Mock Interview Mode</span>
+    </div>
+  </div>
+
+  <div class="note note-cyan">
+    <strong>How to use this guide:</strong> Go through each chapter in order — they build on each other. Every chapter ends with interview questions specific to that topic. The Mock Interview tab lets you test yourself blind. Mark questions as ✓ Mastered as you go.
+  </div>
+
+  <div class="sh"><h2>What Chetan already asked you about AKS</h2><p>From your Manulife interview — these are the exact AKS questions that came up. By the end of this guide you will answer all of them confidently.</p></div>
+
+  <table class="tbl">
+    <tr><th>Question asked</th><th>Chapter that covers it</th><th>Difficulty</th></tr>
+    <tr><td>How is your AKS service accessed from outside?</td><td>05 · Networking</td><td style="color:var(--amber)">Medium</td></tr>
+    <tr><td>How do you troubleshoot a pod that keeps restarting?</td><td>06 · Scaling & Health</td><td style="color:var(--amber)">Medium</td></tr>
+    <tr><td>What is a Virtual Service in Kubernetes?</td><td>05 · Networking</td><td style="color:var(--red)">Hard</td></tr>
+    <tr><td>What is a Destination Rule?</td><td>05 · Networking</td><td style="color:var(--red)">Hard</td></tr>
+    <tr><td>What are readiness and liveness probes?</td><td>06 · Scaling & Health</td><td style="color:var(--green)">Easy</td></tr>
+    <tr><td>How does HPA (autoscaling) work?</td><td>06 · Scaling & Health</td><td style="color:var(--amber)">Medium</td></tr>
+    <tr><td>How do you expose APIs outside the cluster?</td><td>05 · Networking</td><td style="color:var(--amber)">Medium</td></tr>
+  </table>
+
+  <div class="sh"><h2>Learning path</h2></div>
+  <table class="tbl">
+    <tr><th>Chapter</th><th>What you learn</th><th>Time</th></tr>
+    <tr><td>01 · What is AKS?</td><td>Kubernetes vs AKS, why it exists, the mental model</td><td>5 min</td></tr>
+    <tr><td>02 · Core Concepts</td><td>Pod, Node, Cluster, Deployment, Service, Namespace</td><td>10 min</td></tr>
+    <tr><td>03 · Architecture</td><td>Control Plane vs Worker Nodes, how AKS differs from plain K8s</td><td>8 min</td></tr>
+    <tr><td>04 · YAML & Config</td><td>Deployment YAML, ConfigMaps, Secrets, resource limits</td><td>12 min</td></tr>
+    <tr><td>05 · Networking</td><td>Services, Ingress, App Gateway, Virtual Service, Destination Rule</td><td>12 min</td></tr>
+    <tr><td>06 · Scaling & Health</td><td>HPA, probes, troubleshooting, kubectl commands</td><td>10 min</td></tr>
+    <tr><td>07 · Interview Q&A</td><td>40 questions with model answers</td><td>30 min</td></tr>
+    <tr><td>08 · Mock Interview</td><td>Self-test blind</td><td>20 min</td></tr>
+  </table>
+</div>
+
+<!-- PAGE 1: WHAT IS AKS -->
+<div id="p1" class="page">
+  <div class="eyebrow">Chapter 01</div>
+  <h1 style="font-size:1.8rem;font-weight:700;margin-bottom:8px">What is AKS?</h1>
+  <p style="color:var(--muted);margin-bottom:32px">Start from the very beginning — containers, Kubernetes, then AKS.</p>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-cyan">📦</div>
+      <div><div class="concept-title">Step 1 — What is a Container?</div><div class="concept-sub">Before Kubernetes, understand containers</div></div>
+    </div>
+    <div class="concept-body">
+      <p>A <strong>container</strong> is a lightweight package that holds your application code + everything it needs to run (Java runtime, dependencies, config). Think of it like a shipping container — standardised box that runs the same everywhere.</p>
+      <p>You've already used Docker containers in your Spring Boot projects. When you run <code>docker build</code> and <code>docker run</code>, you're creating and running containers.</p>
+    </div>
+    <div class="analogy">🚢 <strong>Analogy:</strong> A container is like a lunchbox. Everything your app needs for the day is packed inside. Doesn't matter if you're at home, office, or a café — the lunchbox works the same.</div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-blue">⚙️</div>
+      <div><div class="concept-title">Step 2 — What is Kubernetes?</div><div class="concept-sub">The container orchestrator — manages thousands of containers</div></div>
+    </div>
+    <div class="concept-body">
+      <p><strong>Kubernetes (K8s)</strong> is a system that manages containers at scale. Imagine you have 50 containers running your Spring Boot app across 10 servers. Kubernetes handles:</p>
+      <ul>
+        <li>Starting and stopping containers</li>
+        <li>Restarting crashed containers automatically</li>
+        <li>Distributing traffic across containers (load balancing)</li>
+        <li>Scaling up/down based on traffic</li>
+        <li>Deploying new versions without downtime</li>
+      </ul>
+    </div>
+    <div class="analogy">🏭 <strong>Analogy:</strong> If containers are workers, Kubernetes is the factory manager. It decides how many workers to hire, which shifts they work, replaces sick workers automatically, and ensures production never stops.</div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-purple">☁️</div>
+      <div><div class="concept-title">Step 3 — What is AKS?</div><div class="concept-sub">Azure Kubernetes Service — managed Kubernetes on Microsoft Azure</div></div>
+    </div>
+    <div class="concept-body">
+      <p><strong>AKS (Azure Kubernetes Service)</strong> is Microsoft Azure's managed version of Kubernetes. Running Kubernetes yourself is hard — you need to set up and maintain the control plane, upgrades, security, networking. AKS does all of that for you.</p>
+      <p>You get a fully functional Kubernetes cluster with one command. Azure manages the brain of Kubernetes (control plane) for free. You only pay for the worker machines (nodes) that run your apps.</p>
+      <ul>
+        <li>Microsoft manages: upgrades, security patches, control plane availability</li>
+        <li>You manage: your application deployments, scaling config, networking rules</li>
+      </ul>
+    </div>
+    <div class="analogy">🏠 <strong>Analogy:</strong> Running Kubernetes yourself = buying land and building a house. AKS = renting a fully-managed apartment. The building's infrastructure (plumbing, electricity, security) is handled. You just move in your furniture (your apps).</div>
+  </div>
+
+  <div class="sh"><h2>Kubernetes vs AKS — key difference</h2></div>
+  <table class="tbl">
+    <tr><th>Aspect</th><th>Plain Kubernetes (self-managed)</th><th>AKS (managed)</th></tr>
+    <tr><td>Control Plane</td><td>You set it up and maintain it</td><td>Azure manages it (free)</td></tr>
+    <tr><td>Upgrades</td><td>You do them manually</td><td>Azure handles them</td></tr>
+    <tr><td>Availability</td><td>Your responsibility</td><td>99.9% SLA from Azure</td></tr>
+    <tr><td>Integration</td><td>Manual Azure integration</td><td>Built-in: Azure AD, Key Vault, Monitor</td></tr>
+    <tr><td>Cost</td><td>Pay for all machines incl. control plane</td><td>Pay only for worker nodes</td></tr>
+  </table>
+
+  <div class="note note-green">
+    <strong>Interview one-liner:</strong> "AKS is Azure's managed Kubernetes service. Azure handles the control plane, upgrades, and security. We focus on deploying and scaling our applications."
+  </div>
+</div>
+
+<!-- PAGE 2: CORE CONCEPTS -->
+<div id="p2" class="page">
+  <div class="eyebrow">Chapter 02</div>
+  <h1 style="font-size:1.8rem;font-weight:700;margin-bottom:8px">Core Concepts</h1>
+  <p style="color:var(--muted);margin-bottom:32px">The 8 building blocks of Kubernetes. Understand these and everything else makes sense.</p>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-green">🫘</div>
+      <div><div class="concept-title">Pod</div><div class="concept-sub">The smallest unit in Kubernetes</div></div>
+    </div>
+    <div class="concept-body">
+      <p>A <strong>Pod</strong> is the smallest deployable unit in Kubernetes. It wraps one or more containers that share the same network and storage. In practice, most pods contain <strong>one container</strong> (your Spring Boot app).</p>
+      <p>Pods are <strong>ephemeral</strong> — they are created and destroyed frequently. Never depend on a specific pod staying alive. If a pod crashes, Kubernetes creates a new one automatically.</p>
+      <ul>
+        <li>Each pod gets its own IP address inside the cluster</li>
+        <li>Pods on the same node share the node's resources (CPU, memory)</li>
+        <li>Pods don't survive node failures — they're rescheduled on another node</li>
+      </ul>
+    </div>
+    <div class="analogy">💡 <strong>Analogy:</strong> A Pod is like one instance of your Spring Boot app running in a server. If the server crashes, the app crashes. Kubernetes starts a new one automatically on a healthy server.</div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-blue">🖥️</div>
+      <div><div class="concept-title">Node</div><div class="concept-sub">A virtual machine that runs pods</div></div>
+    </div>
+    <div class="concept-body">
+      <p>A <strong>Node</strong> is a virtual machine (VM) in Azure that runs your pods. In AKS, nodes are Azure VMs (like Standard_D4s_v3). Each node runs a Kubernetes agent (kubelet) that manages pods on that node.</p>
+      <ul>
+        <li>You pick the node size (CPU, memory) when creating your AKS cluster</li>
+        <li>Multiple pods run on each node</li>
+        <li>Nodes are grouped into <strong>Node Pools</strong> in AKS</li>
+      </ul>
+    </div>
+    <div class="analogy">🏗️ <strong>Analogy:</strong> A Node is the physical server (or VM). Pods are apps running on that server. One server can run many apps.</div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-amber">🚀</div>
+      <div><div class="concept-title">Deployment</div><div class="concept-sub">Manages how many pods run and how they update</div></div>
+    </div>
+    <div class="concept-body">
+      <p>A <strong>Deployment</strong> tells Kubernetes: "I want 3 replicas of my Spring Boot app running at all times, using image version 2.1". Kubernetes maintains that state — if a pod dies, it creates a new one.</p>
+      <p>Deployments also handle <strong>rolling updates</strong> — when you deploy a new version, Kubernetes starts new pods with the new version before killing old ones. Zero downtime.</p>
+      <ul>
+        <li><code>replicas: 3</code> — run 3 pods</li>
+        <li><code>image: myapp:2.1</code> — which container image to use</li>
+        <li><code>strategy: RollingUpdate</code> — update pods one at a time</li>
+      </ul>
+    </div>
+    <div class="analogy">👔 <strong>Analogy:</strong> A Deployment is like an HR policy: "We always have 3 customer service agents on shift. If one calls in sick, hire a replacement immediately."</div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-cyan">🔗</div>
+      <div><div class="concept-title">Service</div><div class="concept-sub">A stable network endpoint for your pods</div></div>
+    </div>
+    <div class="concept-body">
+      <p>Pods come and go with different IP addresses. A <strong>Service</strong> is a stable virtual IP that sits in front of your pods and load-balances traffic to them. Other apps don't talk to pods directly — they talk to the Service.</p>
+      <p>Three main types:</p>
+      <ul>
+        <li><strong>ClusterIP</strong> — only accessible inside the cluster (default)</li>
+        <li><strong>NodePort</strong> — exposed on each node's IP on a specific port</li>
+        <li><strong>LoadBalancer</strong> — creates an Azure Load Balancer with a public IP</li>
+      </ul>
+    </div>
+    <div class="analogy">☎️ <strong>Analogy:</strong> A Service is like a company's main phone number. Employees (pods) come and go, but customers always call the same number. The receptionist (Service) routes the call to an available employee.</div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-red">🗺️</div>
+      <div><div class="concept-title">Ingress</div><div class="concept-sub">HTTP routing from the internet into your cluster</div></div>
+    </div>
+    <div class="concept-body">
+      <p>An <strong>Ingress</strong> is a set of rules for routing external HTTP/HTTPS traffic to the right Service. One Ingress can route multiple domain paths to different services.</p>
+      <ul>
+        <li><code>api.company.com/users</code> → user-service</li>
+        <li><code>api.company.com/orders</code> → order-service</li>
+      </ul>
+      <p>An <strong>Ingress Controller</strong> (e.g., NGINX, Azure Application Gateway) is the actual software that implements the rules.</p>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-purple">🗄️</div>
+      <div><div class="concept-title">ConfigMap & Secret</div><div class="concept-sub">Configuration and sensitive data for pods</div></div>
+    </div>
+    <div class="concept-body">
+      <p><strong>ConfigMap</strong> — stores non-sensitive configuration as key-value pairs. Mounted into pods as environment variables or files.</p>
+      <p><strong>Secret</strong> — stores sensitive data (passwords, API keys, connection strings) in base64-encoded form. In AKS, you connect Secrets to <strong>Azure Key Vault</strong> for true security.</p>
+    </div>
+    <div class="analogy">🔑 <strong>Analogy:</strong> ConfigMap = a sticky note with app settings. Secret = a locked safe with passwords. Both are handed to the app when it starts.</div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-blue">📁</div>
+      <div><div class="concept-title">Namespace</div><div class="concept-sub">Logical isolation inside a cluster</div></div>
+    </div>
+    <div class="concept-body">
+      <p>A <strong>Namespace</strong> divides a cluster into virtual sub-clusters. Used to separate environments (dev/staging/prod) or teams within the same physical cluster.</p>
+      <ul>
+        <li>Default namespace: <code>default</code></li>
+        <li>You create: <code>namespace: production</code>, <code>namespace: staging</code></li>
+        <li>Resource quotas can be set per namespace</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sh"><h2>Quick Reference</h2></div>
+  <div class="cheat">
+    <div class="cheat-head">Concept · What it does · Key command</div>
+    <div class="cheat-row"><div class="cheat-key">Pod</div><div class="cheat-val">One running instance of your app</div><div class="cheat-cmd">kubectl get pods</div></div>
+    <div class="cheat-row"><div class="cheat-key">Node</div><div class="cheat-val">VM that hosts pods</div><div class="cheat-cmd">kubectl get nodes</div></div>
+    <div class="cheat-row"><div class="cheat-key">Deployment</div><div class="cheat-val">Manages pod count + rolling updates</div><div class="cheat-cmd">kubectl get deployments</div></div>
+    <div class="cheat-row"><div class="cheat-key">Service</div><div class="cheat-val">Stable network endpoint for pods</div><div class="cheat-cmd">kubectl get services</div></div>
+    <div class="cheat-row"><div class="cheat-key">Ingress</div><div class="cheat-val">Routes external HTTP to services</div><div class="cheat-cmd">kubectl get ingress</div></div>
+    <div class="cheat-row"><div class="cheat-key">ConfigMap</div><div class="cheat-val">Non-sensitive app config</div><div class="cheat-cmd">kubectl get configmaps</div></div>
+    <div class="cheat-row"><div class="cheat-key">Secret</div><div class="cheat-val">Sensitive data (passwords, keys)</div><div class="cheat-cmd">kubectl get secrets</div></div>
+    <div class="cheat-row"><div class="cheat-key">Namespace</div><div class="cheat-val">Logical cluster partition</div><div class="cheat-cmd">kubectl get namespaces</div></div>
+  </div>
+</div>
+
+<!-- PAGE 3: ARCHITECTURE -->
+<div id="p3" class="page">
+  <div class="eyebrow">Chapter 03</div>
+  <h1 style="font-size:1.8rem;font-weight:700;margin-bottom:8px">AKS Architecture</h1>
+  <p style="color:var(--muted);margin-bottom:32px">How the pieces fit together — Control Plane, Worker Nodes, and Azure integrations.</p>
+
+  <div class="sh"><h2>The two halves of a Kubernetes cluster</h2></div>
+
+  <div class="svg-wrap">
+    <svg width="100%" viewBox="0 0 780 380" xmlns="http://www.w3.org/2000/svg">
+      <!-- Control Plane box -->
+      <rect x="20" y="20" width="340" height="160" rx="10" fill="#1a1d27" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <text x="190" y="44" text-anchor="middle" fill="#6366f1" font-size="10" font-weight="600" letter-spacing="2">CONTROL PLANE (managed by Azure)</text>
+
+      <rect x="36" y="56" width="140" height="50" rx="6" fill="#222536" stroke="#2e3148"/>
+      <text x="106" y="77" text-anchor="middle" fill="#e2e8f0" font-size="10" font-weight="600">API Server</text>
+      <text x="106" y="93" text-anchor="middle" fill="#64748b" font-size="9">All kubectl commands</text>
+      <text x="106" y="107" text-anchor="middle" fill="#64748b" font-size="9">hit this first</text>
+
+      <rect x="196" y="56" width="140" height="50" rx="6" fill="#222536" stroke="#2e3148"/>
+      <text x="266" y="77" text-anchor="middle" fill="#e2e8f0" font-size="10" font-weight="600">etcd</text>
+      <text x="266" y="93" text-anchor="middle" fill="#64748b" font-size="9">Distributed database</text>
+      <text x="266" y="107" text-anchor="middle" fill="#64748b" font-size="9">stores all cluster state</text>
+
+      <rect x="36" y="124" width="140" height="44" rx="6" fill="#222536" stroke="#2e3148"/>
+      <text x="106" y="145" text-anchor="middle" fill="#e2e8f0" font-size="10" font-weight="600">Scheduler</text>
+      <text x="106" y="161" text-anchor="middle" fill="#64748b" font-size="9">Decides which node</text>
+
+      <rect x="196" y="124" width="140" height="44" rx="6" fill="#222536" stroke="#2e3148"/>
+      <text x="266" y="145" text-anchor="middle" fill="#e2e8f0" font-size="10" font-weight="600">Controller Manager</text>
+      <text x="266" y="161" text-anchor="middle" fill="#64748b" font-size="9">Maintains desired state</text>
+
+      <!-- Worker Nodes box -->
+      <rect x="400" y="20" width="360" height="340" rx="10" fill="#1a1d27" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <text x="580" y="44" text-anchor="middle" fill="#22d3ee" font-size="10" font-weight="600" letter-spacing="2">WORKER NODES (you pay for these)</text>
+
+      <!-- Node 1 -->
+      <rect x="416" y="56" width="156" height="150" rx="6" fill="#222536" stroke="#2e3148"/>
+      <text x="494" y="76" text-anchor="middle" fill="#e2e8f0" font-size="10" font-weight="600">Node 1 (Azure VM)</text>
+      <rect x="426" y="84" width="136" height="34" rx="4" fill="#1a1d27" stroke="#6366f1"/>
+      <text x="494" y="103" text-anchor="middle" fill="#a5b4fc" font-size="9">Pod: spring-api-1</text>
+      <rect x="426" y="124" width="136" height="34" rx="4" fill="#1a1d27" stroke="#6366f1"/>
+      <text x="494" y="143" text-anchor="middle" fill="#a5b4fc" font-size="9">Pod: spring-api-2</text>
+      <rect x="426" y="164" width="136" height="34" rx="4" fill="#1a1d27" stroke="#22c55e"/>
+      <text x="494" y="183" text-anchor="middle" fill="#86efac" font-size="9">kubelet (agent)</text>
+
+      <!-- Node 2 -->
+      <rect x="588" y="56" width="156" height="150" rx="6" fill="#222536" stroke="#2e3148"/>
+      <text x="666" y="76" text-anchor="middle" fill="#e2e8f0" font-size="10" font-weight="600">Node 2 (Azure VM)</text>
+      <rect x="598" y="84" width="136" height="34" rx="4" fill="#1a1d27" stroke="#6366f1"/>
+      <text x="666" y="103" text-anchor="middle" fill="#a5b4fc" font-size="9">Pod: spring-api-3</text>
+      <rect x="598" y="124" width="136" height="34" rx="4" fill="#1a1d27" stroke="#f59e0b"/>
+      <text x="666" y="143" text-anchor="middle" fill="#fcd34d" font-size="9">Pod: redis-cache</text>
+      <rect x="598" y="164" width="136" height="34" rx="4" fill="#1a1d27" stroke="#22c55e"/>
+      <text x="666" y="183" text-anchor="middle" fill="#86efac" font-size="9">kubelet (agent)</text>
+
+      <!-- Azure Services -->
+      <rect x="416" y="226" width="326" height="120" rx="6" fill="#1a1d27" stroke="#f59e0b" stroke-dasharray="4,3"/>
+      <text x="579" y="244" text-anchor="middle" fill="#f59e0b" font-size="9" font-weight="600" letter-spacing="1">AZURE INTEGRATIONS</text>
+      <rect x="428" y="252" width="90" height="32" rx="4" fill="#222536" stroke="#2e3148"/>
+      <text x="473" y="272" text-anchor="middle" fill="#94a3b8" font-size="8">Azure Entra ID</text>
+      <rect x="528" y="252" width="90" height="32" rx="4" fill="#222536" stroke="#2e3148"/>
+      <text x="573" y="272" text-anchor="middle" fill="#94a3b8" font-size="8">Azure Key Vault</text>
+      <rect x="628" y="252" width="100" height="32" rx="4" fill="#222536" stroke="#2e3148"/>
+      <text x="678" y="272" text-anchor="middle" fill="#94a3b8" font-size="8">App Insights</text>
+      <rect x="428" y="294" width="90" height="32" rx="4" fill="#222536" stroke="#2e3148"/>
+      <text x="473" y="314" text-anchor="middle" fill="#94a3b8" font-size="8">Azure Monitor</text>
+      <rect x="528" y="294" width="90" height="32" rx="4" fill="#222536" stroke="#2e3148"/>
+      <text x="573" y="314" text-anchor="middle" fill="#94a3b8" font-size="8">Container Registry</text>
+      <rect x="628" y="294" width="100" height="32" rx="4" fill="#222536" stroke="#2e3148"/>
+      <text x="678" y="314" text-anchor="middle" fill="#94a3b8" font-size="8">Azure SQL / Redis</text>
+
+      <!-- Arrow from Control to Workers -->
+      <line x1="362" y1="100" x2="400" y2="100" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+      <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#6366f1"/></marker></defs>
+
+      <!-- kubectl from outside -->
+      <rect x="20" y="210" width="120" height="36" rx="6" fill="#222536" stroke="#22d3ee"/>
+      <text x="80" y="233" text-anchor="middle" fill="#22d3ee" font-size="10" font-weight="600">kubectl</text>
+      <line x1="140" y1="228" x2="180" y2="120" stroke="#22d3ee" stroke-width="1" stroke-dasharray="4,2"/>
+      <text x="80" y="258" text-anchor="middle" fill="#64748b" font-size="8">Your terminal</text>
+    </svg>
+  </div>
+
+  <div class="arch-grid">
+    <div class="arch-box">
+      <h4 style="color:var(--accent)">Control Plane (Azure manages)</h4>
+      <ul>
+        <li><strong>API Server</strong> — entry point for all kubectl commands</li>
+        <li><strong>etcd</strong> — database storing all cluster state</li>
+        <li><strong>Scheduler</strong> — decides which node a new pod goes to</li>
+        <li><strong>Controller Manager</strong> — ensures desired state is maintained</li>
+      </ul>
+    </div>
+    <div class="arch-box">
+      <h4 style="color:var(--accent2)">Worker Nodes (you manage)</h4>
+      <ul>
+        <li><strong>kubelet</strong> — agent on each node, talks to Control Plane</li>
+        <li><strong>kube-proxy</strong> — handles network rules on the node</li>
+        <li><strong>Container runtime</strong> — actually runs containers (containerd)</li>
+        <li><strong>Your pods</strong> — your Spring Boot apps run here</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note note-amber">
+    <strong>Interview tip:</strong> "In AKS, Azure manages the control plane completely — we don't pay for it or maintain it. We only manage the worker nodes where our applications run. This is the biggest operational advantage of AKS over self-managed Kubernetes."
+  </div>
+</div>
+
+<!-- PAGE 4: YAML & CONFIG -->
+<div id="p4" class="page">
+  <div class="eyebrow">Chapter 04</div>
+  <h1 style="font-size:1.8rem;font-weight:700;margin-bottom:8px">YAML & Configuration</h1>
+  <p style="color:var(--muted);margin-bottom:32px">Everything in Kubernetes is defined in YAML files. Learn to read and write them.</p>
+
+  <div class="sh"><h2>Deployment YAML — your Spring Boot app</h2><p>This is what you write to deploy your Spring Boot API to AKS</p></div>
+
+  <div class="cb-wrap">
+    <div class="cb-label"><div class="cb-dot cb-dot-red"></div><div class="cb-dot cb-dot-amber"></div><div class="cb-dot cb-dot-green"></div>&nbsp; deployment.yaml — Spring Boot API</div>
+    <pre class="language-yaml"><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: policy-api                    # name of this deployment
+  namespace: production               # which namespace
+spec:
+  replicas: 3                         # run 3 pods at all times
+  selector:
+    matchLabels:
+      app: policy-api                 # which pods this deployment manages
+  template:
+    metadata:
+      labels:
+        app: policy-api
+    spec:
+      containers:
+      - name: policy-api
+        image: myregistry.azurecr.io/policy-api:2.1.0   # container image
+        ports:
+        - containerPort: 8080
+        
+        # Environment variables from ConfigMap and Secret
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "production"
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:             # pulled from Azure Key Vault Secret
+              name: db-credentials
+              key: url
+        
+        # Resource limits — CRITICAL for AKS
+        resources:
+          requests:                   # minimum guaranteed
+            memory: "512Mi"
+            cpu: "250m"
+          limits:                     # maximum allowed
+            memory: "1Gi"
+            cpu: "500m"
+        
+        # Health probes
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 15</code></pre>
+  </div>
+
+  <div class="sh"><h2>Service YAML — expose your deployment</h2></div>
+  <div class="cb-wrap">
+    <div class="cb-label"><div class="cb-dot cb-dot-red"></div><div class="cb-dot cb-dot-amber"></div><div class="cb-dot cb-dot-green"></div>&nbsp; service.yaml</div>
+    <pre class="language-yaml"><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: policy-api-service
+  namespace: production
+spec:
+  selector:
+    app: policy-api               # routes to pods with this label
+  ports:
+  - protocol: TCP
+    port: 80                      # service port (external)
+    targetPort: 8080              # pod port (internal)
+  type: ClusterIP                 # internal only — Ingress handles external</code></pre>
+  </div>
+
+  <div class="sh"><h2>Resource requests vs limits — important distinction</h2></div>
+  <table class="tbl">
+    <tr><th>Setting</th><th>What it means</th><th>Consequence if violated</th></tr>
+    <tr><td>requests.memory</td><td>Minimum memory guaranteed to this pod</td><td>Pod won't start if node can't provide it</td></tr>
+    <tr><td>limits.memory</td><td>Maximum memory the pod can use</td><td>Pod is killed with OOMKilled if exceeded</td></tr>
+    <tr><td>requests.cpu</td><td>Minimum CPU guaranteed</td><td>Pod may be scheduled on different node</td></tr>
+    <tr><td>limits.cpu</td><td>Maximum CPU the pod can use</td><td>Pod is throttled (slowed down, not killed)</td></tr>
+  </table>
+
+  <div class="note note-amber">
+    <strong>Common interview question:</strong> "What is OOMKilled?" — It means Out Of Memory Killed. The pod exceeded its memory limit and Kubernetes killed it. You'll see this in <code>kubectl describe pod</code>. Fix: increase the memory limit.
+  </div>
+
+  <div class="sh"><h2>CPU units explained</h2></div>
+  <div class="concept">
+    <div class="concept-body">
+      <p><code>250m</code> = 250 millicores = 0.25 CPU cores. <code>1000m</code> = 1 full CPU core.</p>
+      <p>So <code>requests.cpu: 250m</code> means "guarantee this pod at least ¼ of a CPU core".</p>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 5: NETWORKING -->
+<div id="p5" class="page">
+  <div class="eyebrow">Chapter 05</div>
+  <h1 style="font-size:1.8rem;font-weight:700;margin-bottom:8px">Networking</h1>
+  <p style="color:var(--muted);margin-bottom:32px">How traffic gets from the internet to your Spring Boot pod — and the Istio concepts Chetan asked about.</p>
+
+  <div class="sh"><h2>The full traffic path</h2></div>
+
+  <div class="diagram"><span class="hl">INTERNET USER</span>
+      │
+      ▼
+<span class="gr">DNS lookup</span> → resolves to Azure App Gateway public IP
+      │
+      ▼
+<span class="hl">Azure Application Gateway</span>  (WAF, SSL termination, routing)
+      │  443 (HTTPS) in → 80 (HTTP) out
+      ▼
+<span class="ac">AKS Ingress Controller</span>  (NGINX or App Gateway Ingress Controller)
+      │  routes by path: /api/policies → policy-service
+      ▼
+<span class="gr">Kubernetes Service</span>  (ClusterIP — load balances across pods)
+      │
+      ├──────────────────────────┐
+      ▼                          ▼
+<span class="am">Pod: spring-api-1</span>        <span class="am">Pod: spring-api-2</span>
+  :8080                      :8080</div>
+
+  <div class="sh"><h2>Types of Kubernetes Services</h2></div>
+  <table class="tbl">
+    <tr><th>Type</th><th>Accessible from</th><th>When to use</th></tr>
+    <tr><td>ClusterIP</td><td>Inside cluster only</td><td>Default. For internal service-to-service communication</td></tr>
+    <tr><td>NodePort</td><td>Each node's IP + port</td><td>Testing only — not for production</td></tr>
+    <tr><td>LoadBalancer</td><td>Public internet via Azure LB</td><td>When you need a direct public IP (e.g., no Ingress)</td></tr>
+    <tr><td>ExternalName</td><td>Maps to an external DNS</td><td>Bridging to external services</td></tr>
+  </table>
+
+  <div class="sh"><h2>Ingress — path-based routing</h2></div>
+  <div class="cb-wrap">
+    <div class="cb-label"><div class="cb-dot cb-dot-red"></div><div class="cb-dot cb-dot-amber"></div><div class="cb-dot cb-dot-green"></div>&nbsp; ingress.yaml</div>
+    <pre class="language-yaml"><code class="language-yaml">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: api.manulife.com
+    http:
+      paths:
+      - path: /policies
+        pathType: Prefix
+        backend:
+          service:
+            name: policy-service
+            port:
+              number: 80
+      - path: /claims
+        pathType: Prefix
+        backend:
+          service:
+            name: claims-service
+            port:
+              number: 80</code></pre>
+  </div>
+
+  <div class="sh"><h2>Istio — Virtual Service & Destination Rule</h2><p>These are what Chetan asked. Istio is a service mesh layer on top of Kubernetes.</p></div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-blue">🗺️</div>
+      <div><div class="concept-title">Virtual Service</div><div class="concept-sub">Traffic routing rules — WHERE traffic goes</div></div>
+    </div>
+    <div class="concept-body">
+      <p>A <strong>VirtualService</strong> defines routing rules within Istio's service mesh. It answers: <em>which version of a service should receive this request?</em></p>
+      <ul>
+        <li><strong>Canary deploy:</strong> 90% of traffic → v1, 10% → v2 (new version being tested)</li>
+        <li><strong>A/B testing:</strong> Users with header <code>X-Beta: true</code> → v2, everyone else → v1</li>
+        <li><strong>Fault injection:</strong> Simulate 5% errors for chaos testing</li>
+        <li><strong>Retries:</strong> Auto-retry failed requests up to 3 times</li>
+      </ul>
+    </div>
+    <div class="analogy">🗺️ <strong>Analogy:</strong> VirtualService is the GPS navigation — it decides the route. "Take 90% of traffic on the main road (v1), and 10% on the new road being tested (v2)."</div>
+  </div>
+
+  <div class="cb-wrap">
+    <div class="cb-label"><div class="cb-dot cb-dot-red"></div><div class="cb-dot cb-dot-amber"></div><div class="cb-dot cb-dot-green"></div>&nbsp; virtual-service.yaml — canary deployment</div>
+    <pre class="language-yaml"><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: policy-api-vs
+spec:
+  hosts:
+  - policy-api
+  http:
+  - route:
+    - destination:
+        host: policy-api
+        subset: v1              # 90% to stable version
+      weight: 90
+    - destination:
+        host: policy-api
+        subset: v2              # 10% to new version (canary)
+      weight: 10</code></pre>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-cyan">🚦</div>
+      <div><div class="concept-title">Destination Rule</div><div class="concept-sub">Traffic behaviour — HOW traffic behaves at the destination</div></div>
+    </div>
+    <div class="concept-body">
+      <p>A <strong>DestinationRule</strong> defines policies that apply once traffic reaches its destination. It answers: <em>how should we handle traffic once it arrives?</em></p>
+      <ul>
+        <li><strong>Load balancing algorithm:</strong> ROUND_ROBIN, LEAST_CONN, RANDOM</li>
+        <li><strong>Circuit breaker:</strong> Eject a pod from the load balancer after 5 consecutive failures for 30 seconds</li>
+        <li><strong>Connection pool:</strong> Max 100 concurrent connections per pod</li>
+        <li><strong>Subsets:</strong> Define v1 and v2 pods by their labels (used by VirtualService)</li>
+      </ul>
+    </div>
+    <div class="analogy">🚦 <strong>Analogy:</strong> DestinationRule is the traffic management system once you're at the destination — speed limits, lane rules, which exits are closed. VirtualService decides your route; DestinationRule manages what happens when you arrive.</div>
+  </div>
+
+  <div class="cb-wrap">
+    <div class="cb-label"><div class="cb-dot cb-dot-red"></div><div class="cb-dot cb-dot-amber"></div><div class="cb-dot cb-dot-green"></div>&nbsp; destination-rule.yaml</div>
+    <pre class="language-yaml"><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: policy-api-dr
+spec:
+  host: policy-api
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN         # distribute evenly across pods
+    outlierDetection:             # circuit breaker
+      consecutive5xxErrors: 5     # eject after 5 consecutive errors
+      interval: 30s               # check every 30 seconds
+      baseEjectionTime: 30s       # eject for 30 seconds
+  subsets:
+  - name: v1
+    labels:
+      version: v1                 # pods labelled version=v1
+  - name: v2
+    labels:
+      version: v2                 # pods labelled version=v2</code></pre>
+  </div>
+
+  <div class="note note-cyan">
+    <strong>The one-line distinction to memorise:</strong> VirtualService = the map (routing rules, which version gets traffic). DestinationRule = the road rules (how traffic behaves: load balancing, circuit breakers, connection limits).
+  </div>
+</div>
+
+<!-- PAGE 6: SCALING & HEALTH -->
+<div id="p6" class="page">
+  <div class="eyebrow">Chapter 06</div>
+  <h1 style="font-size:1.8rem;font-weight:700;margin-bottom:8px">Scaling & Health</h1>
+  <p style="color:var(--muted);margin-bottom:32px">How Kubernetes keeps your app alive and scales it automatically.</p>
+
+  <div class="sh"><h2>Health Probes — how Kubernetes knows if your pod is healthy</h2></div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-green">💚</div>
+      <div><div class="concept-title">Readiness Probe</div><div class="concept-sub">Is this pod ready to receive traffic?</div></div>
+    </div>
+    <div class="concept-body">
+      <p>The readiness probe checks if your pod is ready to serve requests. If it fails, Kubernetes removes the pod from the Service's load balancer — no traffic is sent to it — but the pod keeps running.</p>
+      <p><strong>Use case:</strong> Spring Boot takes 20 seconds to start. Without a readiness probe, Kubernetes sends traffic immediately and users get errors. With it, traffic only routes to the pod after startup is complete.</p>
+    </div>
+    <div class="analogy">🏪 <strong>Analogy:</strong> A restaurant that's open but the kitchen isn't ready yet. The "Open" sign is off (not in load balancer) until the kitchen is ready. Then the sign turns on.</div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-red">❤️</div>
+      <div><div class="concept-title">Liveness Probe</div><div class="concept-sub">Is this pod still alive? Should we restart it?</div></div>
+    </div>
+    <div class="concept-body">
+      <p>The liveness probe checks if your pod is healthy during its life. If it fails, Kubernetes <strong>restarts the pod</strong>. Used to detect when an app has deadlocked or entered a bad state from which it can't recover.</p>
+      <p><strong>Use case:</strong> Your Spring Boot app is running but has a deadlocked thread — it's responsive to the health endpoint? No. Kubernetes restarts it.</p>
+    </div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-amber">🚀</div>
+      <div><div class="concept-title">Startup Probe</div><div class="concept-sub">Give slow-starting apps time to boot</div></div>
+    </div>
+    <div class="concept-body">
+      <p>The startup probe runs <strong>before</strong> liveness and readiness probes kick in. It gives slow-starting apps (like Spring Boot with many beans) extra time to boot without the liveness probe killing them prematurely.</p>
+      <p><strong>Rule:</strong> If your app takes more than 30 seconds to start, use a startup probe.</p>
+    </div>
+  </div>
+
+  <div class="cb-wrap">
+    <div class="cb-label"><div class="cb-dot cb-dot-red"></div><div class="cb-dot cb-dot-amber"></div><div class="cb-dot cb-dot-green"></div>&nbsp; probes in deployment.yaml</div>
+    <pre class="language-yaml"><code class="language-yaml">        startupProbe:                       # runs first, gives app time to boot
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          failureThreshold: 30              # 30 × 10s = 5 minutes to start
+          periodSeconds: 10
+
+        readinessProbe:                     # is it ready for traffic?
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 0           # starts after startupProbe succeeds
+          periodSeconds: 10
+          failureThreshold: 3
+
+        livenessProbe:                      # is it still healthy?
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          periodSeconds: 15
+          failureThreshold: 3              # restart after 3 consecutive failures</code></pre>
+  </div>
+
+  <div class="sh"><h2>HPA — Horizontal Pod Autoscaler</h2></div>
+
+  <div class="concept">
+    <div class="concept-head">
+      <div class="concept-icon ci-blue">📈</div>
+      <div><div class="concept-title">Horizontal Pod Autoscaler (HPA)</div><div class="concept-sub">Automatically scales pod count based on load</div></div>
+    </div>
+    <div class="concept-body">
+      <p>HPA watches your pod's CPU/memory usage and automatically adds or removes pods to maintain target utilisation. You set: min pods, max pods, and target CPU%.</p>
+      <p><strong>Example:</strong> Normal traffic = 3 pods at 30% CPU. Traffic spike = HPA scales to 8 pods to keep each at ~70% CPU. Spike ends = HPA scales back to 3.</p>
+    </div>
+    <div class="analogy">🚖 <strong>Analogy:</strong> Like Uber surge pricing — when demand spikes, more drivers (pods) come online automatically. When it's quiet, fewer drivers are needed.</div>
+  </div>
+
+  <div class="cb-wrap">
+    <div class="cb-label"><div class="cb-dot cb-dot-red"></div><div class="cb-dot cb-dot-amber"></div><div class="cb-dot cb-dot-green"></div>&nbsp; hpa.yaml</div>
+    <pre class="language-yaml"><code class="language-yaml">apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: policy-api-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: policy-api
+  minReplicas: 3                  # never go below 3 pods
+  maxReplicas: 10                 # never exceed 10 pods
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70    # scale up when average CPU > 70%</code></pre>
+  </div>
+
+  <div class="sh"><h2>Troubleshooting — pod keeps restarting</h2><p>The exact scenario Chetan asked about. Know this runbook cold.</p></div>
+
+  <div class="cheat">
+    <div class="cheat-head">Step · Command · What to look for</div>
+    <div class="cheat-row">
+      <div class="cheat-key">Step 1</div>
+      <div class="cheat-val">Check pod status and reason for restart</div>
+      <div class="cheat-cmd">kubectl describe pod &lt;name&gt;</div>
+    </div>
+    <div class="cheat-row">
+      <div class="cheat-key">Look for</div>
+      <div class="cheat-val">OOMKilled = memory limit exceeded. CrashLoopBackOff = app crashing. Liveness probe failed = health endpoint not responding</div>
+      <div class="cheat-cmd">Events section at bottom</div>
+    </div>
+    <div class="cheat-row">
+      <div class="cheat-key">Step 2</div>
+      <div class="cheat-val">Read logs from the crashed container (before restart)</div>
+      <div class="cheat-cmd">kubectl logs &lt;name&gt; --previous</div>
+    </div>
+    <div class="cheat-row">
+      <div class="cheat-key">Step 3</div>
+      <div class="cheat-val">If OOMKilled → increase memory limit in YAML</div>
+      <div class="cheat-cmd">limits.memory: "2Gi"</div>
+    </div>
+    <div class="cheat-row">
+      <div class="cheat-key">Step 4</div>
+      <div class="cheat-val">If CrashLoopBackOff → app failing at startup. Check env vars and secrets are all mounted correctly</div>
+      <div class="cheat-cmd">kubectl get secret &lt;name&gt;</div>
+    </div>
+    <div class="cheat-row">
+      <div class="cheat-key">Step 5</div>
+      <div class="cheat-val">If liveness probe fails for slow app → add startupProbe to give it more time</div>
+      <div class="cheat-cmd">startupProbe.failureThreshold: 30</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 7: INTERVIEW Q&A -->
+<div id="p7" class="page">
+  <div class="eyebrow">Chapter 07 · 40 Questions</div>
+  <h1 style="font-size:1.8rem;font-weight:700;margin-bottom:8px">Interview Q&A</h1>
+  <p style="color:var(--muted);margin-bottom:24px">Every question an interviewer is likely to ask a backend engineer about AKS. Click to reveal model answers. Mark as mastered when you can answer without reading.</p>
+
+  <!-- BASICS -->
+  <div class="sh"><h2>Fundamentals</h2></div>
+
+  <div class="qa" id="q1">
+    <div class="qa-q" onclick="toggleQA('q1')">
+      <span class="qa-badge badge-easy">EASY</span>
+      <span class="qa-text">What is AKS and why would you use it over running Kubernetes yourself?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q1')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>AKS is Azure's managed Kubernetes service. Azure manages the control plane — the API server, etcd, scheduler, controller manager — for free. We only pay for and manage the worker nodes where our applications run.</p>
+        <p>The advantages over self-managed Kubernetes: no operational overhead for control plane upgrades and patches, built-in integration with Azure AD, Key Vault, Monitor, and Container Registry, and a 99.9% SLA on the control plane. For a backend team, this means we focus on deploying applications rather than maintaining Kubernetes infrastructure.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q2">
+    <div class="qa-q" onclick="toggleQA('q2')">
+      <span class="qa-badge badge-easy">EASY</span>
+      <span class="qa-text">What is a Pod? How is it different from a container?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q2')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>A container is the runtime instance of a Docker image — it's one isolated process. A Pod is Kubernetes' abstraction that wraps one or more containers that share the same network namespace and storage volumes.</p>
+        <p>In practice, most pods contain a single container — your Spring Boot app. The pod is the smallest deployable unit in Kubernetes. Pods are ephemeral: when they die, Kubernetes creates new ones. You never interact with individual containers in Kubernetes — you work with pods.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q3">
+    <div class="qa-q" onclick="toggleQA('q3')">
+      <span class="qa-badge badge-easy">EASY</span>
+      <span class="qa-text">What is a Deployment and what does it guarantee?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q3')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>A Deployment is a Kubernetes resource that declares the desired state for your pods — which container image to run, how many replicas, resource limits, and health probes. Kubernetes' controller continuously reconciles the actual state with the desired state.</p>
+        <p>It guarantees: if a pod crashes, a new one is created. If a node goes down, pods are rescheduled on healthy nodes. It also manages rolling updates — deploying new image versions without downtime by starting new pods before terminating old ones.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q4">
+    <div class="qa-q" onclick="toggleQA('q4')">
+      <span class="qa-badge badge-easy">EASY</span>
+      <span class="qa-text">What is the difference between ClusterIP, NodePort, and LoadBalancer services?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q4')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p><strong>ClusterIP</strong> — only accessible inside the cluster. Used for internal service-to-service communication. For example, my policy-api calling the claims-service internally.</p>
+        <p><strong>NodePort</strong> — exposes the service on a static port on every node. Accessible from outside the cluster at NodeIP:NodePort. Only used for testing — not production.</p>
+        <p><strong>LoadBalancer</strong> — provisions an Azure Load Balancer with a public IP. Used when you need direct external access without an Ingress. More expensive as each service gets its own public IP. In production we prefer Ingress to share one load balancer across services.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q5">
+    <div class="qa-q" onclick="toggleQA('q5')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What is a Namespace and why do you use them?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q5')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>Namespaces provide logical isolation within a single cluster. We use them to separate environments — production, staging, and development all running in the same AKS cluster but completely isolated. Resource quotas can be set per namespace to prevent one environment from consuming all cluster resources.</p>
+        <p>In practice: <code>kubectl get pods -n production</code> vs <code>kubectl get pods -n staging</code>. Services in different namespaces don't conflict even if they have the same name.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEALTH PROBES -->
+  <div class="sh"><h2>Health Probes</h2></div>
+
+  <div class="qa" id="q6">
+    <div class="qa-q" onclick="toggleQA('q6')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What is the difference between readiness and liveness probes?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q6')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p><strong>Readiness probe</strong> — answers "is this pod ready to receive traffic?" If it fails, the pod is removed from the Service's load balancer but keeps running. Used to handle slow startup — Spring Boot takes 20-30 seconds to initialise, so we don't want traffic routed to it immediately.</p>
+        <p><strong>Liveness probe</strong> — answers "is this pod still healthy?" If it fails, Kubernetes restarts the pod. Used to recover from deadlocks or unrecoverable error states where the app is running but can't serve requests.</p>
+        <p>Key distinction: readiness failure = remove from load balancer. Liveness failure = restart the pod.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q7">
+    <div class="qa-q" onclick="toggleQA('q7')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What is a startup probe and when do you need one?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q7')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>A startup probe runs before liveness and readiness probes and gives slow-starting applications time to initialise. While the startup probe is running, liveness and readiness probes are disabled.</p>
+        <p>We need it when a Spring Boot application takes more than 30 seconds to start — for example, if it loads a large dataset at startup or has many beans to initialise. Without a startup probe, the liveness probe would kill the pod before it finishes starting, causing a restart loop. With <code>failureThreshold: 30</code> and <code>periodSeconds: 10</code>, the app has up to 5 minutes to start.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q8">
+    <div class="qa-q" onclick="toggleQA('q8')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What are resource requests and limits? What happens if a pod exceeds its memory limit?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q8')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p><strong>Requests</strong> are the minimum resources guaranteed to the pod — used by the scheduler to decide which node can host the pod. <strong>Limits</strong> are the maximum resources the pod can use.</p>
+        <p>If a pod exceeds its <strong>memory limit</strong>, Kubernetes kills it immediately with an <code>OOMKilled</code> (Out Of Memory Killed) status — visible in <code>kubectl describe pod</code>. The fix is to increase the memory limit or fix a memory leak in the application.</p>
+        <p>If a pod exceeds its <strong>CPU limit</strong>, it's throttled — slowed down but not killed. CPU limits are softer constraints than memory limits.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- NETWORKING -->
+  <div class="sh"><h2>Networking & Ingress</h2></div>
+
+  <div class="qa" id="q9">
+    <div class="qa-q" onclick="toggleQA('q9')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">How is a service deployed on AKS accessed from outside the cluster?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q9')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>External traffic flows: Client → DNS (resolves to App Gateway IP) → Azure Application Gateway (TLS termination, WAF, routing rules) → AKS Ingress Controller (NGINX or AGIC) → Kubernetes Service (ClusterIP, load balances across pods) → Pod.</p>
+        <p>The Application Gateway is the public entry point. It terminates HTTPS (using certificates from Azure Key Vault), applies WAF rules, and routes traffic by hostname or path to the appropriate AKS service. The Ingress Controller inside the cluster maps those paths to internal Services. Services load-balance across the healthy pods.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q10">
+    <div class="qa-q" onclick="toggleQA('q10')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What is an Ingress and why use it instead of a LoadBalancer service for every microservice?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q10')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>An Ingress is an HTTP routing layer that consolidates external access through a single entry point. One Ingress can route traffic to dozens of services based on path or hostname — <code>/api/policies</code> → policy-service, <code>/api/claims</code> → claims-service — all sharing one IP address and one load balancer.</p>
+        <p>Using LoadBalancer for every service means each gets its own Azure Load Balancer and public IP — expensive and unmanageable at scale. An Ingress with path-based routing is cheaper, centralised, and easier to secure (one TLS certificate, one WAF policy).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q11">
+    <div class="qa-q" onclick="toggleQA('q11')">
+      <span class="qa-badge badge-hard">HARD</span>
+      <span class="qa-text">What is a VirtualService in Istio and what are its use cases?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q11')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>A VirtualService is an Istio resource that defines traffic routing rules within the service mesh. It answers "which version or subset of a service should receive this request and under what conditions?"</p>
+        <p>Key use cases: <strong>Canary deployments</strong> — route 90% to v1 and 10% to v2, gradually shifting traffic as confidence grows. <strong>A/B testing</strong> — route users with a specific header to a different version. <strong>Fault injection</strong> — inject artificial delays or errors to test resilience. <strong>Retries and timeouts</strong> — automatically retry failed requests without changing application code.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q12">
+    <div class="qa-q" onclick="toggleQA('q12')">
+      <span class="qa-badge badge-hard">HARD</span>
+      <span class="qa-text">What is a DestinationRule and how does it differ from a VirtualService?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q12')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>VirtualService defines routing rules — where traffic goes and under what conditions. DestinationRule defines traffic policies — how traffic behaves once it reaches its destination.</p>
+        <p>DestinationRule controls: load balancing algorithm (ROUND_ROBIN, LEAST_CONN), connection pool limits (max concurrent connections per pod), and circuit breaking (eject a pod from the load balancer after N consecutive failures). It also defines subsets — labelling pods as v1 or v2 — which VirtualService references for weighted routing.</p>
+        <p>Memory hook: VirtualService is the map (route). DestinationRule is the road rules (speed limits, circuit breakers, lane control).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCALING -->
+  <div class="sh"><h2>Scaling & Deployments</h2></div>
+
+  <div class="qa" id="q13">
+    <div class="qa-q" onclick="toggleQA('q13')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What is HPA and how does it work?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q13')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>HPA — Horizontal Pod Autoscaler — automatically scales the number of pod replicas based on observed metrics. You configure a minimum replicas, maximum replicas, and a target metric (typically CPU utilisation at 70%).</p>
+        <p>Every 15 seconds, the HPA controller checks the current CPU across all pods. If average CPU exceeds 70%, it calculates the number of pods needed to bring it back to 70% and creates them. When load drops, it scales down — but slowly, to avoid flapping.</p>
+        <p>This pairs with resource requests — HPA uses the requests value as the baseline for utilisation calculations. If requests.cpu is 250m and the pod uses 200m, utilisation is 80%.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q14">
+    <div class="qa-q" onclick="toggleQA('q14')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What is a rolling update and how does Kubernetes achieve zero-downtime deployments?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q14')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>A rolling update replaces pods gradually — it starts new pods with the new image version before terminating old ones, ensuring there are always enough pods serving traffic throughout the deployment.</p>
+        <p>Configured by <code>maxSurge</code> (how many extra pods can exist during update) and <code>maxUnavailable</code> (how many pods can be down during update). With <code>maxSurge: 1</code> and <code>maxUnavailable: 0</code>, Kubernetes starts one new pod, waits for its readiness probe to pass, then terminates one old pod — repeating until all pods are updated. Zero downtime because there are always healthy pods receiving traffic.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q15">
+    <div class="qa-q" onclick="toggleQA('q15')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">How do you do a canary deployment in AKS without Istio?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q15')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>Without Istio, you can do a basic canary by running two Deployments — one for v1 with 9 replicas and one for v2 with 1 replica, both with the same label selector. The Service routes to both, giving approximately 90/10 traffic split by pod count ratio.</p>
+        <p>For more precise traffic splitting (exact percentages, header-based routing), you need Istio's VirtualService or an Ingress controller that supports traffic splitting (like NGINX with split annotations). The Istio approach is more production-grade as it doesn't require matching replica ratios to achieve your desired split.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TROUBLESHOOTING -->
+  <div class="sh"><h2>Troubleshooting</h2></div>
+
+  <div class="qa" id="q16">
+    <div class="qa-q" onclick="toggleQA('q16')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">A pod keeps restarting. Walk me through your debugging process.</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q16')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer — say this in order</div>
+      <div class="qa-a-text">
+        <p><strong>Step 1:</strong> <code>kubectl describe pod &lt;name&gt;</code> — check the Last State reason. OOMKilled means memory limit exceeded. CrashLoopBackOff means the app crashes on startup.</p>
+        <p><strong>Step 2:</strong> <code>kubectl logs &lt;name&gt; --previous</code> — read logs from the container before it crashed. Usually a stack trace tells you exactly what failed.</p>
+        <p><strong>Step 3 — if OOMKilled:</strong> Increase <code>resources.limits.memory</code> in the deployment YAML. Check for memory leaks.</p>
+        <p><strong>Step 4 — if CrashLoopBackOff:</strong> App failing at startup. Check all environment variables and secrets are correctly mounted. A missing DB connection string is the most common cause.</p>
+        <p><strong>Step 5 — if liveness probe failing:</strong> App is running but health endpoint not responding. For slow apps, add a startupProbe with <code>failureThreshold: 30</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q17">
+    <div class="qa-q" onclick="toggleQA('q17')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What is CrashLoopBackOff and what causes it?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q17')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>CrashLoopBackOff means the container keeps crashing and Kubernetes keeps restarting it, but adds increasing delays (backoff) between restarts — 10s, 20s, 40s, up to 5 minutes — to prevent thrashing the node.</p>
+        <p>Common causes: missing required environment variable (app crashes because DB_URL is null), wrong container image or image that doesn't exist, out-of-memory on startup (increase memory limit), application bug that throws an exception before the app is ready, or wrong startup command in the Docker image. Always check <code>kubectl logs --previous</code> first.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q18">
+    <div class="qa-q" onclick="toggleQA('q18')">
+      <span class="qa-badge badge-hard">HARD</span>
+      <span class="qa-text">How do you do a zero-downtime deployment for a Spring Boot app in AKS?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q18')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>Several things must be in place together:</p>
+        <p><strong>1. Rolling update strategy</strong> with maxUnavailable: 0 — no pod is terminated until a new one is ready.</p>
+        <p><strong>2. Readiness probe</strong> — new pods only receive traffic after the readiness probe passes. Without this, rolling update would send traffic to pods still initialising.</p>
+        <p><strong>3. Graceful shutdown</strong> — configure Spring Boot with <code>server.shutdown=graceful</code> so in-flight requests complete before the pod terminates. Set <code>terminationGracePeriodSeconds: 30</code> in the pod spec.</p>
+        <p><strong>4. preStop hook</strong> — add a short sleep (5s) in the preStop lifecycle hook so the load balancer has time to stop routing new traffic before Spring Boot starts shutting down.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECURITY -->
+  <div class="sh"><h2>Security & Config</h2></div>
+
+  <div class="qa" id="q19">
+    <div class="qa-q" onclick="toggleQA('q19')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">How do you manage secrets in AKS? How do you avoid hardcoding passwords?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q19')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>In AKS we use the <strong>Azure Key Vault provider for Secrets Store CSI Driver</strong>. Secrets are stored in Azure Key Vault (not in Kubernetes YAML or etcd). The AKS pod's managed identity is granted read access to Key Vault. When the pod starts, the CSI driver mounts the secrets as environment variables or files — the pod gets the secret value without it ever appearing in YAML or code.</p>
+        <p>We never commit secrets to git. Kubernetes native Secrets are base64-encoded (not encrypted) and stored in etcd — they're not secure by default. Azure Key Vault with managed identity is the production approach.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q20">
+    <div class="qa-q" onclick="toggleQA('q20')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What is a ConfigMap and when would you use it vs an environment variable directly in the deployment?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q20')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>A ConfigMap stores non-sensitive configuration data as key-value pairs, decoupled from the pod spec. Use it when the same config value is needed across multiple deployments, or when the config changes independently of the app image.</p>
+        <p>Direct env vars in deployment YAML are fine for single-use, rarely-changing values. ConfigMaps are better for: shared config (multiple services reading the same DB host), config that ops teams change without touching deployment YAML, and mounting config files into pods (e.g., an application.properties file).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADVANCED -->
+  <div class="sh"><h2>Advanced Topics</h2></div>
+
+  <div class="qa" id="q21">
+    <div class="qa-q" onclick="toggleQA('q21')">
+      <span class="qa-badge badge-hard">HARD</span>
+      <span class="qa-text">What is the difference between a Node Pool and a Cluster in AKS?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q21')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>A <strong>Cluster</strong> is the entire AKS environment — control plane + all worker nodes. A <strong>Node Pool</strong> is a group of nodes within a cluster that all have the same VM size and configuration.</p>
+        <p>You use multiple node pools when different workloads need different VM types. Example: a system node pool with Standard_D4s for general services, and a GPU node pool with NC6 VMs for ML inference workloads. Pods use node selectors or taints/tolerations to target specific pools. This way, expensive GPU nodes only run GPU workloads — not regular Spring Boot apps.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q22">
+    <div class="qa-q" onclick="toggleQA('q22')">
+      <span class="qa-badge badge-hard">HARD</span>
+      <span class="qa-text">What is a PersistentVolume and when does a backend service need one?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q22')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>A PersistentVolume (PV) is storage that persists beyond the life of a pod. Pods are ephemeral — when they die, any local storage is lost. PVs survive pod restarts and rescheduling.</p>
+        <p>Most backend Spring Boot APIs are stateless — they don't need PVs because state lives in Azure SQL or Redis. You need PVs for stateful workloads: databases running in Kubernetes (PostgreSQL, MongoDB), file storage services that store uploaded documents, or services that need a writable filesystem that survives restarts. In AKS, PVs are backed by Azure Disk or Azure Files.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q23">
+    <div class="qa-q" onclick="toggleQA('q23')">
+      <span class="qa-badge badge-hard">HARD</span>
+      <span class="qa-text">How does Kubernetes decide which node to schedule a pod on?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q23')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>The scheduler filters nodes first (removes nodes that can't run the pod) then scores remaining nodes and picks the highest scorer.</p>
+        <p>Filtering: node must have enough CPU and memory to satisfy the pod's requests, node must not have a taint the pod doesn't tolerate, node must match any nodeSelector or affinity rules the pod specifies.</p>
+        <p>Scoring: prefers nodes that spread the deployment's pods across different nodes (anti-affinity), prefers nodes with the most available resources. The highest-scoring node wins. This is why resource requests are critical — if you don't set them, the scheduler has no information to make a good decision.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q24">
+    <div class="qa-q" onclick="toggleQA('q24')">
+      <span class="qa-badge badge-hard">HARD</span>
+      <span class="qa-text">What is a DaemonSet? When would you use one vs a Deployment?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q24')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>A DaemonSet ensures exactly one pod runs on every node (or every node matching a selector). When a new node joins the cluster, the DaemonSet automatically starts a pod on it. When a node is removed, the pod is garbage collected.</p>
+        <p>Use DaemonSets for node-level infrastructure: log collectors (Fluentd, Filebeat) that need to run on every node to collect logs, monitoring agents (Datadog, Prometheus node-exporter), network plugins. Use Deployments for your application services where you control replica count and don't care which specific nodes they run on.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q25">
+    <div class="qa-q" onclick="toggleQA('q25')">
+      <span class="qa-badge badge-hard">HARD</span>
+      <span class="qa-text">How does Kubernetes handle service discovery? How does service-A call service-B internally?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q25')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>Kubernetes uses DNS-based service discovery. Every Service gets a DNS entry automatically: <code>service-name.namespace.svc.cluster.local</code>. Pods within the cluster can call services by name.</p>
+        <p>When policy-api calls claims-service in the same namespace: <code>http://claims-service:80/claims</code>. Kubernetes DNS resolves this to the ClusterIP of the claims-service. The kube-proxy on the node then load-balances across the healthy pods behind that service using iptables rules.</p>
+        <p>The application doesn't know about individual pod IPs — it only knows the service name. This is why Services are essential for internal communication.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q26">
+    <div class="qa-q" onclick="toggleQA('q26')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What is the Cluster Autoscaler and how does it differ from HPA?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q26')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p><strong>HPA</strong> scales pods (horizontal scaling of your application). <strong>Cluster Autoscaler</strong> scales nodes (adds or removes VMs from the node pool).</p>
+        <p>They work together: HPA sees high CPU, wants to add 3 more pods. But all nodes are full — no room. Cluster Autoscaler detects pending pods that can't be scheduled, provisions a new node from Azure, and the scheduler places the pods there. When load drops, HPA removes pods, nodes become underutilised, and Cluster Autoscaler terminates unneeded nodes to save cost.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q27">
+    <div class="qa-q" onclick="toggleQA('q27')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What is a StatefulSet and when would you use it?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q27')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>A StatefulSet is like a Deployment but for stateful applications. Unlike Deployments where pods are interchangeable, StatefulSet pods have stable, unique identities (pod-0, pod-1, pod-2) and stable network names that persist across restarts. Each pod gets its own PersistentVolume.</p>
+        <p>Use StatefulSets for databases or distributed systems running inside Kubernetes — Cassandra, Kafka, Redis Cluster, Zookeeper — where each instance has a unique role or data partition. For most backend Spring Boot services, use Deployments. If you're using Azure SQL or Azure Redis externally, you don't need StatefulSets at all.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q28">
+    <div class="qa-q" onclick="toggleQA('q28')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What kubectl commands do you use most in day-to-day work?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q28')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer — give these confidently</div>
+      <div class="qa-a-text">
+        <p><code>kubectl get pods -n production</code> — see all running pods and their status</p>
+        <p><code>kubectl describe pod &lt;name&gt;</code> — detailed info, events, restart reasons</p>
+        <p><code>kubectl logs &lt;name&gt; --previous</code> — logs from a crashed container</p>
+        <p><code>kubectl logs &lt;name&gt; -f</code> — stream live logs</p>
+        <p><code>kubectl rollout status deployment/policy-api</code> — watch a deployment roll out</p>
+        <p><code>kubectl rollout undo deployment/policy-api</code> — roll back to previous version</p>
+        <p><code>kubectl scale deployment/policy-api --replicas=5</code> — manually scale</p>
+        <p><code>kubectl exec -it &lt;pod&gt; -- /bin/sh</code> — shell into a running pod for debugging</p>
+        <p><code>kubectl apply -f deployment.yaml</code> — apply a YAML config change</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q29">
+    <div class="qa-q" onclick="toggleQA('q29')">
+      <span class="qa-badge badge-hard">HARD</span>
+      <span class="qa-text">What is a taint and toleration in Kubernetes?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q29')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>Taints are applied to nodes to repel pods. Tolerations are applied to pods to allow them onto tainted nodes. Together they control which pods can run on which nodes.</p>
+        <p>Example: a GPU node pool is tainted with <code>gpu=true:NoSchedule</code>. Regular pods can't be scheduled there because they don't tolerate this taint. Only ML inference pods that have the matching toleration can run on GPU nodes. This ensures expensive GPU nodes aren't wasted on regular Spring Boot apps.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa" id="q30">
+    <div class="qa-q" onclick="toggleQA('q30')">
+      <span class="qa-badge badge-med">MEDIUM</span>
+      <span class="qa-text">What is a Job and a CronJob in Kubernetes?</span>
+      <div class="qa-right"><button class="master-btn" onclick="markQ(event,'q30')">✓ Mastered</button><span class="chevron">▼</span></div>
+    </div>
+    <div class="qa-a">
+      <div class="qa-a-label">Model Answer</div>
+      <div class="qa-a-text">
+        <p>A <strong>Job</strong> runs a pod to completion — it starts a pod, waits for it to finish successfully, and then it's done. Used for batch processing, database migrations (run once on deploy), or data import tasks. If the pod fails, the Job retries it.</p>
+        <p>A <strong>CronJob</strong> is a Job that runs on a schedule — like a cron expression. Used for: nightly report generation, scheduled cache warming, periodic data cleanup, sending scheduled emails. The cron expression <code>0 2 * * *</code> runs at 2am every day.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 8: MOCK -->
+<div id="p8" class="page">
+  <div class="eyebrow">Chapter 08</div>
+  <h1 style="font-size:1.8rem;font-weight:700;margin-bottom:8px">Mock Interview</h1>
+  <p style="color:var(--muted);margin-bottom:24px">Toggle mock mode. Answer each question out loud before revealing. This is how you build interview muscle memory.</p>
+
+  <div class="mock-bar" id="mock-toggle-bar" onclick="toggleMock()">
+    <div class="sw" id="mock-sw"><div class="sw-k"></div></div>
+    <div class="mock-label">Mock mode <span id="mock-label-text">OFF — answers visible. Toggle to hide them.</span></div>
+  </div>
+
+  <div class="note note-amber" style="margin-bottom:20px">
+    <strong>Instructions:</strong> Read each question out loud. Answer it verbally. Then click to reveal and compare. If your answer matched ≥80%, mark it Mastered. Repeat the ones you missed until you can answer all 10 without looking.
+  </div>
+
+  <div id="mock-qs">
+    <div class="qa" id="mq1">
+      <div class="qa-q" onclick="toggleQA('mq1')">
+        <span class="qa-badge badge-easy">EASY</span>
+        <span class="qa-text">In one sentence — what is AKS?</span>
+        <div class="qa-right"><button class="master-btn" onclick="markQ(event,'mq1')">✓ Mastered</button><span class="chevron">▼</span></div>
+      </div>
+      <div class="qa-a">
+        <div class="qa-a-label">Model Answer</div>
+        <div class="qa-a-text"><p>AKS is Azure's managed Kubernetes service — Azure manages the control plane for free, and we pay only for the worker nodes that run our applications.</p></div>
+      </div>
+    </div>
+
+    <div class="qa" id="mq2">
+      <div class="qa-q" onclick="toggleQA('mq2')">
+        <span class="qa-badge badge-easy">EASY</span>
+        <span class="qa-text">What's the difference between a Pod and a Deployment?</span>
+        <div class="qa-right"><button class="master-btn" onclick="markQ(event,'mq2')">✓ Mastered</button><span class="chevron">▼</span></div>
+      </div>
+      <div class="qa-a">
+        <div class="qa-a-label">Model Answer</div>
+        <div class="qa-a-text"><p>A Pod is one running instance of your app — ephemeral, it can die at any time. A Deployment manages pods: it declares how many should run, which image to use, and ensures that desired count is maintained. If a pod dies, the Deployment creates a new one automatically.</p></div>
+      </div>
+    </div>
+
+    <div class="qa" id="mq3">
+      <div class="qa-q" onclick="toggleQA('mq3')">
+        <span class="qa-badge badge-med">MEDIUM</span>
+        <span class="qa-text">Readiness probe vs liveness probe — what's the difference?</span>
+        <div class="qa-right"><button class="master-btn" onclick="markQ(event,'mq3')">✓ Mastered</button><span class="chevron">▼</span></div>
+      </div>
+      <div class="qa-a">
+        <div class="qa-a-label">Model Answer</div>
+        <div class="qa-a-text"><p>Readiness = is this pod ready for traffic? Failure removes it from the load balancer. Liveness = is this pod still healthy? Failure restarts the pod. Readiness handles slow startup. Liveness handles deadlocks and unrecoverable states.</p></div>
+      </div>
+    </div>
+
+    <div class="qa" id="mq4">
+      <div class="qa-q" onclick="toggleQA('mq4')">
+        <span class="qa-badge badge-med">MEDIUM</span>
+        <span class="qa-text">How does traffic from the internet reach your Spring Boot pod in AKS?</span>
+        <div class="qa-right"><button class="master-btn" onclick="markQ(event,'mq4')">✓ Mastered</button><span class="chevron">▼</span></div>
+      </div>
+      <div class="qa-a">
+        <div class="qa-a-label">Model Answer</div>
+        <div class="qa-a-text"><p>Internet → DNS resolves to Azure Application Gateway → App Gateway does TLS termination and routes by path → AKS Ingress Controller routes to the correct Kubernetes Service → Service load-balances to healthy pods → your Spring Boot pod at port 8080.</p></div>
+      </div>
+    </div>
+
+    <div class="qa" id="mq5">
+      <div class="qa-q" onclick="toggleQA('mq5')">
+        <span class="qa-badge badge-med">MEDIUM</span>
+        <span class="qa-text">What is OOMKilled and how do you fix it?</span>
+        <div class="qa-right"><button class="master-btn" onclick="markQ(event,'mq5')">✓ Mastered</button><span class="chevron">▼</span></div>
+      </div>
+      <div class="qa-a">
+        <div class="qa-a-label">Model Answer</div>
+        <div class="qa-a-text"><p>OOMKilled means Out Of Memory Killed — the pod exceeded its memory limit and Kubernetes terminated it. Fix: increase <code>resources.limits.memory</code> in the deployment YAML. Then investigate whether the app has a memory leak using heap dumps or Application Insights memory metrics.</p></div>
+      </div>
+    </div>
+
+    <div class="qa" id="mq6">
+      <div class="qa-q" onclick="toggleQA('mq6')">
+        <span class="qa-badge badge-med">MEDIUM</span>
+        <span class="qa-text">What is HPA and what does it need to work correctly?</span>
+        <div class="qa-right"><button class="master-btn" onclick="markQ(event,'mq6')">✓ Mastered</button><span class="chevron">▼</span></div>
+      </div>
+      <div class="qa-a">
+        <div class="qa-a-label">Model Answer</div>
+        <div class="qa-a-text"><p>HPA automatically scales pod count based on metrics — typically CPU utilisation. It needs: resource requests set on pods (otherwise it can't calculate utilisation), a metrics server running in the cluster, and min/max replica bounds configured. When average CPU across pods exceeds the target%, it adds pods. When it drops, it removes them.</p></div>
+      </div>
+    </div>
+
+    <div class="qa" id="mq7">
+      <div class="qa-q" onclick="toggleQA('mq7')">
+        <span class="qa-badge badge-hard">HARD</span>
+        <span class="qa-text">VirtualService vs DestinationRule — explain the difference in one sentence each.</span>
+        <div class="qa-right"><button class="master-btn" onclick="markQ(event,'mq7')">✓ Mastered</button><span class="chevron">▼</span></div>
+      </div>
+      <div class="qa-a">
+        <div class="qa-a-label">Model Answer</div>
+        <div class="qa-a-text"><p>VirtualService defines routing rules — which version of a service gets traffic and under what conditions (canary, A/B, header matching). DestinationRule defines traffic policies at the destination — load balancing algorithm, circuit breaker settings, connection pool limits.</p></div>
+      </div>
+    </div>
+
+    <div class="qa" id="mq8">
+      <div class="qa-q" onclick="toggleQA('mq8')">
+        <span class="qa-badge badge-med">MEDIUM</span>
+        <span class="qa-text">A pod is in CrashLoopBackOff. What are your first 3 commands?</span>
+        <div class="qa-right"><button class="master-btn" onclick="markQ(event,'mq8')">✓ Mastered</button><span class="chevron">▼</span></div>
+      </div>
+      <div class="qa-a">
+        <div class="qa-a-label">Model Answer</div>
+        <div class="qa-a-text"><p>1) <code>kubectl describe pod &lt;name&gt;</code> — check Events and Last State reason. 2) <code>kubectl logs &lt;name&gt; --previous</code> — read the crash log from the dead container. 3) Based on the error: increase memory limit if OOMKilled, fix missing env vars if startup exception, add startupProbe if slow startup killing liveness.</p></div>
+      </div>
+    </div>
+
+    <div class="qa" id="mq9">
+      <div class="qa-q" onclick="toggleQA('mq9')">
+        <span class="qa-badge badge-med">MEDIUM</span>
+        <span class="qa-text">How do you manage secrets in AKS without hardcoding them in YAML?</span>
+        <div class="qa-right"><button class="master-btn" onclick="markQ(event,'mq9')">✓ Mastered</button><span class="chevron">▼</span></div>
+      </div>
+      <div class="qa-a">
+        <div class="qa-a-label">Model Answer</div>
+        <div class="qa-a-text"><p>We store secrets in Azure Key Vault and use the Secrets Store CSI Driver to mount them into pods at runtime. The pod's managed identity has read access to Key Vault. Secrets appear as environment variables in the pod without ever appearing in YAML or being committed to git. This is far more secure than Kubernetes native Secrets which are just base64-encoded in etcd.</p></div>
+      </div>
+    </div>
+
+    <div class="qa" id="mq10">
+      <div class="qa-q" onclick="toggleQA('mq10')">
+        <span class="qa-badge badge-hard">HARD</span>
+        <span class="qa-text">How do you achieve zero-downtime deployments in AKS for a Spring Boot app?</span>
+        <div class="qa-right"><button class="master-btn" onclick="markQ(event,'mq10')">✓ Mastered</button><span class="chevron">▼</span></div>
+      </div>
+      <div class="qa-a">
+        <div class="qa-a-label">Model Answer</div>
+        <div class="qa-a-text"><p>Four things together: rolling update strategy with maxUnavailable: 0 so no pod is removed until a replacement is ready; a readiness probe so new pods only receive traffic after Spring Boot is fully initialised; graceful shutdown in Spring Boot (<code>server.shutdown=graceful</code>) so in-flight requests complete before pod terminates; and a preStop lifecycle hook with a 5-second sleep so the load balancer stops routing new requests before shutdown begins.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+<script>
+let mastered = new Set();
+let mockOn = false;
+
+function show(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleQA(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+function markQ(e, id) {
+  e.stopPropagation();
+  const btn = e.target;
+  const card = document.getElementById(id);
+  if (mastered.has(id)) {
+    mastered.delete(id);
+    btn.classList.remove('done');
+    btn.textContent = '✓ Mastered';
+    card.classList.remove('mastered');
+  } else {
+    mastered.add(id);
+    btn.classList.add('done');
+    btn.textContent = '✓ Done!';
+    card.classList.add('mastered');
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = 40;
+  const count = mastered.size;
+  document.getElementById('prog-text').textContent = count + '/' + total;
+  document.getElementById('prog-fill').style.width = Math.round(count/total*100) + '%';
+}
+
+function toggleMock() {
+  mockOn = !mockOn;
+  const sw = document.getElementById('mock-sw');
+  const label = document.getElementById('mock-label-text');
+  const qs = document.getElementById('mock-qs');
+  const bar = document.getElementById('mock-toggle-bar');
+  if (mockOn) {
+    sw.classList.add('on');
+    label.textContent = 'ON — answers hidden. Click any question to reveal after answering.';
+    qs.classList.add('mock-mode');
+    bar.classList.add('mock-on');
+    document.querySelectorAll('#mock-qs .qa').forEach(q => q.classList.remove('open'));
+  } else {
+    sw.classList.remove('on');
+    label.textContent = 'OFF — answers visible. Toggle to hide them.';
+    qs.classList.remove('mock-mode');
+    bar.classList.remove('mock-on');
+  }
+}
+</script>
+</body>
+</html>
