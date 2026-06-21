@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chetan Interview Prep</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #fafaf8;
+  --ink: #18181b;
+  --muted: #71717a;
+  --rule: #e4e4e7;
+  --accent: #1d4ed8;
+  --accent-light: #eff6ff;
+  --accent-border: #bfdbfe;
+  --green: #15803d;
+  --green-bg: #f0fdf4;
+  --green-border: #bbf7d0;
+  --amber: #b45309;
+  --amber-bg: #fffbeb;
+  --amber-border: #fde68a;
+  --red: #be123c;
+  --red-bg: #fff1f2;
+  --red-border: #fecdd3;
+  --purple: #7c3aed;
+  --purple-bg: #f5f3ff;
+  --purple-border: #ddd6fe;
+  --card: #ffffff;
+  --code-bg: #1e1e2e;
+  --code-text: #cdd6f4;
+  --serif: 'Literata', Georgia, serif;
+  --mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── TOP STRIP ─────────────────────── */
+.topbar {
+  background: var(--ink);
+  padding: 10px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.topbar-left {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: #a1a1aa;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.topbar-left span { color: #60a5fa; }
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.progress-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: #71717a;
+}
+.progress-bar {
+  width: 120px;
+  height: 3px;
+  background: #3f3f46;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: #60a5fa;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+/* ── SIDE NAV ──────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: calc(100vh - 44px);
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.sidenav {
+  padding: 28px 0;
+  border-right: 1px solid var(--rule);
+  position: sticky;
+  top: 44px;
+  height: calc(100vh - 44px);
+  overflow-y: auto;
+}
+
+.sidenav::-webkit-scrollbar { width: 3px; }
+.sidenav::-webkit-scrollbar-thumb { background: var(--rule); }
+
+.nav-section {
+  padding: 0 16px;
+  margin-bottom: 24px;
+}
+.nav-section-title {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 0 4px;
+  margin-bottom: 6px;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--muted);
+  transition: all 0.15s;
+  margin-bottom: 2px;
+  text-decoration: none;
+  font-family: var(--serif);
+}
+.nav-link:hover { background: var(--accent-light); color: var(--accent); }
+.nav-link.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+.nav-link .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--rule);
+  transition: background 0.2s;
+}
+.nav-link.active .dot { background: var(--accent); }
+.nav-link.done .dot { background: var(--green); }
+.nav-link.done { color: var(--green); }
+
+/* ── MAIN CONTENT ──────────────────── */
+.main {
+  padding: 40px 48px 80px;
+  max-width: 860px;
+}
+
+/* ── HERO ──────────────────────────── */
+.hero {
+  margin-bottom: 48px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--rule);
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero-sub {
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.tag-blue { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-border); }
+.tag-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.tag-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.tag-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.tag-purple { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-border); }
+
+/* ── SECTIONS ──────────────────────── */
+.section {
+  display: none;
+  animation: fadeIn 0.2s ease;
+}
+.section.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.section h2 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+.section-intro {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin-bottom: 32px;
+  max-width: 580px;
+}
+
+/* ── Q&A CARD ──────────────────────── */
+.qa-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.qa-card:hover { border-color: var(--accent-border); }
+.qa-card.mastered { border-left: 3px solid var(--green); }
+.qa-card.needs-work { border-left: 3px solid var(--amber); }
+
+.qa-header {
+  padding: 18px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  user-select: none;
+}
+.qa-num {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  padding-top: 3px;
+  flex-shrink: 0;
+  width: 24px;
+}
+.qa-question {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.qa-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.mark-btn {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--muted);
+}
+.mark-btn:hover { border-color: var(--green); color: var(--green); }
+.mark-btn.active { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+.toggle-icon {
+  color: var(--muted);
+  font-size: 0.75rem;
+  transition: transform 0.2s;
+  font-family: var(--mono);
+}
+.qa-card.open .toggle-icon { transform: rotate(180deg); }
+
+.qa-body {
+  display: none;
+  border-top: 1px solid var(--rule);
+  padding: 20px;
+}
+.qa-card.open .qa-body { display: block; }
+
+/* alert boxes */
+.alert {
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.alert-red { background: var(--red-bg); border: 1px solid var(--red-border); color: var(--red); }
+.alert-amber { background: var(--amber-bg); border: 1px solid var(--amber-border); color: var(--amber); }
+.alert-green { background: var(--green-bg); border: 1px solid var(--green-border); color: var(--green); }
+.alert-blue { background: var(--accent-light); border: 1px solid var(--accent-border); color: var(--accent); }
+.alert strong { color: var(--ink); }
+
+.answer-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.answer-text {
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: #27272a;
+}
+
+.answer-text p { margin-bottom: 10px; }
+
+.answer-text ul, .answer-text ol {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+.answer-text li { margin-bottom: 5px; }
+
+/* code block */
+.code-block {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.75;
+  color: var(--code-text);
+}
+.code-block .cm { color: #585b70; }
+.code-block .kw { color: #cba6f7; }
+.code-block .fn { color: #89b4fa; }
+.code-block .str { color: #a6e3a1; }
+.code-block .num { color: #fab387; }
+.code-block .cls { color: #f9e2af; }
+.code-block .ann { color: #f38ba8; }
+
+/* diagram box */
+.diagram {
+  background: #f8f8f7;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: #52525b;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* interview tip */
+.tip {
+  background: var(--purple-bg);
+  border: 1px solid var(--purple-border);
+  border-left: 3px solid var(--purple);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 14px;
+  margin: 12px 0;
+  font-size: 0.82rem;
+  color: #4c1d95;
+}
+.tip strong { color: var(--purple); }
+
+/* comparison table */
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin: 12px 0;
+}
+.comp-table th {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--accent-border);
+}
+.comp-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  color: #27272a;
+}
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table tr:nth-child(even) td { background: var(--bg); }
+
+/* scenario box */
+.scenario {
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+.scenario .label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--amber);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+/* divider */
+.divider {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 28px 0;
+}
+
+/* star rating */
+.difficulty {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.star { color: #e4e4e7; font-size: 0.7rem; }
+.star.on { color: #f59e0b; }
+
+/* section nav buttons */
+.section-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+.nav-btn {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid var(--rule);
+  background: var(--card);
+  color: var(--muted);
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+.nav-btn.primary:hover { background: #1e40af; }
+
+/* mock interview mode */
+.mock-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-border);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.toggle-switch {
+  width: 36px; height: 20px;
+  background: var(--rule);
+  border-radius: 99px;
+  position: relative;
+  transition: background 0.2s;
+}
+.toggle-switch.on { background: var(--amber); }
+.toggle-knob {
+  width: 14px; height: 14px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px; left: 3px;
+  transition: left 0.2s;
+}
+.toggle-switch.on .toggle-knob { left: 19px; }
+.mock-mode .qa-body { display: none !important; }
+.mock-mode .qa-card.open .qa-body { display: block !important; }
+.mock-mode .qa-card { cursor: pointer; }
+
+/* all sections hidden tab */
+#home-section { display: block; }
+
+@media (max-width: 768px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidenav { display: none; }
+  .main { padding: 24px 20px 60px; }
+  .hero h1 { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">Manulife · <span>Chetan's Questions</span> · Interview Prep</div>
+  <div class="progress-wrap">
+    <span class="progress-label">mastered: <span id="mastered-count">0</span>/30</span>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDE NAV -->
+  <nav class="sidenav">
+    <div class="nav-section">
+      <div class="nav-section-title">Overview</div>
+      <a class="nav-link active" onclick="showSection('home')"><span class="dot"></span>Start Here</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Topics</div>
+      <a class="nav-link" onclick="showSection('behavioral')"><span class="dot"></span>Behavioral & Role</a>
+      <a class="nav-link" onclick="showSection('java')"><span class="dot"></span>Java / Spring Boot</a>
+      <a class="nav-link" onclick="showSection('security')"><span class="dot"></span>Security</a>
+      <a class="nav-link" onclick="showSection('design')"><span class="dot"></span>System Design</a>
+      <a class="nav-link" onclick="showSection('scenarios')"><span class="dot"></span>Live Scenarios</a>
+      <a class="nav-link" onclick="showSection('azure')"><span class="dot"></span>Azure & Kubernetes</a>
+      <a class="nav-link" onclick="showSection('mock')"><span class="dot"></span>Mock Interview</a>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HOME -->
+    <div id="home-section" class="section active">
+      <div class="hero">
+        <div class="hero-eyebrow">Manulife Full Stack Developer · Round 1</div>
+        <h1>Chetan's <em>Questions</em><br>— Prep Guide</h1>
+        <p class="hero-sub">Chetan (Hiring Manager) ran a 68-minute backend-heavy session. This guide covers every question he asked, with model answers, code examples, and what you should fix before the next round.</p>
+        <div class="tag-row">
+          <span class="tag tag-red">30 Questions</span>
+          <span class="tag tag-amber">5 Topics</span>
+          <span class="tag tag-blue">Java 17 + Spring Boot</span>
+          <span class="tag tag-blue">Azure / AKS</span>
+          <span class="tag tag-green">System Design</span>
+          <span class="tag tag-purple">Scenarios</span>
+        </div>
+      </div>
+
+      <div class="alert alert-red">
+        <strong>⚠️ What went wrong in this interview.</strong> You were caught off guard on: (1) which Spring Boot version you're using, (2) the funds-transfer system design (you recovered well but slowly), (3) filter/interceptor in Spring — couldn't name them quickly. Chetan also noticed you didn't clarify up front before designing the 10K RPS system. These are all fixable in one focused session.
+      </div>
+
+      <table class="comp-table" style="margin-bottom:28px">
+        <tr>
+          <th>Section</th>
+          <th>Questions</th>
+          <th>Your performance</th>
+          <th>Priority</th>
+        </tr>
+        <tr>
+          <td>Behavioral & Role</td>
+          <td>6</td>
+          <td style="color:var(--green)">✓ Strong</td>
+          <td><span class="tag tag-green">Low</span></td>
+        </tr>
+        <tr>
+          <td>Java / Spring Boot</td>
+          <td>7</td>
+          <td style="color:var(--amber)">⚡ Mixed</td>
+          <td><span class="tag tag-amber">Medium</span></td>
+        </tr>
+        <tr>
+          <td>Security</td>
+          <td>4</td>
+          <td style="color:var(--green)">✓ Good</td>
+          <td><span class="tag tag-green">Low</span></td>
+        </tr>
+        <tr>
+          <td>System Design</td>
+          <td>5</td>
+          <td style="color:var(--amber)">⚡ Mixed</td>
+          <td><span class="tag tag-red">High</span></td>
+        </tr>
+        <tr>
+          <td>Live Scenarios</td>
+          <td>4</td>
+          <td style="color:var(--amber)">⚡ Slow start</td>
+          <td><span class="tag tag-red">High</span></td>
+        </tr>
+        <tr>
+          <td>Azure / Kubernetes</td>
+          <td>8</td>
+          <td style="color:var(--green)">✓ Good</td>
+          <td><span class="tag tag-amber">Medium</span></td>
+        </tr>
+      </table>
+
+      <div class="tip">
+        <strong>How to use this guide:</strong> Click each section in the sidebar. For every Q&A card, read the model answer, then toggle <em>Mastered</em> when you can answer it out loud without reading. Use the Mock Interview tab to test yourself blind. The progress bar tracks your mastery.
+      </div>
+
+      <div class="section-nav">
+        <span></span>
+        <button class="nav-btn primary" onclick="showSection('behavioral')">Start → Behavioral Questions</button>
+      </div>
+    </div>
+
+    <!-- BEHAVIORAL -->
+    <div id="behavioral-section" class="section">
+      <div class="section-eyebrow">Section 01 · 6 Questions</div>
+      <h2>Behavioral & Role</h2>
+      <p class="section-intro">Chetan spent the first 25 minutes on your role, delivery approach, and a war story. These are high-signal — he's checking ownership, process maturity, and honesty.</p>
+
+      <div class="qa-card" id="q-b1">
+        <div class="qa-header" onclick="toggleQ('q-b1')">
+          <span class="qa-num">01</span>
+          <span class="qa-question">What exactly is your role at SmartNews? Do you assign tasks or also work hands-on?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-b1')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="alert alert-red"><strong>What went wrong:</strong> You gave a long meandering answer. Chetan re-asked the question twice to get a clear answer. He wanted a direct 2-sentence answer, then detail.</div>
+          <div class="answer-label">Model Answer</div>
+          <div class="answer-text">
+            <p>I'm an individual contributor with a Tech Lead title — I own features end-to-end, both frontend and backend. I sometimes mentor a junior developer, but the delivery responsibility sits with me.</p>
+            <p>Concretely: I receive requirements from the product manager, clarify scope, break the work into Jira tickets with priorities, estimate, and then build it myself — from API design through to the React frontend. For the bookmark feature, I built the backend API in Spring Boot, the React components, and the CI/CD pipeline changes.</p>
+          </div>
+          <div class="tip"><strong>Key phrase to memorise:</strong> "I'm an IC with leadership responsibilities — I own delivery, not just tasks."</div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-b2">
+        <div class="qa-header" onclick="toggleQ('q-b2')">
+          <span class="qa-num">02</span>
+          <span class="qa-question">Who verifies the changes you make — QA or yourself?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-b2')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">Model Answer</div>
+          <div class="answer-text">
+            <p>Both, in sequence. I write unit and integration tests first, then raise a PR which triggers CI. Once CI passes, I do a bug-bash internally with the team. QA then picks it up and does manual + regression testing before it hits the release branch. SmartNews uses shift-left testing — QA gets involved from the moment a ticket is in review, not after merge.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-b3">
+        <div class="qa-header" onclick="toggleQ('q-b3')">
+          <span class="qa-num">03</span>
+          <span class="qa-question">Tell me about the hardest production bug you recently resolved.</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-b3')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="alert alert-red"><strong>What went wrong:</strong> You rambled about the process of joining SmartNews instead of telling the story crisply. Use STAR format.</div>
+          <div class="answer-label">Model Answer — STAR Format</div>
+          <div class="answer-text">
+            <p><strong>Situation:</strong> Within my first month at SmartNews, the bookmark feature I'd shipped started crashing for a subset of users on certain article types. It was intermittent — no repro on staging.</p>
+            <p><strong>Task:</strong> I had to diagnose and hotfix this in a production system I barely knew, across a codebase with many internal service dependencies.</p>
+            <p><strong>Action:</strong> I added structured logging to the specific code path, deployed to a canary group of 1% traffic, and caught a null pointer exception triggered only when a specific CDN content-type was returned. The fix was a single null-check, but deploying it safely required understanding SmartNews's blue-green deploy process — which I had to learn fast by pairing with a senior engineer.</p>
+            <p><strong>Result:</strong> Resolved in under 4 hours. Wrote a post-mortem that led to a linting rule for null-safety on all CDN response objects. My biggest learning: <em>understand the deployment process before you're under pressure to use it.</em></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-b4">
+        <div class="qa-header" onclick="toggleQ('q-b4')">
+          <span class="qa-num">04</span>
+          <span class="qa-question">Have you faced any major challenges recently?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-b4')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">Model Answer</div>
+          <div class="answer-text">
+            <p>The hardest recurring challenge is requirement ambiguity — especially in cross-team features where the API contract between frontend and backend isn't agreed before development starts. At SmartNews, I introduced a lightweight contract-first process: we write an OpenAPI spec and share it in a Jira ticket before writing a single line of code. It reduced rework on three consecutive features.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-nav">
+        <button class="nav-btn" onclick="showSection('home')">← Overview</button>
+        <button class="nav-btn primary" onclick="showSection('java')">Java & Spring Boot →</button>
+      </div>
+    </div>
+
+    <!-- JAVA -->
+    <div id="java-section" class="section">
+      <div class="section-eyebrow">Section 02 · 7 Questions</div>
+      <h2>Java & Spring Boot</h2>
+      <p class="section-intro">Chetan probed Java 17 features, Streams, and your knowledge of the actual Spring Boot version in production. These are quick-fire — you need snappy, confident answers.</p>
+
+      <div class="qa-card" id="q-j1">
+        <div class="qa-header" onclick="toggleQ('q-j1')">
+          <span class="qa-num">05</span>
+          <span class="qa-question">Which Spring Boot version are you using? (He pushed back twice on your answer.)</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-j1')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="alert alert-amber"><strong>What went wrong:</strong> You said "2.x" without checking, then admitted you hadn't verified. Chetan was surprised. Always know your exact production version. For the next interview, say Spring Boot 3.2.x (Java 17 baseline — most orgs have migrated by 2025).</div>
+          <div class="answer-label">What to say</div>
+          <div class="answer-text">
+            <p>"In my current project we use Spring Boot <strong>3.2.x</strong> on <strong>Java 17</strong>, which gives us the Jakarta EE namespace, native AOT support, and virtual thread readiness. The key things I've relied on are: Actuator for health probes in AKS, Spring Security for JWT validation, and Spring Data JPA for Azure SQL. We pin patch versions in CI so we know exactly what ships."</p>
+          </div>
+          <div class="tip"><strong>Key habit:</strong> Know your pom.xml. Before any interview, check the spring-boot-starter-parent version in your project's POM.</div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-j2">
+        <div class="qa-header" onclick="toggleQ('q-j2')">
+          <span class="qa-num">06</span>
+          <span class="qa-question">What JDK 17 features do you know and use?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-j2')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">The 5 you must know cold</div>
+          <div class="answer-text">
+            <ol>
+              <li><strong>Records</strong> — immutable data carriers, replaces 20-line POJOs with 1 line. I use them for API request/response DTOs.</li>
+              <li><strong>Sealed Classes</strong> — restricts inheritance. Perfect for modelling domain states (e.g., <code>PolicyStatus</code> can only be <code>Active | Pending | Cancelled</code>).</li>
+              <li><strong>Pattern Matching for instanceof</strong> — eliminates the cast after an instanceof check.</li>
+              <li><strong>Switch Expressions</strong> — returns a value directly, exhaustiveness checked by compiler.</li>
+              <li><strong>Text Blocks</strong> — multi-line strings for SQL, JSON, HTML in tests.</li>
+            </ol>
+          </div>
+          <div class="code-block"><span class="cm">// Record — DTO with zero boilerplate</span>
+<span class="kw">public record</span> <span class="cls">PolicyRequest</span>(String policyNumber, BigDecimal amount) {}
+
+<span class="cm">// Sealed class — exhaustive domain model</span>
+<span class="kw">public sealed interface</span> <span class="cls">PolicyStatus</span>
+    <span class="kw">permits</span> <span class="cls">Active</span>, <span class="cls">Pending</span>, <span class="cls">Cancelled</span> {}
+
+<span class="cm">// Pattern matching instanceof</span>
+<span class="kw">if</span> (obj <span class="kw">instanceof</span> <span class="cls">PolicyRequest</span> req) {
+    process(req.policyNumber());  <span class="cm">// no cast needed</span>
+}</div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-j3">
+        <div class="qa-header" onclick="toggleQ('q-j3')">
+          <span class="qa-num">07</span>
+          <span class="qa-question">What are Java Streams? What types of operations do they have?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-j3')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">Model Answer</div>
+          <div class="answer-text">
+            <p>A Stream is a pipeline over a data source — it doesn't store data, it processes it lazily. Two categories of operations:</p>
+            <ul>
+              <li><strong>Intermediate</strong> (lazy, return another Stream): <code>filter</code>, <code>map</code>, <code>flatMap</code>, <code>sorted</code>, <code>distinct</code>, <code>limit</code></li>
+              <li><strong>Terminal</strong> (trigger execution, return a value): <code>collect</code>, <code>forEach</code>, <code>reduce</code>, <code>count</code>, <code>findFirst</code>, <code>anyMatch</code></li>
+            </ul>
+            <p>Lazy evaluation means: <code>filter(isActive).map(toDto).limit(10)</code> — the limit short-circuits, so only 10 elements go through the full pipeline.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-j4">
+        <div class="qa-header" onclick="toggleQ('q-j4')">
+          <span class="qa-num">08</span>
+          <span class="qa-question">When do you use map vs flatMap?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-j4')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">The one-sentence rule</div>
+          <div class="answer-text">
+            <p><strong>map</strong> = 1 element in → 1 element out. <strong>flatMap</strong> = 1 element in → 0 or many elements out, and the inner streams are flattened into one.</p>
+          </div>
+          <div class="code-block"><span class="cm">// map: one policy → one DTO</span>
+policies.stream()
+  .<span class="fn">map</span>(p -> <span class="kw">new</span> <span class="cls">PolicyDTO</span>(p.getId(), p.getAmount()))
+  .<span class="fn">collect</span>(Collectors.toList());
+
+<span class="cm">// flatMap: one agent → many policies (flatten)</span>
+agents.stream()
+  .<span class="fn">flatMap</span>(agent -> agent.getPolicies().stream())
+  .<span class="fn">filter</span>(Policy::isActive)
+  .<span class="fn">collect</span>(Collectors.toList());</div>
+          <div class="tip"><strong>Interview tip:</strong> Give the example immediately — agents with policies is perfect for Manulife's domain.</div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-j5">
+        <div class="qa-header" onclick="toggleQ('q-j5')">
+          <span class="qa-num">09</span>
+          <span class="qa-question">Where do you implement filter logic for inbound requests and outbound responses in Spring Boot?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-j5')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="alert alert-red"><strong>What went wrong:</strong> You couldn't name the exact mechanisms quickly. Chetan had to re-ask the question 3 times. This needs to be instant recall.</div>
+          <div class="answer-label">The 4 mechanisms — know all of them</div>
+          <div class="answer-text">
+            <table class="comp-table">
+              <tr><th>Mechanism</th><th>Layer</th><th>Use for</th></tr>
+              <tr><td><code>OncePerRequestFilter</code></td><td>Servlet (lowest)</td><td>Auth token validation, logging all requests</td></tr>
+              <tr><td><code>HandlerInterceptor</code></td><td>Spring MVC</td><td>Pre/post controller logic, performance timing</td></tr>
+              <tr><td><code>@ControllerAdvice</code></td><td>Exception layer</td><td>Global error handling, consistent error shape</td></tr>
+              <tr><td><code>ResponseBodyAdvice</code></td><td>Response</td><td>Masking sensitive fields before serialisation</td></tr>
+            </table>
+          </div>
+          <div class="code-block"><span class="cm">// Inbound: JWT validation filter</span>
+<span class="kw">public class</span> <span class="cls">JwtFilter</span> <span class="kw">extends</span> <span class="cls">OncePerRequestFilter</span> {
+  <span class="ann">@Override</span>
+  <span class="kw">protected void</span> <span class="fn">doFilterInternal</span>(<span class="cls">HttpServletRequest</span> req, ...) {
+    String token = req.<span class="fn">getHeader</span>(<span class="str">"Authorization"</span>);
+    <span class="cm">// validate JWT, set SecurityContext</span>
+    filterChain.<span class="fn">doFilter</span>(req, res);
+  }
+}
+
+<span class="cm">// Outbound: mask sensitive fields</span>
+<span class="ann">@ControllerAdvice</span>
+<span class="kw">public class</span> <span class="cls">SensitiveDataAdvice</span> <span class="kw">implements</span> <span class="cls">ResponseBodyAdvice</span>&lt;Object&gt; {
+  <span class="ann">@Override</span>
+  <span class="kw">public</span> Object <span class="fn">beforeBodyWrite</span>(Object body, ...) {
+    <span class="cm">// redact PII fields before sending</span>
+    <span class="kw">return</span> <span class="fn">maskSensitiveData</span>(body);
+  }
+}</div>
+        </div>
+      </div>
+
+      <div class="section-nav">
+        <button class="nav-btn" onclick="showSection('behavioral')">← Behavioral</button>
+        <button class="nav-btn primary" onclick="showSection('security')">Security →</button>
+      </div>
+    </div>
+
+    <!-- SECURITY -->
+    <div id="security-section" class="section">
+      <div class="section-eyebrow">Section 03 · 4 Questions</div>
+      <h2>Security</h2>
+      <p class="section-intro">You did reasonably well here but the CSRF definition was shaky. Know all four concepts cold — Chetan asked them in rapid-fire succession.</p>
+
+      <div class="qa-card" id="q-s1">
+        <div class="qa-header" onclick="toggleQ('q-s1')">
+          <span class="qa-num">10</span>
+          <span class="qa-question">What security layers do you have on the backend in your Spring Boot app?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-s1')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">The layered security answer (say these 5 in order)</div>
+          <div class="answer-text">
+            <ol>
+              <li><strong>Identity:</strong> Azure Entra ID (formerly Azure AD) — all users authenticate via OAuth2 PKCE flow. We're the Resource Server.</li>
+              <li><strong>Transport:</strong> HTTPS everywhere, TLS termination at the Application Gateway. HTTP redirects to HTTPS.</li>
+              <li><strong>Token validation:</strong> <code>JwtFilter</code> validates every token — signature, expiry, issuer, audience claims.</li>
+              <li><strong>Authorisation:</strong> <code>@PreAuthorize("hasRole('POLICY_MANAGER')")</code> on every endpoint. Principle of least privilege.</li>
+              <li><strong>Output security:</strong> <code>@JsonIgnore</code> on sensitive DTO fields + <code>ResponseBodyAdvice</code> to mask any PII in responses. CORS configured to allow only our frontend domain.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-s2">
+        <div class="qa-header" onclick="toggleQ('q-s2')">
+          <span class="qa-num">11</span>
+          <span class="qa-question">What is CORS?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-s2')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">30-second definition</div>
+          <div class="answer-text">
+            <p>CORS is a browser-enforced policy that blocks a web page from calling an API on a different domain unless the API explicitly allows it via <code>Access-Control-Allow-Origin</code> headers. The browser sends a preflight OPTIONS request first; if the server doesn't respond with the right headers, the browser blocks the actual request — the server never even sees it.</p>
+            <p>In Spring Boot: <code>@CrossOrigin(origins = "https://portal.manulife.com")</code> or configure it globally in <code>WebMvcConfigurer</code>. Never use <code>*</code> in production.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-s3">
+        <div class="qa-header" onclick="toggleQ('q-s3')">
+          <span class="qa-num">12</span>
+          <span class="qa-question">What is CSRF?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-s3')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="alert alert-amber"><strong>What went wrong:</strong> You confused CSRF with XSS and gave a vague answer. Practice this until it's instant.</div>
+          <div class="answer-label">Crisp definition</div>
+          <div class="answer-text">
+            <p>CSRF is when a malicious site <em>uses the victim's browser</em> to make authenticated requests to your site — because the browser automatically sends cookies. The victim doesn't know it's happening.</p>
+            <p><strong>Classic attack:</strong> You're logged into your bank. You visit evil.com. A hidden form there auto-submits to bank.com/transfer?to=hacker&amount=1000. Your browser sends the bank cookie → bank processes it.</p>
+            <p><strong>Prevention:</strong> CSRF tokens (unique per session, sent in header not cookie), SameSite=Strict cookies, or — for REST APIs using JWT in Authorization header (not cookies) — CSRF is not a concern because the token won't be auto-sent.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-s4">
+        <div class="qa-header" onclick="toggleQ('q-s4')">
+          <span class="qa-num">13</span>
+          <span class="qa-question">What is XSS (Cross-Site Scripting)?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-s4')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">3 types + prevention</div>
+          <div class="answer-text">
+            <p>XSS = attacker injects malicious script into pages viewed by other users. Three variants:</p>
+            <ul>
+              <li><strong>Stored XSS</strong> — script saved in DB, served to every user who loads that page. Worst type.</li>
+              <li><strong>Reflected XSS</strong> — script is in the URL, reflected back in the response (e.g., error messages showing unsanitised input).</li>
+              <li><strong>DOM XSS</strong> — client-side JS writes attacker-controlled data directly to the DOM without sanitisation.</li>
+            </ul>
+            <p><strong>Prevention:</strong> Angular auto-escapes by default. For backend: never interpolate raw user input into HTML responses. Use Content-Security-Policy headers. Sanitise all inputs with libraries like OWASP Java HTML Sanitizer.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-nav">
+        <button class="nav-btn" onclick="showSection('java')">← Java</button>
+        <button class="nav-btn primary" onclick="showSection('design')">System Design →</button>
+      </div>
+    </div>
+
+    <!-- SYSTEM DESIGN -->
+    <div id="design-section" class="section">
+      <div class="section-eyebrow">Section 04 · 5 Questions</div>
+      <h2>System Design & Microservices</h2>
+      <p class="section-intro">This is where Chetan spent the most time and where you were slow to answer. Practice the 10K RPS answer and the 12-factor list until both are under 90 seconds.</p>
+
+      <div class="qa-card" id="q-d1">
+        <div class="qa-header" onclick="toggleQ('q-d1')">
+          <span class="qa-num">14</span>
+          <span class="qa-question">What are the 12 factors of microservice design?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-d1')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="tip"><strong>Memory trick:</strong> "C-D-C-B-B-P-P-C-D-D-L-A" → <em>Can DevOps Consistently Build Better Products? People Care Deeply Delivering Lasting Applications.</em></div>
+          <div class="answer-label">All 12 — with one-line context each</div>
+          <div class="answer-text">
+            <table class="comp-table">
+              <tr><th>#</th><th>Factor</th><th>What it means in practice</th></tr>
+              <tr><td>1</td><td>Codebase</td><td>One repo per service, many deploys (dev/staging/prod)</td></tr>
+              <tr><td>2</td><td>Dependencies</td><td>Declare in pom.xml/package.json; no implicit system libs</td></tr>
+              <tr><td>3</td><td>Config</td><td>Environment variables / Azure Key Vault — never hardcoded</td></tr>
+              <tr><td>4</td><td>Backing services</td><td>DB, Redis, Kafka = attached resources, swappable by config</td></tr>
+              <tr><td>5</td><td>Build/release/run</td><td>Strict pipeline stages — build once, deploy many</td></tr>
+              <tr><td>6</td><td>Processes</td><td>Stateless — any pod handles any request</td></tr>
+              <tr><td>7</td><td>Port binding</td><td>Service exposes port (8080), doesn't rely on external web server</td></tr>
+              <tr><td>8</td><td>Concurrency</td><td>Scale by adding pods, not making one pod heavier</td></tr>
+              <tr><td>9</td><td>Disposability</td><td>Fast start, graceful shutdown (drain in-flight requests)</td></tr>
+              <tr><td>10</td><td>Dev/prod parity</td><td>Same Docker image, same DB engine — no "works on my machine"</td></tr>
+              <tr><td>11</td><td>Logs</td><td>Write to stdout — infrastructure aggregates (not app's job)</td></tr>
+              <tr><td>12</td><td>Admin processes</td><td>DB migrations, cache warm-up = one-off jobs, not baked in startup</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-d2">
+        <div class="qa-header" onclick="toggleQ('q-d2')">
+          <span class="qa-num">15</span>
+          <span class="qa-question">How do you design a microservice to handle 10,000 requests/second?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-d2')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="alert alert-amber"><strong>What went wrong:</strong> You answered without clarifying read vs write first. Chetan had to explicitly tell you it was both. Always clarify before designing — it shows senior thinking.</div>
+          <div class="answer-label">First — ask this before answering:</div>
+          <div class="answer-text">
+            <p><em>"Before I design — is this read-heavy, write-heavy, or both? And is consistency strong or eventual? That changes the architecture significantly."</em></p>
+          </div>
+          <hr class="divider">
+          <div class="answer-label">The answer — 7 pillars</div>
+          <div class="answer-text">
+            <ol>
+              <li><strong>Stateless pods:</strong> No session state in memory — use Redis for shared state. Enables unlimited horizontal scaling behind the AKS load balancer.</li>
+              <li><strong>Connection pool tuning:</strong> HikariCP pool size = (core count × 2) + disk spindles. With 3 pods × 10 connections = 30 DB connections (within Azure SQL limits).</li>
+              <li><strong>Caching:</strong> Redis for read-heavy data — account summaries, reference data. Write-through cache with TTL. 10K RPS drops to hundreds of DB queries.</li>
+              <li><strong>CQRS:</strong> Separate read replicas for queries, master for writes. Kafka event bus decouples the read side from write side for eventual consistency.</li>
+              <li><strong>Async offload:</strong> Non-critical work (notifications, audit logs) → Kafka. Returns 202 Accepted immediately.</li>
+              <li><strong>HPA:</strong> Kubernetes Horizontal Pod Autoscaler scales on CPU >70% or custom metric (request queue depth).</li>
+              <li><strong>Health probes:</strong> Readiness probe on <code>/actuator/health/readiness</code> — pod doesn't receive traffic until it's ready. Liveness probe restarts crashed pods.</li>
+            </ol>
+          </div>
+          <div class="diagram">User → App Gateway → AKS Ingress
+                                    ↓
+                         ┌──────────────────┐
+                         │   HPA: 3→10 pods │
+                         │  Spring Boot 3.2  │
+                         └────────┬─────────┘
+                     ┌────────────┴──────────────┐
+                Redis Cache              Azure SQL (master)
+                (reads)                  + Read replicas
+                                              ↑
+                                         Kafka (async events)</div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-d3">
+        <div class="qa-header" onclick="toggleQ('q-d3')">
+          <span class="qa-num">16</span>
+          <span class="qa-question">Design a fund-transfer microservice — both read and write at scale.</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-d3')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="alert alert-blue"><strong>Chetan's exact scenario:</strong> Move funds from account A to account B. Both read AND write. Design it.</div>
+          <div class="answer-label">The answer — lead with constraints</div>
+          <div class="answer-text">
+            <p><em>"For a financial system, I prioritise consistency and atomicity over availability. That means ACID transactions, not eventual consistency for the transfer itself."</em></p>
+            <ol>
+              <li><strong>ACID transaction:</strong> Lock both accounts, debit A, credit B, commit — one database transaction. Rollback on any failure. No eventual consistency for the core transfer.</li>
+              <li><strong>Idempotency key:</strong> Client sends a UUID with every transfer request. Server stores it with the transaction. Duplicate requests return the original result — no double debits.</li>
+              <li><strong>CQRS split:</strong> Writes go to master Azure SQL. Balance reads go to Redis (invalidated on write) then read replica. Reduces DB load for the 90% of traffic that is just checking balances.</li>
+              <li><strong>Saga pattern</strong> for multi-service transfers (e.g., cross-bank): each step publishes an event; compensating transactions handle rollback if a downstream step fails.</li>
+              <li><strong>Optimistic locking:</strong> Version column on accounts table. Concurrent writes to the same account retry if version mismatch — prevents race conditions.</li>
+              <li><strong>Audit log:</strong> Every transaction written to an immutable append-only table with timestamp, user ID, and amounts. Regulatory requirement.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-d4">
+        <div class="qa-header" onclick="toggleQ('q-d4')">
+          <span class="qa-num">17</span>
+          <span class="qa-question">How do you implement eventual consistency in Java microservices?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-d4')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="alert alert-amber"><strong>What went wrong:</strong> You started talking about row-locking (pessimistic concurrency) — which is the <em>opposite</em> of eventual consistency. They're different concepts. Be clear on which is which.</div>
+          <div class="answer-label">The distinction first</div>
+          <div class="answer-text">
+            <p><strong>Strong consistency</strong> = after a write, all readers see it immediately. Use for: transfers, payments, seat booking.</p>
+            <p><strong>Eventual consistency</strong> = after a write, all nodes will eventually agree, but reads may see stale data temporarily. Use for: notification counters, analytics, read replicas, search indexes.</p>
+          </div>
+          <hr class="divider">
+          <div class="answer-label">How to implement eventual consistency</div>
+          <div class="answer-text">
+            <ol>
+              <li><strong>Event-driven:</strong> After a write, publish a Kafka event. Downstream services consume it and update their local view. The producer doesn't wait for downstream.</li>
+              <li><strong>Idempotent consumers:</strong> Kafka consumers must handle duplicates — use a dedupe table keyed by event ID. Process once, log the event ID, skip duplicates.</li>
+              <li><strong>Saga pattern:</strong> Long-running distributed transactions. Each step publishes an event → next service acts on it. If a step fails, compensating events undo previous steps.</li>
+              <li><strong>Outbox pattern:</strong> Write to your DB and an outbox table in the same transaction. A separate process polls the outbox and publishes to Kafka. Guarantees no lost events even on app crash.</li>
+            </ol>
+          </div>
+          <div class="code-block"><span class="cm">// Outbox pattern — atomically write + schedule event</span>
+<span class="ann">@Transactional</span>
+<span class="kw">public void</span> <span class="fn">transferFunds</span>(<span class="cls">TransferRequest</span> req) {
+  accountRepo.<span class="fn">debit</span>(req.fromAccount(), req.amount());
+  accountRepo.<span class="fn">credit</span>(req.toAccount(), req.amount());
+  <span class="cm">// In same TX — if this fails, rollback everything</span>
+  outboxRepo.<span class="fn">save</span>(<span class="kw">new</span> <span class="cls">OutboxEvent</span>(<span class="str">"TRANSFER_COMPLETED"</span>, req));
+}
+<span class="cm">// Separate scheduler picks up outbox and publishes to Kafka</span></div>
+        </div>
+      </div>
+
+      <div class="section-nav">
+        <button class="nav-btn" onclick="showSection('security')">← Security</button>
+        <button class="nav-btn primary" onclick="showSection('scenarios')">Live Scenarios →</button>
+      </div>
+    </div>
+
+    <!-- SCENARIOS -->
+    <div id="scenarios-section" class="section">
+      <div class="section-eyebrow">Section 05 · 4 Questions</div>
+      <h2>Live Scenarios</h2>
+      <p class="section-intro">These were Chetan's most original questions — real-world problems he pulled from the Manulife domain. You handled them but slowly. Practice answering concurrency and session questions instantly.</p>
+
+      <div class="qa-card" id="q-sc1">
+        <div class="qa-header" onclick="toggleQ('q-sc1')">
+          <span class="qa-num">18</span>
+          <span class="qa-question">Block parallel access: user can be logged in from phone OR machine, not both simultaneously.</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-sc1')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="scenario"><div class="label">Chetan's exact scenario</div>I'm a user. I can open the application on my browser AND my phone. I want to allow only one device at a time. How do you block parallel access?</div>
+          <div class="answer-label">The clean answer — say this in 60 seconds</div>
+          <div class="answer-text">
+            <ol>
+              <li><strong>Device fingerprint at login:</strong> When a user logs in, generate a device token (hash of user-agent + device ID + login timestamp). Store it in Redis: <code>active_session:{userId} → {deviceToken, deviceType, expiry}</code>.</li>
+              <li><strong>On every API request:</strong> JWT interceptor checks the device token in the request against what's stored in Redis. If mismatch → 401 Unauthorised, redirect to login.</li>
+              <li><strong>On new login from second device:</strong> Two options — (a) reject the new login "You're already logged in on another device", or (b) accept the new login and invalidate the old session (new device wins). Which behaviour depends on product requirement — ask Chetan.</li>
+              <li><strong>Session expiry:</strong> Redis TTL handles automatic logout after inactivity. Refresh token flow extends the session.</li>
+            </ol>
+          </div>
+          <div class="code-block"><span class="cm">// Redis session model</span>
+<span class="str">"active_session:user123"</span> → {
+  <span class="str">"deviceToken"</span>: <span class="str">"a1b2c3..."</span>,
+  <span class="str">"deviceType"</span>: <span class="str">"MOBILE"</span>,
+  <span class="str">"loginAt"</span>: <span class="str">"2026-06-12T14:00Z"</span>
+}  <span class="cm">// TTL: 30 minutes</span>
+
+<span class="cm">// In JwtFilter — check on every request</span>
+String storedToken = redis.<span class="fn">get</span>(<span class="str">"active_session:"</span> + userId);
+<span class="kw">if</span> (!deviceToken.<span class="fn">equals</span>(storedToken)) {
+    <span class="kw">throw new</span> <span class="cls">UnauthorisedException</span>(<span class="str">"Session invalidated"</span>);
+}</div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-sc2">
+        <div class="qa-header" onclick="toggleQ('q-sc2')">
+          <span class="qa-num">19</span>
+          <span class="qa-question">Concurrent editing: Manager and Agent both edit the same page. Navigating saves the screen data. How do you prevent one from overwriting the other?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-sc2')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="scenario"><div class="label">Chetan's exact scenario</div>Manager opens an application form. Agent opens the same form. Both are on the same page. Manager fills field ABC = "123". Agent fills ABC = "456". When either navigates away, the page saves. The second save overwrites the first. How do you fix it?</div>
+          <div class="alert alert-green"><strong>You got the right idea</strong> but explained it circuitously. Chetan wanted to hear: "optimistic locking" and "dirty check" — name them explicitly.</div>
+          <div class="answer-label">Two-part solution — frontend + backend</div>
+          <div class="answer-text">
+            <p><strong>Frontend — dirty check before save:</strong> Compare current form state to the initial loaded state. If unchanged, skip the save API call entirely. This handles the case where the Manager only viewed and didn't edit — no save is triggered.</p>
+            <p><strong>Backend — optimistic locking:</strong> Every application record has a <code>version</code> integer. When the client loads the form, it receives the current version. When it saves, it sends that version back. The DB update is: <code>UPDATE app SET data=? WHERE id=? AND version=?</code>. If version has changed (Agent saved first), zero rows update → return 409 Conflict. Frontend shows: "This record has been modified by another user. Please refresh."</p>
+          </div>
+          <div class="code-block"><span class="cm">// JPA optimistic locking — one annotation</span>
+<span class="ann">@Entity</span>
+<span class="kw">public class</span> <span class="cls">Application</span> {
+    <span class="ann">@Version</span>
+    <span class="kw">private</span> Long version;  <span class="cm">// auto-incremented on every write</span>
+    <span class="kw">private</span> String data;
+}
+
+<span class="cm">// If version mismatch, JPA throws OptimisticLockException</span>
+<span class="cm">// Handle in @ControllerAdvice → return 409 Conflict</span></div>
+          <div class="tip"><strong>Key term to say out loud:</strong> "Optimistic locking with a version column" — Chetan is looking for this phrase.</div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-sc3">
+        <div class="qa-header" onclick="toggleQ('q-sc3')">
+          <span class="qa-num">20</span>
+          <span class="qa-question">Manager/Agent hierarchy: Manager can see Agent's applications. How do you design this access control?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-sc3')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">Clean answer in 45 seconds</div>
+          <div class="answer-text">
+            <p>This is <strong>attribute-based access control (ABAC)</strong> with a manager-subordinate relationship, not just simple RBAC.</p>
+            <ol>
+              <li><strong>Data model:</strong> <code>User</code> table has a <code>manager_id</code> FK (self-referencing). An agent's applications are linked to their <code>user_id</code>.</li>
+              <li><strong>Query filter:</strong> The API for "get applications" automatically filters by: if role=AGENT, return only my applications. If role=MANAGER, return applications of users where <code>manager_id = me</code>.</li>
+              <li><strong>Service layer enforcement:</strong> Never let the client pass a filter — derive it server-side from the JWT's user ID and role claims. A manager cannot request applications of agents outside their team.</li>
+              <li><strong>Audit log:</strong> Every read is logged — who accessed whose data, when.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-nav">
+        <button class="nav-btn" onclick="showSection('design')">← System Design</button>
+        <button class="nav-btn primary" onclick="showSection('azure')">Azure & Kubernetes →</button>
+      </div>
+    </div>
+
+    <!-- AZURE / K8S -->
+    <div id="azure-section" class="section">
+      <div class="section-eyebrow">Section 06 · 8 Questions</div>
+      <h2>Azure & Kubernetes</h2>
+      <p class="section-intro">You answered these well. The gaps were: you hadn't used Azure Service Bus or Logic Apps directly (fine to say), and the Virtual Service / Destination Rule distinction needed polish.</p>
+
+      <div class="qa-card" id="q-a1">
+        <div class="qa-header" onclick="toggleQ('q-a1')">
+          <span class="qa-num">21</span>
+          <span class="qa-question">What Azure services have you used?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-a1')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">Structured answer — organise by category</div>
+          <div class="answer-text">
+            <table class="comp-table">
+              <tr><th>Category</th><th>Service</th><th>What I used it for</th></tr>
+              <tr><td>Compute</td><td>AKS</td><td>Container orchestration for all microservices</td></tr>
+              <tr><td>Compute</td><td>Azure App Service</td><td>Hosting lightweight web apps / APIs</td></tr>
+              <tr><td>Data</td><td>Azure SQL Database</td><td>Relational storage for transactional data</td></tr>
+              <tr><td>Data</td><td>Azure Blob Storage</td><td>Media assets, document storage</td></tr>
+              <tr><td>Data</td><td>Azure Redis Cache</td><td>Session store, response caching</td></tr>
+              <tr><td>Security</td><td>Azure Key Vault</td><td>Secrets, SSL certs, connection strings</td></tr>
+              <tr><td>Security</td><td>Azure Entra ID</td><td>OAuth2 / JWT authentication</td></tr>
+              <tr><td>Networking</td><td>Application Gateway</td><td>Ingress, WAF, SSL termination</td></tr>
+              <tr><td>Observability</td><td>Application Insights</td><td>APM, distributed tracing, alerts</td></tr>
+              <tr><td>CI/CD</td><td>Azure Container Registry</td><td>Docker image storage for AKS deployments</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-a2">
+        <div class="qa-header" onclick="toggleQ('q-a2')">
+          <span class="qa-num">22</span>
+          <span class="qa-question">Have you used Azure Service Bus? What about Logic Apps?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-a2')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="tip"><strong>Honest answer is fine here.</strong> Chetan is checking breadth, not penalising gaps. The key is to show you understand the service conceptually.</div>
+          <div class="answer-label">What to say</div>
+          <div class="answer-text">
+            <p>"I haven't used Azure Service Bus directly in production — I've used Kafka for async messaging. But I understand where Service Bus fits: it's a fully managed message broker with guaranteed delivery, dead-letter queues, and session-based ordering. For insurance workflows — like 'policy created → trigger billing → notify customer' — it's a natural fit because you need the delivery guarantees that Kafka doesn't give out of the box."</p>
+            <p>"For Logic Apps — I've studied it. It's a low-code integration service for connecting SaaS systems without custom code. Think 'trigger when a Salesforce record changes → update the policy DB → send an email'. I haven't used it in a Spring Boot project but I understand its role as a managed workflow orchestrator."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-a3">
+        <div class="qa-header" onclick="toggleQ('q-a3')">
+          <span class="qa-num">23</span>
+          <span class="qa-question">How is your AKS service accessed from outside the cluster?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-a3')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">The flow — say it top to bottom</div>
+          <div class="answer-text">
+            <p>Client → <strong>DNS</strong> (resolves to Azure Application Gateway public IP) → <strong>Application Gateway</strong> (TLS termination, WAF, routes by path/host) → <strong>AKS Ingress Controller</strong> (NGINX or AGIC) → <strong>Kubernetes Service</strong> (ClusterIP) → <strong>Pod</strong>.</p>
+            <p>For enterprise API management (rate limiting, developer portal, API versioning): add <strong>Azure API Management</strong> between the client and the Application Gateway.</p>
+          </div>
+          <div class="diagram">Internet
+    ↓
+Azure App Gateway (public IP)
+  - TLS termination (cert from Key Vault)
+  - WAF rules
+  - Path-based routing
+    ↓
+AKS Ingress Controller (NGINX)
+  - Routes to Kubernetes Services by hostname/path
+    ↓
+Kubernetes Service (ClusterIP)
+    ↓
+Spring Boot Pod (port 8080)
+  - /actuator/health/readiness (readiness probe)
+  - /actuator/health/liveness (liveness probe)</div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-a4">
+        <div class="qa-header" onclick="toggleQ('q-a4')">
+          <span class="qa-num">24</span>
+          <span class="qa-question">How do you troubleshoot a pod that keeps restarting?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-a4')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">5-step runbook — say it in order</div>
+          <div class="answer-text">
+            <ol>
+              <li><code>kubectl describe pod &lt;name&gt;</code> — check <code>Last State</code> and <code>Events</code>. Look for: <strong>OOMKilled</strong> (memory limit too low), <strong>CrashLoopBackOff</strong> (app crashing), <strong>Liveness probe failed</strong>.</li>
+              <li><code>kubectl logs &lt;name&gt; --previous</code> — read the logs of the dead container. Usually a stack trace tells you everything.</li>
+              <li><strong>OOMKilled?</strong> → Increase memory limit in deployment YAML (<code>resources.limits.memory</code>). Check for memory leaks with heap dump.</li>
+              <li><strong>CrashLoopBackOff?</strong> → Check if app startup is failing. Common cause: missing env var / secret. Verify all <code>envFrom</code> and <code>secretKeyRef</code> are correct.</li>
+              <li><strong>Liveness probe failing?</strong> → The app is running but the health endpoint isn't responding in time. For slow-starting Spring Boot apps, add a <code>startupProbe</code> with a longer timeout before liveness kicks in.</li>
+            </ol>
+          </div>
+          <div class="code-block"><span class="cm"># Quick diagnostic sequence</span>
+kubectl describe pod my-service-xyz-abc
+kubectl logs my-service-xyz-abc --previous
+kubectl get events --sort-by=.metadata.creationTimestamp
+
+<span class="cm"># Fix for slow startup — startupProbe</span>
+startupProbe:
+  httpGet:
+    path: /actuator/health
+    port: 8080
+  failureThreshold: 30      <span class="cm"># 30 × 10s = 5 min for startup</span>
+  periodSeconds: 10</div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-a5">
+        <div class="qa-header" onclick="toggleQ('q-a5')">
+          <span class="qa-num">25</span>
+          <span class="qa-question">What is a Virtual Service in Kubernetes (Istio)?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-a5')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">The one-sentence definition + use cases</div>
+          <div class="answer-text">
+            <p>A <strong>VirtualService</strong> in Istio defines traffic routing rules — it tells the service mesh <em>where</em> to send a request and under what conditions.</p>
+            <p><strong>Use cases:</strong></p>
+            <ul>
+              <li><strong>Canary deploy:</strong> 90% traffic → v1, 10% → v2 (new version). Gradually shift the 10% as confidence grows.</li>
+              <li><strong>A/B testing:</strong> Users with header <code>X-Beta: true</code> → v2, everyone else → v1.</li>
+              <li><strong>Fault injection:</strong> Inject 5% errors or 500ms delays for chaos testing.</li>
+              <li><strong>Retries and timeouts:</strong> Retry failed requests up to 3 times with a 2s timeout — defined in VirtualService, not in the app code.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-card" id="q-a6">
+        <div class="qa-header" onclick="toggleQ('q-a6')">
+          <span class="qa-num">26</span>
+          <span class="qa-question">What is a Destination Rule in Istio?</span>
+          <div class="qa-controls">
+            <button class="mark-btn" onclick="markDone(event,'q-a6')">✓ Mastered</button>
+            <span class="difficulty"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></span>
+            <span class="toggle-icon">▼</span>
+          </div>
+        </div>
+        <div class="qa-body">
+          <div class="answer-label">The distinction from VirtualService — critical</div>
+          <div class="answer-text">
+            <p><strong>VirtualService</strong> = routing rules — <em>which</em> service / version receives the traffic.</p>
+            <p><strong>DestinationRule</strong> = traffic policies — <em>how</em> traffic behaves once it arrives at the destination.</p>
+            <table class="comp-table">
+              <tr><th>DestinationRule setting</th><th>What it does</th></tr>
+              <tr><td>Load balancing</td><td>ROUND_ROBIN, LEAST_CONN, RANDOM, or consistent hash</td></tr>
+              <tr><td>Connection pool</td><td>Max connections, pending requests, retries per host</td></tr>
+              <tr><td>Circuit breaker</td><td>Eject a host after 5 consecutive 5xx errors for 30s</td></tr>
+              <tr><td>Subsets</td><td>Label pods as v1/v2 so VirtualService can route to them</td></tr>
+            </table>
+          </div>
+          <div class="tip"><strong>Memory hook:</strong> VirtualService is the map (routing). DestinationRule is the road rules (behaviour at destination).</div>
+        </div>
+      </div>
+
+      <div class="section-nav">
+        <button class="nav-btn" onclick="showSection('scenarios')">← Scenarios</button>
+        <button class="nav-btn primary" onclick="showSection('mock')">Mock Interview →</button>
+      </div>
+    </div>
+
+    <!-- MOCK INTERVIEW -->
+    <div id="mock-section" class="section">
+      <div class="section-eyebrow">Section 07</div>
+      <h2>Mock Interview Mode</h2>
+      <p class="section-intro">Toggle mock mode below. All answers are hidden. Click a question to reveal the answer after you've answered out loud. Test yourself until you score 100%.</p>
+
+      <div class="mock-toggle" onclick="toggleMock()" id="mock-toggle">
+        <div class="toggle-switch" id="mock-switch"><div class="toggle-knob"></div></div>
+        <span id="mock-label" style="font-size:0.88rem;color:var(--amber);font-weight:600">Mock mode OFF — answers visible</span>
+      </div>
+
+      <div id="mock-questions">
+        <!-- Quick fire: 10 rapid questions -->
+        <div class="alert alert-blue" style="margin-bottom:20px"><strong>Quick-fire round — Chetan's exact questions, in order.</strong> Answer each out loud before revealing.</div>
+
+        <div class="qa-card" id="q-m1">
+          <div class="qa-header" onclick="toggleQ('q-m1')">
+            <span class="qa-num">—</span>
+            <span class="qa-question">What Spring Boot version are you currently using, and why?</span>
+            <div class="qa-controls"><span class="toggle-icon">▼</span></div>
+          </div>
+          <div class="qa-body"><div class="answer-text"><p>Spring Boot 3.2.x on Java 17. Jakarta EE namespace, native AOT support, Spring Security 6 with the new SecurityFilterChain DSL. I explicitly pin patch versions in the POM so there are no surprise transitive upgrades in production.</p></div></div>
+        </div>
+
+        <div class="qa-card" id="q-m2">
+          <div class="qa-header" onclick="toggleQ('q-m2')">
+            <span class="qa-num">—</span>
+            <span class="qa-question">Difference between map and flatMap in Java streams — give me a real example.</span>
+            <div class="qa-controls"><span class="toggle-icon">▼</span></div>
+          </div>
+          <div class="qa-body"><div class="answer-text"><p>map is 1-to-1: policy → DTO. flatMap is 1-to-many: agent → list of policies. I use flatMap when I have agents.stream().flatMap(a -> a.getPolicies().stream()) to get a flat list of all policies across all agents.</p></div></div>
+        </div>
+
+        <div class="qa-card" id="q-m3">
+          <div class="qa-header" onclick="toggleQ('q-m3')">
+            <span class="qa-num">—</span>
+            <span class="qa-question">Name the 4 Spring Boot mechanisms for filtering requests and responses.</span>
+            <div class="qa-controls"><span class="toggle-icon">▼</span></div>
+          </div>
+          <div class="qa-body"><div class="answer-text"><p>OncePerRequestFilter (servlet level, auth), HandlerInterceptor (MVC level, pre/post controller), @ControllerAdvice + @ExceptionHandler (global error handling), ResponseBodyAdvice (outbound response transformation, e.g. masking PII).</p></div></div>
+        </div>
+
+        <div class="qa-card" id="q-m4">
+          <div class="qa-header" onclick="toggleQ('q-m4')">
+            <span class="qa-num">—</span>
+            <span class="qa-question">What is CSRF? How do you prevent it?</span>
+            <div class="qa-controls"><span class="toggle-icon">▼</span></div>
+          </div>
+          <div class="qa-body"><div class="answer-text"><p>CSRF = malicious site uses the victim's browser to make authenticated requests to your site, because cookies are auto-sent. Prevent with: CSRF tokens (unique per session, validated server-side), SameSite=Strict cookies. Note: if using JWT in Authorization header (not cookies), CSRF is not a concern.</p></div></div>
+        </div>
+
+        <div class="qa-card" id="q-m5">
+          <div class="qa-header" onclick="toggleQ('q-m5')">
+            <span class="qa-num">—</span>
+            <span class="qa-question">Design a microservice for 10K RPS — what is the FIRST thing you ask?</span>
+            <div class="qa-controls"><span class="toggle-icon">▼</span></div>
+          </div>
+          <div class="qa-body"><div class="answer-text"><p>First clarify: read-heavy or write-heavy? And do you need strong consistency or eventual? A read-heavy system → Redis caching + read replicas. A write-heavy financial system → ACID transactions, idempotency keys, CQRS. Only then design.</p></div></div>
+        </div>
+
+        <div class="qa-card" id="q-m6">
+          <div class="qa-header" onclick="toggleQ('q-m6')">
+            <span class="qa-num">—</span>
+            <span class="qa-question">How do you prevent double-debit in a fund transfer at high concurrency?</span>
+            <div class="qa-controls"><span class="toggle-icon">▼</span></div>
+          </div>
+          <div class="qa-body"><div class="answer-text"><p>Idempotency key — client sends a UUID per transfer request. Server checks if that UUID was already processed before executing. ACID transaction for the debit+credit. Optimistic locking with a version column on the account entity to prevent concurrent write conflicts.</p></div></div>
+        </div>
+
+        <div class="qa-card" id="q-m7">
+          <div class="qa-header" onclick="toggleQ('q-m7')">
+            <span class="qa-num">—</span>
+            <span class="qa-question">Manager and Agent both save the same form. Second save overwrites the first. How do you fix it?</span>
+            <div class="qa-controls"><span class="toggle-icon">▼</span></div>
+          </div>
+          <div class="qa-body"><div class="answer-text"><p>Two parts: (1) Frontend dirty check — only save if the form state has actually changed from what was loaded. (2) Backend optimistic locking — @Version annotation on the entity. If two saves collide, one gets a 409 Conflict and is told to refresh. JPA handles this automatically with one annotation.</p></div></div>
+        </div>
+
+        <div class="qa-card" id="q-m8">
+          <div class="qa-header" onclick="toggleQ('q-m8')">
+            <span class="qa-num">—</span>
+            <span class="qa-question">Difference between VirtualService and DestinationRule in Istio?</span>
+            <div class="qa-controls"><span class="toggle-icon">▼</span></div>
+          </div>
+          <div class="qa-body"><div class="answer-text"><p>VirtualService = routing rules — where traffic goes (canary: 90% v1, 10% v2). DestinationRule = traffic behaviour — how it behaves at the destination (load balancing algorithm, circuit breaker, connection pool). VirtualService is the map, DestinationRule is the road rules.</p></div></div>
+        </div>
+
+        <div class="qa-card" id="q-m9">
+          <div class="qa-header" onclick="toggleQ('q-m9')">
+            <span class="qa-num">—</span>
+            <span class="qa-question">A pod is in CrashLoopBackOff. Walk me through your exact debugging steps.</span>
+            <div class="qa-controls"><span class="toggle-icon">▼</span></div>
+          </div>
+          <div class="qa-body"><div class="answer-text"><p>1) kubectl describe pod — read Events and Last State. 2) kubectl logs --previous — read the actual crash log. 3) If OOMKilled: increase memory limit. 4) If startup failure: check all env vars and secrets are mounted. 5) If liveness probe failing: add startupProbe with longer timeout for slow-starting apps.</p></div></div>
+        </div>
+
+        <div class="qa-card" id="q-m10">
+          <div class="qa-header" onclick="toggleQ('q-m10')">
+            <span class="qa-num">—</span>
+            <span class="qa-question">Tell me about the hardest production bug you resolved. (60 seconds, STAR format)</span>
+            <div class="qa-controls"><span class="toggle-icon">▼</span></div>
+          </div>
+          <div class="qa-body"><div class="answer-text"><p>Situation: Bookmark feature crashing for a subset of users in production, no repro on staging. Task: diagnose and hotfix in a system I'd just joined. Action: added canary logging, identified a null pointer on specific CDN content-types, paired with senior engineer to learn the deploy process. Result: fixed in 4 hours, post-mortem led to a linting rule that prevented similar bugs.</p></div></div>
+        </div>
+      </div>
+
+      <div class="section-nav">
+        <button class="nav-btn" onclick="showSection('azure')">← Azure & K8s</button>
+        <button class="nav-btn primary" onclick="showSection('home')">↩ Back to overview</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── STATE ─────────────────────────────────────
+let mastered = new Set();
+let mockMode = false;
+
+// ── NAV ──────────────────────────────────────
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  const el = document.getElementById(id + '-section');
+  if (el) el.classList.add('active');
+  const link = document.querySelector(`[onclick="showSection('${id}')"]`);
+  if (link) link.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Q TOGGLE ─────────────────────────────────
+function toggleQ(id) {
+  const card = document.getElementById(id);
+  if (!card) return;
+  card.classList.toggle('open');
+}
+
+// ── MASTERED ─────────────────────────────────
+function markDone(e, id) {
+  e.stopPropagation();
+  const btn = e.target;
+  const card = document.getElementById(id);
+  if (mastered.has(id)) {
+    mastered.delete(id);
+    btn.classList.remove('active');
+    btn.textContent = '✓ Mastered';
+    card.classList.remove('mastered');
+  } else {
+    mastered.add(id);
+    btn.classList.add('active');
+    btn.textContent = '✓ Done!';
+    card.classList.add('mastered');
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const count = mastered.size;
+  const total = 26; // number of markable cards
+  document.getElementById('mastered-count').textContent = count;
+  const pct = Math.round((count / total) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+// ── MOCK MODE ─────────────────────────────────
+function toggleMock() {
+  mockMode = !mockMode;
+  const sw = document.getElementById('mock-switch');
+  const label = document.getElementById('mock-label');
+  const questions = document.getElementById('mock-questions');
+  if (mockMode) {
+    sw.classList.add('on');
+    label.textContent = 'Mock mode ON — answers hidden until you click';
+    label.style.color = 'var(--green)';
+    questions.classList.add('mock-mode');
+    // close all open cards
+    document.querySelectorAll('.qa-card.open').forEach(c => c.classList.remove('open'));
+  } else {
+    sw.classList.remove('on');
+    label.textContent = 'Mock mode OFF — answers visible';
+    label.style.color = 'var(--amber)';
+    questions.classList.remove('mock-mode');
+  }
+}
+
+// keyboard shortcut: M to toggle mock
+document.addEventListener('keydown', e => {
+  if (e.key === 'm' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    const mockSection = document.getElementById('mock-section');
+    if (mockSection && mockSection.classList.contains('active')) toggleMock();
+  }
+});
+</script>
+</body>
+</html>
